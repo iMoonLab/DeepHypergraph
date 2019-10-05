@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import neighbor_grid, neighbor_distance
+from HyperG.hyedge import neighbor_grid, neighbor_distance, gather_patch_ft
 
 
 def test_grid_neighbor():
@@ -32,3 +32,17 @@ def test_distance_neighbor():
         [0, 2, 1, 0, 2, 0],
         [0, 0, 1, 1, 2, 2]
     ]))
+
+
+def test_gather_patch_ft():
+    x = torch.tensor([
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8]
+    ])
+    x = x.view((1, 1, 3, 3))
+    patch_size = (3, 3)
+    x_new = gather_patch_ft(x, patch_size)
+    assert x_new.shape == (1, 9, 3, 3)
+    assert torch.all(x_new.squeeze().permute(1, 2, 0)[0, 0] ==
+                     torch.tensor([0, 0, 0, 0, 0, 1, 0, 3, 4]).float())
