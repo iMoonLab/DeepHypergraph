@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.construct_hyedge import pairwise_euclidean_distance
+from HyperG.hyedge import pairwise_euclidean_distance
 
 
 def test_pairwise_euclidean_distance():

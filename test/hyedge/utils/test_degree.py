@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.construct_hyedge import hyedge_degree
+from HyperG.hyedge import degree_hyedge
 
 
 def test_edge_degree():
@@ -8,4 +8,4 @@ def test_edge_degree():
         [2, 1, 0, 1, 2, 3, 1],
         [0, 0, 0, 1, 1, 1, 2]
     ])
-    assert torch.all(hyedge_degree(H) == torch.tensor([3, 3, 1]))
+    assert torch.all(degree_hyedge(H) == torch.tensor([3, 3, 1]))

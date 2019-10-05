@@ -1,6 +1,6 @@
-def node_count(H):
+def count_node(H):
     return H[0].max().item() + 1
 
 
-def hyedge_count(H):
+def count_hyedge(H):
     return H[1].max().item() + 1

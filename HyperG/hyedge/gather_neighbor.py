@@ -2,10 +2,10 @@ from functools import reduce
 
 import torch
 
-from . import remove_negative_index, add_self_loop, pairwise_euclidean_distance
+from . import remove_negative_index, self_loop_add, pairwise_euclidean_distance
 
 
-def grid_neighbor(input_size, self_loop=False, neigh_funs__mask_funs=None):
+def neighbor_grid(input_size, self_loop=False, neigh_funs__mask_funs=None):
     """
 
     :param input_size: w \times h matrix
@@ -65,12 +65,12 @@ def grid_neighbor(input_size, self_loop=False, neigh_funs__mask_funs=None):
     H = remove_negative_index(H)
 
     if self_loop:
-        H = add_self_loop(H)
+        H = self_loop_add(H)
 
     return H
 
 
-def distance_neighbor(x, k_nearest):
+def neighbor_distance(x, k_nearest, dis_metric=pairwise_euclidean_distance):
     """
     construct hyperedge for each node in x matrix. Each hyperedge contains a node and its k-1 nearest neighbors.
     :param x: N x C matrix. N denotes node number, and C is the feature dimension.
@@ -78,14 +78,11 @@ def distance_neighbor(x, k_nearest):
     :return:
     """
     assert isinstance(x, torch.Tensor)
-
-    x = x.squeeze()
-    if len(x.shape) == 2:
-        x = x.unsqueeze(0)
+    assert len(x.shape) == 2
 
     # x (N x C)
     node_num = x.size(0)
-    dis_matrix = pairwise_euclidean_distance(x)
+    dis_matrix = dis_metric(x)
     _, nn_idx = torch.topk(dis_matrix, k_nearest, dim=1, largest=False)
     hyedge_idx = torch.arange(node_num).unsqueeze(0).repeat(k_nearest, 1).transpose(1, 0).reshape(-1)
     H = torch.stack([nn_idx.reshape(-1), hyedge_idx])
