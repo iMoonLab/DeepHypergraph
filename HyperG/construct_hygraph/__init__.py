@@ -1,0 +1,1 @@
+from .fusion import hyedge_concat
