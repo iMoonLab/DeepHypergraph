@@ -1,0 +1,26 @@
+import torch.nn.functional as F
+from torch import nn
+
+from HyperG.conv import HyConv
+
+
+class HGNN(nn.Module):
+    def __init__(self, in_ch, n_class, hidens=[16], dropout=0.5) -> None:
+        super().__init__()
+        self.dropout = dropout
+        _in = in_ch
+        self.hyconvs = []
+        for _h in hidens:
+            _out = _h
+            self.hyconvs.append(HyConv(_in, _out))
+            _in = _out
+        self.hyconvs = nn.ModuleList(self.hyconvs)
+        self.last_hyconv = HyConv(_in, n_class)
+
+    def forward(self, x, H, hyedge_weight=None):
+        for hyconv in self.hyconvs:
+            x = hyconv(x, H)
+            x = F.leaky_relu(x, inplace=True)
+            x = F.dropout(x, self.dropout)
+        x = self.last_hyconv(x, H)
+        return x

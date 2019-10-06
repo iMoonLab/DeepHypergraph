@@ -3,7 +3,6 @@ import torch
 from .count import count_node
 from .degree import degree_hyedge
 from .verify import contiguous_hyedge_idx
-from HyperG.hygraph import hyedge_concat
 
 
 def self_loop_remove(H):
@@ -27,4 +26,5 @@ def self_loop_add(H):
     loop_hyedge_idx = torch.arange(node_num)
     loop_H = torch.stack([loop_node_idx, loop_hyedge_idx])
 
+    from HyperG.hygraph import hyedge_concat
     return hyedge_concat([H, loop_H])
