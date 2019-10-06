@@ -98,20 +98,33 @@ def gather_patch_ft(x: torch.Tensor, patch_size):
     assert len(patch_size) == 2
 
     # C x M x N
-    x = x.view([x.size(1), x.size(2), x.size(3)])
-    # M x N x C
+    x = x.float().view([x.size(1), x.size(2), x.size(3)])
+    x_row_num, x_col_num = x.shape[1], x.shape[2]
+    # C x M x N -> M x N x C -> MN x C
     x = x.permute([1, 2, 0])
+    # M x N x C -> MN x C
+    x = x.view(-1, x.size(2))
+    # MN x C -> (1 + MN) x C
+    x = torch.cat([torch.zeros(x.size(1)).unsqueeze(0), x])
 
-    x_row_num, x_col_num = x.shape[0], x.shape[1]
-    out = []
-
+    # generate out index
+    out_idx = []
     center_row, center_col = (patch_size[0] + 1) // 2 - 1, (patch_size[1] + 1) // 2 - 1
+    x_idx = torch.arange(x_row_num * x_col_num).view(x_row_num, x_col_num).long()
 
-    ft_tmp = torch.zeros(x.size(0) + patch_size[0] - 1, x.size(1) + patch_size[1] - 1, x.size(2))
-    ft_tmp[center_row:center_row + x_row_num, center_col:center_col + x_col_num] = x
+    x_idx_pad = torch.zeros(x_row_num + patch_size[0] - 1, x_col_num + patch_size[1] - 1).long()
+    x_idx_pad[center_row:center_row + x_row_num, center_col:center_col + x_col_num] = x_idx + 1
 
     for _row, _col in product(range(patch_size[0]), range(patch_size[1])):
-        out.append(ft_tmp[_row:_row + x_row_num, _col:_col + x_col_num])
+        out_idx.append(x_idx_pad[_row:_row + x_row_num, _col:_col + x_col_num].reshape(-1, 1))
+    # MN x kk
+    out_idx = torch.cat(out_idx, dim=1)
 
-    out = torch.cat(out, dim=2).permute([2, 0, 1]).unsqueeze(0)
+    # apply out index
+    # MNkk x C
+    out = x[out_idx.view(-1)]
+    # M x N x kkC
+    out = out.view(x_row_num, x_col_num, -1)
+    # 1 x kkC x M x N
+    out = out.permute([2, 0, 1]).unsqueeze(0)
     return out
