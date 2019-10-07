@@ -4,7 +4,7 @@ show_img = False
 
 
 def test_read_mri():
-    img_dir = '/Users/fengyifan/Documents/Tsinghua/Other_Code/dcm_seg_hgnn_patch_code/data/ori/bai_de_yu_0001.mha'
+    img_dir = '/repository/HyperG_example/example_data/heart_mri/processed/0001.mha'
     img = read_mri(img_dir)
 
     # print(img.shape)

@@ -1,19 +1,19 @@
 import torch
 import torch.nn.functional as F
+from data_helper import preprocess, split_train_val
 
 from HyperG.models import HGNN
-from .data_helper import preprocess, split_train_val
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 k_nearest = 7
 patch_size = (5, 5)
-data_list = split_train_val('/repository/HyperG_example/example_data/heart_mri/processed',
-                            save_dir='/repository/HyperG_example/tmp/heart_mri', ratio=0.8)
+data_list = split_train_val('/repository/HyperG_example/example_data/heart_mri/processed', ratio=0.8,
+                            save_dir='/repository/HyperG_example/tmp/heart_mri/split.pkl', resplit=True)
 x, H, lbl, mask_train, mask_val = preprocess(data_list, patch_size, k_nearest)
 
 x_ch = x.size(1)
-n_class = lbl.max() + 1
+n_class = lbl.max().item() + 1
 model = HGNN(x_ch, n_class, hidens=[16])
 
 model, x, H, lbl, mask_train, mask_val = model.to(device), x.to(device), H.to(device), \
@@ -44,9 +44,9 @@ def val():
 
 if __name__ == '__main__':
     best_acc = 0.0
-    for epoch in range(1, 51):
+    for epoch in range(1, 21):
         train()
         train_acc, val_acc = val()
         if val_acc > best_acc:
             best_acc = val_acc
-        print(f'Epoch: {epoch}, Train:{train_acc:.4f}, Val:{val_acc:.4f}, Best Val:{best_acc}:.4f')
+        print(f'Epoch: {epoch}, Train:{train_acc:.4f}, Val:{val_acc:.4f}, Best Val:{best_acc:.4f}')

@@ -16,8 +16,8 @@ def normalize(x):
 
 
 def split_train_val(root, ratio=0.8, save_dir=None, resplit=False):
-    if not resplit and save_dir is not None:
-        with open(save_dir, 'r') as f:
+    if not resplit and save_dir is not None and osp.exists(save_dir):
+        with open(save_dir, 'rb') as f:
             result = pickle.load(f)
         return result
 
@@ -44,7 +44,7 @@ def split_train_val(root, ratio=0.8, save_dir=None, resplit=False):
         save_folder = osp.split(save_dir)[0]
         if not osp.exists(save_folder):
             os.makedirs(save_folder)
-        with open(save_dir, 'w') as f:
+        with open(save_dir, 'wb') as f:
             pickle.dump(result, f)
 
     return result
@@ -70,12 +70,12 @@ def preprocess(data_list, patch_size, k_nearest):
         lbl.append(_lbl)
         mask_train.extend([0] * _node_num)
 
-    x, lbl = torch.cat(x, dim=0), torch.cat(lbl, dim=0)
+    x, lbl = torch.cat(x, dim=0), torch.cat(lbl, dim=0).long()
     x = normalize(x)
 
     H_grid = hyedge_concat(H_grid, same_node=False)
-    mask_train = torch.tensor(mask_train)
-    mask_val = 1 - mask_train
+    mask_train = torch.tensor(mask_train).bool()
+    mask_val = ~mask_train
 
     H_global = neighbor_distance(x, k_nearest)
 
