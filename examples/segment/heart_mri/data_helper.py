@@ -15,9 +15,9 @@ def normalize(x):
     return (x - x.min()) / (x.max() - x.min())
 
 
-def split_train_val(root, ratio=0.8, save_dir=None, resplit=False):
-    if not resplit and save_dir is not None and osp.exists(save_dir):
-        with open(save_dir, 'rb') as f:
+def split_train_val(root, ratio=0.8, save_split_dir=None, resplit=False):
+    if not resplit and save_split_dir is not None and osp.exists(save_split_dir):
+        with open(save_split_dir, 'rb') as f:
             result = pickle.load(f)
         return result
 
@@ -40,11 +40,11 @@ def split_train_val(root, ratio=0.8, save_dir=None, resplit=False):
     val_list = [all_dict[_id] for _id in val_list]
 
     result = {'train': train_list, 'val': val_list}
-    if save_dir is not None:
-        save_folder = osp.split(save_dir)[0]
+    if save_split_dir is not None:
+        save_folder = osp.split(save_split_dir)[0]
         if not osp.exists(save_folder):
             os.makedirs(save_folder)
-        with open(save_dir, 'wb') as f:
+        with open(save_split_dir, 'wb') as f:
             pickle.dump(result, f)
 
     return result
@@ -55,7 +55,7 @@ def preprocess(data_list, patch_size, k_nearest):
     x, H_grid, lbl, mask_train = [], [], [], []
 
     for _item in train_list:
-        _x, _H, _lbl = process_mri_seg(_item, patch_size)
+        _x, _H, _lbl, img_size = process_mri_seg(_item, patch_size)
         _node_num = _x.size(0)
         x.append(_x)
         H_grid.append(_H)
@@ -63,7 +63,7 @@ def preprocess(data_list, patch_size, k_nearest):
         mask_train.extend([1] * _node_num)
 
     for _item in val_list:
-        _x, _H, _lbl = process_mri_seg(_item, patch_size)
+        _x, _H, _lbl, img_size = process_mri_seg(_item, patch_size)
         _node_num = _x.size(0)
         x.append(_x)
         H_grid.append(_H)
@@ -81,7 +81,7 @@ def preprocess(data_list, patch_size, k_nearest):
 
     H = hyedge_concat([H_grid, H_global])
 
-    return x, H, lbl, mask_train, mask_val
+    return x, H, lbl, mask_train, mask_val, img_size
 
 
 def process_mri_seg(data, patch_size):
@@ -100,4 +100,4 @@ def process_mri_seg(data, patch_size):
     lbl = lbl.view(-1)
 
     grid_H = neighbor_grid((row_num, col_num), self_loop=True)
-    return img_patched, grid_H, lbl
+    return img_patched, grid_H, lbl, (row_num, col_num)

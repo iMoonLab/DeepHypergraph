@@ -1,8 +1,9 @@
+import pytest
+
 from HyperG.utils.data import read_mri
 
-show_img = False
 
-
+@pytest.mark.skip(reason='unpleasure')
 def test_read_mri():
     img_dir = '/repository/HyperG_example/example_data/heart_mri/processed/0001.mha'
     img = read_mri(img_dir)

@@ -49,6 +49,7 @@ class HyConv(nn.Module):
         return x
 
     def forward(self, x: torch.Tensor, H: torch.Tensor, hyedge_weight=None):
+        assert len(x.shape) == 2, 'the input of HyperConv should be N x C'
         # feature transform
         x = x.matmul(self.theta)
 

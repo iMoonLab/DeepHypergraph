@@ -5,12 +5,12 @@ from HyperG.conv import HyConv
 
 
 class HGNN(nn.Module):
-    def __init__(self, in_ch, n_class, hidens=[16], dropout=0.5) -> None:
+    def __init__(self, in_ch, n_class, hiddens=[16], dropout=0.5) -> None:
         super().__init__()
         self.dropout = dropout
         _in = in_ch
         self.hyconvs = []
-        for _h in hidens:
+        for _h in hiddens:
             _out = _h
             self.hyconvs.append(HyConv(_in, _out))
             _in = _out
@@ -23,4 +23,4 @@ class HGNN(nn.Module):
             x = F.leaky_relu(x, inplace=True)
             x = F.dropout(x, self.dropout)
         x = self.last_hyconv(x, H)
-        return x
+        return F.log_softmax(x, dim=1)

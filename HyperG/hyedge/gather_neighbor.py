@@ -76,13 +76,14 @@ def neighbor_distance(x: torch.Tensor, k_nearest, dis_metric=pairwise_euclidean_
     :param k_nearest:
     :return:
     """
-    assert len(x.shape) == 2
+
+    assert len(x.shape) == 2, 'should be a tensor with (N x C) or (B x C x M x N)'
 
     # N x C
     node_num = x.size(0)
     dis_matrix = dis_metric(x)
     _, nn_idx = torch.topk(dis_matrix, k_nearest, dim=1, largest=False)
-    hyedge_idx = torch.arange(node_num).unsqueeze(0).repeat(k_nearest, 1).transpose(1, 0).reshape(-1)
+    hyedge_idx = torch.arange(node_num).to(x.device).unsqueeze(0).repeat(k_nearest, 1).transpose(1, 0).reshape(-1)
     H = torch.stack([nn_idx.reshape(-1), hyedge_idx])
     return H
 
