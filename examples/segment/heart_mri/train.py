@@ -1,4 +1,3 @@
-import os
 import os.path as osp
 
 import torch
@@ -6,9 +5,9 @@ import torch.nn.functional as F
 from data_helper import preprocess, split_train_val
 
 from HyperG.models import HGNN
+from HyperG.utils import check_dir
 from HyperG.utils.meter import trans_class_acc, trans_iou_socre
 from HyperG.utils.visualization import trans_vis_pred_target
-from HyperG.utils import check_dir
 
 # initialize parameters
 data_root = '/repository/HyperG_example/example_data/heart_mri/processed'
