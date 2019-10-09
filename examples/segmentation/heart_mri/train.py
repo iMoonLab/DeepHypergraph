@@ -20,12 +20,12 @@ split_dir = osp.join(result_root, 'split.pkl')
 vis_dir = osp.join(result_root, 'vis')
 
 # check directions
-assert check_dir(data_root, False)
+assert check_dir(data_root, make=False)
 check_dir(result_root)
 check_dir(vis_dir)
 
-data_list = split_train_val(data_root, ratio=0.8, save_split_dir=split_dir, resplit=False)
-x, H, target, mask_train, mask_val, img_size = preprocess(data_list, patch_size, k_nearest)
+data_dict = split_train_val(data_root, ratio=0.8, save_split_dir=split_dir, resplit=False)
+x, H, target, mask_train, mask_val, img_size = preprocess(data_dict, patch_size, k_nearest)
 
 x_ch = x.size(1)
 n_class = target.max().item() + 1

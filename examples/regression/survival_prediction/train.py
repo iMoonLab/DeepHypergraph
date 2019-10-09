@@ -1,5 +1,3 @@
-from __future__ import print_function, division
-
 import copy
 import os.path as osp
 import time
@@ -7,28 +5,43 @@ import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from data_helper import get_dataloaders
+from data_helper import split_train_val, preprocess, get_dataloaders
 from torch.optim import lr_scheduler
 
-from HyperG.models import ResNet_HGNN
 from HyperG.utils import check_dir
 
-data_root = '/repository/HyperG_example/example_data/breast_pathology/processed'
-result_root = '/repository/HyperG_example/tmp/breast_pathology'
-n_class = 4
+# initialize parameters
+data_root = '/repository/HyperG_example/example_data/survival_prediction/processed'
+result_root = '/repository/HyperG_example/tmp/survival_prediction'
+num_sample = 2000
+patch_size = 256
+mini_frac = 32
 k_nearest = 7
-depth = 34
-hiddens = [512]
 batch_size = 1
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+svs_dir = osp.join(data_root, 'svs')
+patch_ft_dir = osp.join(data_root, 'path_ft')
+sampled_vis = osp.join(result_root, 'sampled_vis')
+
+split_dir = osp.join(result_root, 'split.pkl')
+patch_coors_dir = osp.join(result_root, 'patch_coors.pkl')
 model_save_dir = osp.join(result_root, 'model_best.pth')
 
 # check directions
-assert check_dir(data_root, False)
+assert check_dir(data_root, make=False)
+assert check_dir(svs_dir, make=False)
+assert check_dir(patch_ft_dir, make=False)
 check_dir(result_root)
+check_dir(sampled_vis)
 
-dataloaders, dataset_sizes, _ = get_dataloaders(data_root, batch_size)
+data_dict = split_train_val(svs_dir, ratio=0.8, save_split_dir=split_dir, resplit=False)
+
+preprocess(data_dict, patch_ft_dir, patch_coors_dir, num_sample=num_sample,
+           patch_size=patch_size, mini_frac=mini_frac)
+
+dataloaders, dataset_sizes = get_dataloaders(data_dict, patch_ft_dir)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):

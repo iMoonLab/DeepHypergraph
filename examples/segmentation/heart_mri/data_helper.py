@@ -8,20 +8,21 @@ import torch
 
 from HyperG.hyedge import gather_patch_ft, neighbor_grid, neighbor_distance
 from HyperG.hygraph import hyedge_concat
-from HyperG.utils.data import split_id, read_mri_series
+from HyperG.utils.data import split_id
+from HyperG.utils.data.mri import read_mri_series
 
 
 def normalize(x):
     return (x - x.min()) / (x.max() - x.min())
 
 
-def split_train_val(root, ratio=0.8, save_split_dir=None, resplit=False):
+def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=False):
     if not resplit and save_split_dir is not None and osp.exists(save_split_dir):
         with open(save_split_dir, 'rb') as f:
             result = pickle.load(f)
         return result
 
-    all_list = glob.glob(osp.join(root, '*.mha'))
+    all_list = glob.glob(osp.join(data_root, '*.mha'))
 
     all_dict = {}
     for full_dir in all_list:
@@ -29,9 +30,9 @@ def split_train_val(root, ratio=0.8, save_split_dir=None, resplit=False):
         id = re.split('\_|\.', file_name)[0]
         all_dict.setdefault(id, {})
         if 'seg' in file_name:
-            all_dict[id]['seg'] = full_dir
+            all_dict[id]['seg_dir'] = full_dir
         else:
-            all_dict[id]['img'] = full_dir
+            all_dict[id]['img_dir'] = full_dir
 
     id_list = list(all_dict.keys())
     train_list, val_list = split_id(id_list, ratio)
@@ -86,10 +87,10 @@ def preprocess(data_list, patch_size, k_nearest):
 
 def process_mri_seg(data, patch_size):
     # M x N x C -> C x M x N -> 1 x C x M x N
-    img = read_mri_series(data['img']).permute(2, 0, 1).unsqueeze(0)
+    img = read_mri_series(data['img_dir']).permute(2, 0, 1).unsqueeze(0)
     row_num, col_num = img.size(2), img.size(3)
     # M x N x 1 -> M x N
-    lbl = read_mri_series(data['seg']).squeeze()
+    lbl = read_mri_series(data['seg_dir']).squeeze()
 
     # 1 x C x M x N -> 1 x Ckk x M x N -> M x N x Ckk
     img_patched = gather_patch_ft(img, patch_size).permute(2, 3, 1, 0).squeeze()

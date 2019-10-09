@@ -1,6 +1,6 @@
 import pytest
 
-from HyperG.utils.data import read_mri_series
+from HyperG.utils.data.mri import read_mri_series
 
 
 @pytest.mark.skip(reason='unpleasure')

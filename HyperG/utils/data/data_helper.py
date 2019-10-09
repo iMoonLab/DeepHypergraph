@@ -1,4 +1,6 @@
 from random import shuffle
+import pickle
+import os.path as osp
 
 
 def split_id(id_list, ratio):
@@ -8,3 +10,6 @@ def split_id(id_list, ratio):
     id_train = id_list[:train_len]
     id_val = id_list[train_len:]
     return id_train, id_val
+
+
+
