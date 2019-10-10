@@ -13,7 +13,7 @@ from HyperG.utils.data import split_id
 from HyperG.utils.data.pathology import sample_patch_coors, draw_patches_on_slide
 
 
-def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=False):
+def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=True):
     if not resplit and save_split_dir is not None and osp.exists(save_split_dir):
         with open(save_split_dir, 'rb') as f:
             result = pickle.load(f)

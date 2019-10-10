@@ -18,7 +18,6 @@ def trans_iou_socre(pred, target, mask):
         target_idx = target == _c
         intersection = (pred_idx & target_idx).sum().float().item()
         union = (pred_idx | target_idx).sum().float().item()
-        ious.append((intersection + 1e-6)/(union + 1e-6))
+        ious.append((intersection + 1e-6) / (union + 1e-6))
 
     return ious
-
