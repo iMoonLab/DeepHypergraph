@@ -55,16 +55,6 @@ def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=False):
     return result
 
 
-# def tmp_get_split(data_root):
-#     def tmp_get_id(_dir):
-#         _num = int(osp.splitext(osp.split(_dir)[1])[0].split('_')[1])
-#         return f'TCGA-GBM-{_num}'
-#
-#     result = {'train': {}, 'val': {}}
-#     for phase in ['train', 'val']:
-#         glob.glob(osp.join(data_root, phase, '*.npy'))
-
-
 def preprocess(data_dict, patch_ft_dir, patch_coors_dir, num_sample=2000,
                patch_size=256, sampled_vis=None, mini_frac=32):
     # check if each slide patch feature exists

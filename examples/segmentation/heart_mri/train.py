@@ -24,7 +24,7 @@ assert check_dir(data_root, make=False)
 check_dir(result_root)
 check_dir(vis_dir)
 
-data_dict = split_train_val(data_root, ratio=0.8, save_split_dir=split_dir, resplit=False)
+data_dict = split_train_val(data_root, ratio=0.8, save_split_dir=split_dir, resplit=True)
 x, H, target, mask_train, mask_val, img_size = preprocess(data_dict, patch_size, k_nearest)
 
 x_ch = x.size(1)
