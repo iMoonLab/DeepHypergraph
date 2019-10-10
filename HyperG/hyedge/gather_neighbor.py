@@ -77,7 +77,7 @@ def neighbor_distance(x: torch.Tensor, k_nearest, dis_metric=pairwise_euclidean_
     :return:
     """
 
-    assert len(x.shape) == 2, 'should be a tensor with (N x C) or (B x C x M x N)'
+    assert len(x.shape) == 2, 'should be a tensor with dimension (N x C)'
 
     # N x C
     node_num = x.size(0)

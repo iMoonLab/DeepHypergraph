@@ -4,9 +4,10 @@ import torchvision
 
 class ResNetFeature(nn.Module):
 
-    def __init__(self, depth=34, pretrained=True):
+    def __init__(self, depth=34, pooling=False, pretrained=True):
         super().__init__()
         assert depth in [18, 34, 50, 101, 152]
+        self.pooling = pooling
 
         if depth == 18:
             base_model = torchvision.models.resnet18(pretrained=pretrained)
@@ -34,8 +35,15 @@ class ResNetFeature(nn.Module):
     def forward(self, x):
         x = self.features(x)
 
-        # Attention! No reshape!
-        return x
+        if self.pooling:
+            # -> batch_size x C x N
+            x = x.view(x.size(0), x.size(1), -1)
+            # -> batch_size x C
+            x = x.mean(dim=-1)
+            return x
+        else:
+            # Attention! No reshape!
+            return x
 
 
 class ResNetClassifier(nn.Module):

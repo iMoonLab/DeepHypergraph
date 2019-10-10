@@ -4,7 +4,7 @@ from random import shuffle
 
 import numpy as np
 import openslide
-import tqdm
+from tqdm import tqdm
 from scipy import ndimage
 from skimage.filters import threshold_otsu
 from skimage.morphology import dilation, star
@@ -44,7 +44,8 @@ def sample_patch_coors(slide_dir, num_sample=2000, patch_size=256):
     # half of the center
     th_num = int(np.ceil((mini_patch_size * 3 / 4 * mini_patch_size * 3 / 4)))
 
-    for row, col in tqdm(row_col):
+    pbar = tqdm(total=num_sample)
+    for row, col in row_col:
         if cnt >= num_sample:
             break
         mini_patch = bg_mask[row:row + mini_patch_size, col: col + mini_patch_size]
@@ -55,6 +56,8 @@ def sample_patch_coors(slide_dir, num_sample=2000, patch_size=256):
             #     continue
             patch_coors.append(origin)
             cnt += 1
+            pbar.update(1)
+    pbar.close()
 
     return patch_coors
 

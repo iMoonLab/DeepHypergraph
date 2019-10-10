@@ -13,17 +13,17 @@ def draw_patches_on_slide(slide_dir, patch_coors, mini_frac=32):
     mini_size = np.ceil(np.array(slide.level_dimensions[0]) / mini_frac).astype(np.int)
     mini_level = get_just_gt_level(slide, mini_size)
 
-    img = slide.read_region((0, 0), mini_level, slide.level_dimensions[mini_level])
+    img = slide.read_region((0, 0), mini_level, slide.level_dimensions[mini_level]).convert('RGB')
     img = img.resize(mini_size)
 
     sampled_mask = gather_sampled_patches(patch_coors, mini_size, mini_frac)
     sampled_patches_img = fuse_img_mask(np.asarray(img), sampled_mask)
 
     img.close()
-    return Image.fromarray(sampled_patches_img)
+    return sampled_patches_img
 
 
-def gather_sampled_patches(patch_coors, mini_size, mini_frac):
+def gather_sampled_patches(patch_coors, mini_size, mini_frac) -> np.array:
     # generate sampled area mask
     sampled_mask = np.zeros((mini_size[1], mini_size[0]), np.uint8)
     for _coor in patch_coors:
@@ -36,8 +36,8 @@ def gather_sampled_patches(patch_coors, mini_size, mini_frac):
     return sampled_mask
 
 
-def fuse_img_mask(img: np.array, mask: np.array, alpha=0.7):
-    assert img.shape == mask.shape
+def fuse_img_mask(img: np.array, mask: np.array, alpha=0.7) -> Image:
+    assert img.shape[:2] == mask.shape
     img = img.copy()
     if (mask != 0).any():
         img[mask != 0] = alpha * img[mask != 0] + \
