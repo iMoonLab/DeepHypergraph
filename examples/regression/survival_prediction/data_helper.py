@@ -5,8 +5,9 @@ import os.path as osp
 import pickle
 
 import numpy as np
+import torch
 from extract_patch_feature import extract_ft
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.dataset import T_co
 
 from HyperG.utils.data import split_id
@@ -24,18 +25,23 @@ def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=False):
         lbls = json.load(fp)
 
     all_dict = {}
+    survival_time_max = 0
     for full_dir in all_list:
-        id = get_id(full_dir)
-        all_dict[id]['img_dir'] = full_dir
-        all_dict[id]['survival_time'] = lbls[id]
+        _id = get_id(full_dir)
+        all_dict[_id]['img_dir'] = full_dir
+        all_dict[_id]['survival_time'] = lbls[_id]
+        survival_time_max = survival_time_max \
+            if survival_time_max > lbls[_id] else lbls[_id]
 
     id_list = list(all_dict.keys())
     train_list, val_list = split_id(id_list, ratio)
 
-    train_list = [all_dict[_id] for _id in train_list]
-    val_list = [all_dict[_id] for _id in val_list]
+    result = {'survival_time_max': survival_time_max}
+    for _id in train_list:
+        result['train'][_id] = all_dict[_id]
+    for _id in val_list:
+        result['val'][_id] = all_dict[_id]
 
-    result = {'train': train_list, 'val': val_list}
     if save_split_dir is not None:
         save_folder = osp.split(save_split_dir)[0]
         if not osp.exists(save_folder):
@@ -80,22 +86,44 @@ def preprocess(data_dict, patch_ft_dir, patch_coors_dir, num_sample=2000,
 
 
 def get_dataloader(data_dict, patch_ft_dir):
-    pass
+    all_ft_list = glob.glob(osp.join(patch_ft_dir, '*_fts.npy'))
+
+    ft_dict = {}
+    for _dir in all_ft_list:
+        ft_dict[get_id(_dir)] = _dir
+
+    SP_datasets = {phase: SlidePatch(data_dict[phase], ft_dict, data_dict['survival_time_max'])
+                   for phase in ['train', 'val']}
+    SP_dataloaders = {phase: DataLoader(SP_datasets[phase], batch_size=1,
+                                        shuffle=True, num_workers=4)
+                      for phase in ['train', 'val']}
+    dataset_size = {phase: len(SP_datasets[phase]) for phase in ['train', 'val']}
+    return SP_dataloaders, dataset_size
 
 
-class slide_patch(Dataset):
+class SlidePatch(Dataset):
 
-    def __getitem__(self, index: int) -> T_co:
-        return super().__getitem__(index)
+    def __init__(self, data_dict: dict, ft_dict, survival_time_max):
+        super().__init__()
+        self.st_max = float(survival_time_max)
+        self.id_list = list(data_dict.keys())
+        self.data_dict = data_dict
+        self.ft_dict = ft_dict
+
+    def __getitem__(self, idx: int):
+        id = self.id_list[idx]
+        fts = torch.tensor(np.load(self.ft_dict[id])).float()
+        st = torch.tensor(self.data_dict[id]['survival_time_max']).float()
+        return fts, st / self.st_max
 
     def __len__(self) -> int:
-        return super().__len__()
+        return len(self.id_list)
 
 
 def check_patch_ft(dir_list, patch_ft_dir):
     to_do_list = []
     done_list = glob.glob(osp.join(patch_ft_dir, '*_ft.npy'))
-    done_list = [get_id(_dir).split('_ft.')[0] for _dir in done_list]
+    done_list = [get_id(_dir) for _dir in done_list]
     for _dir in dir_list:
         id = get_id(_dir)
         if id not in done_list:
@@ -104,4 +132,4 @@ def check_patch_ft(dir_list, patch_ft_dir):
 
 
 def get_id(_dir):
-    return osp.splitext(osp.split(_dir)[1])[0]
+    return osp.splitext(osp.split(_dir)[1])[0].split('_')[0]
