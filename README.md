@@ -36,7 +36,34 @@
         segmentation task in transductive learning. 
     * **visualization**: some visualization functions.
         * **transductive**: visualize segmentation result in transductive learning. 
+
+
+ ## Installation
+ Ensure that at least Python3, PyTorch 1.2.0 is installed. HyperG is still under development. Before the first stable 
+ release (1.0), please clone the repository and run
+ ```commandline
+pip install .
+ ```
+
+## Documentation
+Tutorial and Documentation will coming soon!
     
- 
-  
- including edge construction, graph construction and graph/hypergraph convolution.
+## Examples
+We provide examples in classification, regression, segmentation tasks with hypergraph, for more detail refer to our tutorials.
+
+## Citing HyperG
+If you find **HyperG** is useful in your research, please consider citing:
+```
+@inproceedings{feng2019hypergraph,
+  title={Hypergraph neural networks},
+  author={Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={33},
+  pages={3558--3565},
+  year={2019}
+}
+```
+
+## Contributing
+We always welcome contributions to help make HyperG better, and apply hypergraph in more application. If you would like 
+to contribute, please contact [us](mailto:evanfeng97@gmail.com).
