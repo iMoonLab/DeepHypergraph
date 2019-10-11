@@ -1,4 +1,4 @@
-#Hypergraph Toolbox: HyperG
+# Hypergraph Toolbox: HyperG
 **HyperG** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
  Edge in hypergraph named hyperedge can link more than two nodes, which allows hyperedge to express more than pair-wise 
  relation(like: entity-attribute relation, group relation, hierarchical relation and so on.). Thus, hypergraph owns more 
@@ -21,21 +21,21 @@
  * **Hypergraph Convolution**: the common hyconv(hypergrpah convolution) ([Feng et al. AAAI2019](https://github.com/iMoonLab/HGNN)) 
  is implemented here.
  
- * **models**: HGNN([Feng et al. AAAI2019](https://github.com/iMoonLab/HGNN)) with two hyconv layers, ResNet(18, 34, 50, 101, 152)
+ * **Models**: HGNN([Feng et al. AAAI2019](https://github.com/iMoonLab/HGNN)) with two hyconv layers, ResNet(18, 34, 50, 101, 152)
  ([He et al.](https://arxiv.org/abs/1512.03385)), and ResNet_HGNN a combination of ResNet and HGNN for image input and real-time
  construct hypergraph supported.
  
- * **utils**: some convenient util functions(to be continue... ):
-    * **data**: multiple modality data supported (to be continue...)
-        * **mri**: mri series read and write functions.
-        * **pathology**: sample patches from WSI slide return patch coordinates(left top point) and patch width and height. 
+ * **Utils**: some convenient util functions(to be continue... ):
+    * **Data**: multiple modality data supported (to be continue...)
+        * **MRI**: mri series read and write functions.
+        * **Pathology**: sample patches from WSI slide return patch coordinates(left top point) and patch width and height. 
         draw sampled patches on WSI slide function for overview or visualization.
-    * **meter**: evaluate meters in hypergraph learning.
-        * **inductive**:  *C-Index Meter* for survival prediction.
-        * **transductive**: compute class accuracy in classification task for transductive learning, compute IOU Score for 
+    * **Meter**: evaluate meters in hypergraph learning.
+        * **Inductive**:  *C-Index Meter* for survival prediction.
+        * **Transductive**: compute class accuracy in classification task for transductive learning, compute IOU Score for 
         segmentation task in transductive learning. 
-    * **visualization**: some visualization functions.
-        * **transductive**: visualize segmentation result in transductive learning. 
+    * **Visualization**: some visualization functions.
+        * **Transductive**: visualize segmentation result in transductive learning. 
 
 
  ## Installation
@@ -66,4 +66,4 @@ If you find **HyperG** is useful in your research, please consider citing:
 
 ## Contributing
 We always welcome contributions to help make HyperG better, and apply hypergraph in more application. If you would like 
-to contribute, please contact [us](mailto:evanfeng97@gmail.com).
+to contribute, please [contact us](mailto:evanfeng97@gmail.com).
