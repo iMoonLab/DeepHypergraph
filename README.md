@@ -9,7 +9,7 @@
  Hypergrpah inductive learning and hypergraph transductive learning examples is also included in this toolbox. What's more,
  we write several examples that deploy hypergraph in different tasks like: Classification, Segmentation and Regression.    
  
- The supported operations include:
+ The supported operations include: 
  
  * **Hyperedge base operations**: compute hyperedge/node degree, add/remove hypergraph self loop, count hyperedge/node number,
  
