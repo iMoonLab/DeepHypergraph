@@ -65,5 +65,5 @@ If you find **HyperG** is useful in your research, please consider citing:
 ```
 
 ## Contributing
-We always welcome contributions to help make HyperG better, and apply hypergraph in more application. If you would like 
+We always welcome contributions to help make HyperG better, and apply hypergraph in more applications. If you would like 
 to contribute, please [contact us](mailto:evanfeng97@gmail.com).
