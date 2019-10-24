@@ -4,10 +4,10 @@ import torch
 import torch.nn.functional as F
 from data_helper import load_ft
 
-from HyperG.hyedge import neighbor_distance
-from HyperG.hygraph import hyedge_concat
-from HyperG.models import HGNN
-from HyperG.utils.meter import trans_class_acc
+from SuperMoon.hyedge import neighbor_distance
+from SuperMoon.hygraph import hyedge_concat
+from SuperMoon.models import HGNN
+from SuperMoon.utils.meter import trans_class_acc
 
 # initialize parameters
 data_root = '/repository/HyperG_example/example_data/modelnet40/processed'

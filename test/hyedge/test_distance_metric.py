@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import pairwise_euclidean_distance
+from SuperMoon.hyedge import pairwise_euclidean_distance
 
 
 def test_pairwise_euclidean_distance():

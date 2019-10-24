@@ -2,7 +2,7 @@ from typing import Union, Tuple, List
 
 import torch
 
-from HyperG.hyedge import count_hyedge, count_node, contiguous_hyedge_idx
+from SuperMoon.hyedge import count_hyedge, count_node, contiguous_hyedge_idx
 
 
 def hyedge_concat(Hs: Union[Tuple[torch.Tensor, ...], List[torch.Tensor]], same_node=True):

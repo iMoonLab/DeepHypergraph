@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.conv import HyConv
+from SuperMoon.conv import HyConv
 
 
 def test_HyConv():

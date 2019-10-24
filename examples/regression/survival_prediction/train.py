@@ -9,9 +9,9 @@ from data_helper import split_train_val, preprocess, get_dataloaders
 from model import HGNN_reg
 from torch.optim import lr_scheduler
 
-from HyperG.hyedge import neighbor_distance
-from HyperG.utils import check_dir
-from HyperG.utils.meter import CIndexMeter
+from SuperMoon.hyedge import neighbor_distance
+from SuperMoon.utils import check_dir
+from SuperMoon.utils.meter import CIndexMeter
 
 # initialize parameters
 data_root = '/repository/HyperG_example/example_data/survival_prediction/processed'

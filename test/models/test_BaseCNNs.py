@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from HyperG.models import ResNetFeature, ResNetClassifier
+from SuperMoon.models import ResNetFeature, ResNetClassifier
 
 
 @pytest.mark.parametrize('depth', [18, 34, 50, 101, 152])

@@ -1,5 +1,5 @@
 import torch.nn as nn
-from HyperG.models import ResNetFeature, ResNetClassifier
+from SuperMoon.models import ResNetFeature, ResNetClassifier
 
 
 class ResNet(nn.Module):

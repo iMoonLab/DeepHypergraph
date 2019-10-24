@@ -1,5 +1,5 @@
-# Hypergraph Toolbox: HyperG
-**HyperG** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
+# SuperMoon: A pytorch library for hypergraph learning.
+**SuperMoon** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
  Edge in hypergraph named hyperedge can link more than two nodes, which allows hyperedge to express more than pair-wise 
  relation(like: entity-attribute relation, group relation, hierarchical relation and so on.). Thus, hypergraph owns more 
  powerful model ability than common graph. 
@@ -51,8 +51,8 @@ Tutorial and Documentation will coming soon!
 ## Examples
 We provide examples in classification, regression, segmentation tasks with hypergraph, for more detail refer to our tutorials.
 
-## Citing HyperG
-If you find **HyperG** is useful in your research, please consider citing:
+## Citing THU-SuperMoon
+If you find **THU-SuperMoon** is useful in your research, please consider citing:
 ```
 @inproceedings{feng2019hypergraph,
   title={Hypergraph neural networks},

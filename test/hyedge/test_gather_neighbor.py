@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import neighbor_grid, neighbor_distance, gather_patch_ft
+from SuperMoon.hyedge import neighbor_grid, neighbor_distance, gather_patch_ft
 
 
 def test_grid_neighbor():

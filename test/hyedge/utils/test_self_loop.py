@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import self_loop_remove, self_loop_add
+from SuperMoon.hyedge import self_loop_remove, self_loop_add
 
 
 def test_remove_self_loop():

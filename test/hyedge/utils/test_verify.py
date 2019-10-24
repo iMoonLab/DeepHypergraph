@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import filter_node_index, remove_negative_index, contiguous_hyedge_idx
+from SuperMoon.hyedge import filter_node_index, remove_negative_index, contiguous_hyedge_idx
 
 
 def test_filter_node_index():

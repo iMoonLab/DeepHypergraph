@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import Parameter
 
-from HyperG.hyedge import degree_hyedge, degree_node, count_hyedge, count_node
+from SuperMoon.hyedge import degree_hyedge, degree_node, count_hyedge, count_node
 
 
 class HyConv(nn.Module):

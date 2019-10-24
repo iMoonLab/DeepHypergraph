@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hyedge import degree_hyedge
+from SuperMoon.hyedge import degree_hyedge
 
 
 def test_edge_degree():

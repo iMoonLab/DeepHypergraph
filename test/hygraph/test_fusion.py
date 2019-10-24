@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.hygraph import hyedge_concat
+from SuperMoon.hygraph import hyedge_concat
 
 
 def test_hyedge_concat():

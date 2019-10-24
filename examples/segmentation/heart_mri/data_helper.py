@@ -6,10 +6,10 @@ import re
 
 import torch
 
-from HyperG.hyedge import gather_patch_ft, neighbor_grid, neighbor_distance
-from HyperG.hygraph import hyedge_concat
-from HyperG.utils.data import split_id
-from HyperG.utils.data.mri import read_mri_series
+from SuperMoon.hyedge import gather_patch_ft, neighbor_grid, neighbor_distance
+from SuperMoon.hygraph import hyedge_concat
+from SuperMoon.utils.data import split_id
+from SuperMoon.utils.data.mri import read_mri_series
 
 
 def normalize(x):

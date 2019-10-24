@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.models import HGNN
+from SuperMoon.models import HGNN
 
 
 def test_HGNN():

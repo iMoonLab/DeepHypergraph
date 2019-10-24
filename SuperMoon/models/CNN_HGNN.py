@@ -1,9 +1,9 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
-from HyperG.conv import HyConv
-from HyperG.hyedge import neighbor_distance
-from HyperG.models import ResNetFeature, ResNetClassifier
+from SuperMoon.conv import HyConv
+from SuperMoon.hyedge import neighbor_distance
+from SuperMoon.models import ResNetFeature, ResNetClassifier
 
 
 class ResNet_HGNN(nn.Module):

@@ -10,8 +10,8 @@ import torch.optim as optim
 from data_helper import get_dataloaders
 from torch.optim import lr_scheduler
 
-from HyperG.models import ResNet_HGNN
-from HyperG.utils import check_dir
+from SuperMoon.models import ResNet_HGNN
+from SuperMoon.utils import check_dir
 
 data_root = '/repository/HyperG_example/example_data/breast_pathology/processed'
 result_root = '/repository/HyperG_example/tmp/breast_pathology'

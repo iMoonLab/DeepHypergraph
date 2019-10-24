@@ -9,8 +9,8 @@ import torch
 from extract_patch_feature import extract_ft
 from torch.utils.data import Dataset, DataLoader
 
-from HyperG.utils.data import split_id
-from HyperG.utils.data.pathology import sample_patch_coors, draw_patches_on_slide
+from SuperMoon.utils.data import split_id
+from SuperMoon.utils.data.pathology import sample_patch_coors, draw_patches_on_slide
 
 
 def split_train_val(data_root, ratio=0.8, save_split_dir=None, resplit=True):

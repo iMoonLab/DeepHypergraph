@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.utils.meter import CIndexMeter
+from SuperMoon.utils.meter import CIndexMeter
 
 
 def test_CIndexMeter():

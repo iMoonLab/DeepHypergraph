@@ -2,7 +2,7 @@ import torch.nn.functional as F
 from torch import nn
 import torch
 
-from HyperG.conv import HyConv
+from SuperMoon.conv import HyConv
 
 
 class HGNN_reg(nn.Module):

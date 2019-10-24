@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.models import ResNet_HGNN
+from SuperMoon.models import ResNet_HGNN
 
 
 def test_ResNet_HGNN():

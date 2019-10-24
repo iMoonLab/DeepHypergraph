@@ -4,10 +4,10 @@ import torch
 import torch.nn.functional as F
 from data_helper import preprocess, split_train_val
 
-from HyperG.models import HGNN
-from HyperG.utils import check_dir
-from HyperG.utils.meter import trans_class_acc, trans_iou_socre
-from HyperG.utils.visualization import trans_vis_pred_target
+from SuperMoon.models import HGNN
+from SuperMoon.utils import check_dir
+from SuperMoon.utils.meter import trans_class_acc, trans_iou_socre
+from SuperMoon.utils.visualization import trans_vis_pred_target
 
 # initialize parameters
 data_root = '/repository/HyperG_example/example_data/heart_mri/processed'

@@ -4,7 +4,7 @@ from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
-from HyperG.models import ResNetFeature
+from SuperMoon.models import ResNetFeature
 
 
 def extract_ft(slide_dir: str, patch_coors, depth=34, batch_size=16):

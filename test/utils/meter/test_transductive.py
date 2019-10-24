@@ -1,6 +1,6 @@
 import torch
 
-from HyperG.utils.meter import trans_class_acc, trans_iou_socre
+from SuperMoon.utils.meter import trans_class_acc, trans_iou_socre
 
 
 def test_trans_class_acc():
