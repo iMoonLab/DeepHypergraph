@@ -5,9 +5,9 @@ from .degree import degree_hyedge
 from .verify import contiguous_hyedge_idx
 
 
-def self_loop_remove(H):
+def self_loop_remove(H, hyedge_num=None):
     node_idx, hyedge_idx = H
-    DE = degree_hyedge(H)
+    DE = degree_hyedge(H, hyedge_num)
     loop_edge_idx = torch.where(DE == 1)[0]
 
     mask = torch.ones_like(hyedge_idx).bool()
@@ -18,9 +18,9 @@ def self_loop_remove(H):
     return contiguous_hyedge_idx(H)
 
 
-def self_loop_add(H):
+def self_loop_add(H, node_num=None):
     H = self_loop_remove(H)
-    node_num = count_node(H)
+    node_num = count_node(H, node_num=node_num)
 
     loop_node_idx = torch.arange(node_num)
     loop_hyedge_idx = torch.arange(node_num)

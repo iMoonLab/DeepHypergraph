@@ -3,9 +3,9 @@ import torch
 from .degree import degree_hyedge
 
 
-def contiguous_hyedge_idx(H):
+def contiguous_hyedge_idx(H, hyedge_num=None):
     node_idx, hyedge_idx = H
-    DE = degree_hyedge(H)
+    DE = degree_hyedge(H, hyedge_num)
     zero_idx = torch.where(DE == 0)[0]
 
     bias = torch.zeros_like(hyedge_idx)
