@@ -19,8 +19,8 @@ class HGNN(nn.Module):
 
     def forward(self, x, H, hyedge_weight=None):
         for hyconv in self.hyconvs:
+            x = F.dropout(x, self.dropout)
             x = hyconv(x, H)
             x = F.leaky_relu(x, inplace=True)
-            x = F.dropout(x, self.dropout)
         x = self.last_hyconv(x, H)
         return F.log_softmax(x, dim=1)

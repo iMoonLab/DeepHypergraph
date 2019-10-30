@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="fengyifan@166.111.80.50:22">
     <serverData>
-      <paths name="fengyifan@166.111.80.50:22">
+      <paths name="hp02_py36">
         <serverdata>
           <mappings>
             <mapping deploy="/home/fengyifan/code/HyperG_package" local="$PROJECT_DIR$" web="/" />
