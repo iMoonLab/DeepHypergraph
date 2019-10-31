@@ -19,7 +19,7 @@ class HGNN(nn.Module):
 
     def forward(self, x, H, hyedge_weight=None):
         for hyconv in self.hyconvs:
-            x = F.dropout(x, self.dropout)
+            x = F.dropout(x, self.dropout, training=self.training)
             x = hyconv(x, H)
             x = F.leaky_relu(x, inplace=True)
         x = self.last_hyconv(x, H)

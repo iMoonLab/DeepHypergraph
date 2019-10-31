@@ -36,7 +36,7 @@ class ResNet_HGNN(nn.Module):
         for hyconv in self.hyconvs:
             x = hyconv(x, H)
             x = F.leaky_relu(x, inplace=True)
-            x = F.dropout(x, self.dropout)
+            x = F.dropout(x, self.dropout, training=self.training)
         # N x C -> 1 x C x N
         x = x.permute(1, 0).unsqueeze(0)
 
