@@ -46,7 +46,7 @@ pip install .
  ```
 
 ## Documentation
-Tutorial and Documentation will coming soon!
+Tutorial and Documentation are coming soon!
     
 ## Examples
 We provide examples in classification, regression, segmentation tasks with hypergraph, for more detail refer to our tutorials.
@@ -65,5 +65,5 @@ If you find **THU-SuperMoon** is useful in your research, please consider citing
 ```
 
 ## Contributing
-We always welcome contributions to help make HyperG better, and apply hypergraph in more applications. If you would like 
+We always welcome contributions to help make SuperMoon better, and apply hypergraph in more applications. If you would like 
 to contribute, please [contact us](mailto:evanfeng97@gmail.com).
