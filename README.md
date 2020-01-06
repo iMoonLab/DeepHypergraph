@@ -1,5 +1,5 @@
-# SuperMoon: A pytorch library for hypergraph learning.
-**SuperMoon** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
+# THU-SuperMoon: A pytorch library for hypergraph learning.
+**THU-SuperMoon** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
  Edge in hypergraph named hyperedge can link more than two nodes, which allows hyperedge to express more than pair-wise 
  relation(like: entity-attribute relation, group relation, hierarchical relation and so on.). Thus, hypergraph owns more 
  powerful model ability than common graph. 
@@ -53,17 +53,15 @@ We provide examples in classification, regression, segmentation tasks with hyper
 
 ## Citing THU-SuperMoon
 If you find **THU-SuperMoon** is useful in your research, please consider citing:
-```
-@inproceedings{feng2019hypergraph,
-  title={Hypergraph neural networks},
-  author={Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={33},
-  pages={3558--3565},
-  year={2019}
-}
-```
+
+Yifan Feng, Haoxuan You, Zizhao Zhang, Rongrong Ji, Yue Gao.
+**Hypergraph Neural Networks**
+AAAI 2019. [paper](http://gaoyue.org/paper/HGNN.pdf)
+
+Yue Gao, Meng Wang, Dacheng Tao, Rongrong Ji, Qionghai Dai.
+**3D Object Retrieval and Recognition with Hypergraph Analysis**
+TIP 2014. [paper](http://imt.xmu.edu.cn/publication/Image%20Processing-3D%20Object%20Retrieval%20and%20Recognition.pdf)
 
 ## Contributing
-We always welcome contributions to help make SuperMoon better, and apply hypergraph in more applications. If you would like 
+We always welcome contributions to help make THU-SuperMoon better, and apply hypergraph in more applications. If you would like 
 to contribute, please [contact us](mailto:evanfeng97@gmail.com).
