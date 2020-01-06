@@ -60,7 +60,7 @@ AAAI 2019. [paper](http://gaoyue.org/paper/HGNN.pdf)
 
 Yue Gao, Meng Wang, Dacheng Tao, Rongrong Ji, Qionghai Dai.  
 **3D Object Retrieval and Recognition with Hypergraph Analysis**  
-TIP 2014. [paper](http://imt.xmu.edu.cn/publication/Image%20Processing-3D%20Object%20Retrieval%20and%20Recognition.pdf)
+TIP 2012. [paper](http://imt.xmu.edu.cn/publication/Image%20Processing-3D%20Object%20Retrieval%20and%20Recognition.pdf)
 
 ## Contributing
 We always welcome contributions to help make THU-SuperMoon better, and apply hypergraph in more applications. If you would like 
