@@ -39,7 +39,7 @@
 
 
  ## Installation
- Ensure that at least Python3, PyTorch 1.2.0 is installed. HyperG is still under development. Before the first stable 
+ Ensure that at least Python3, PyTorch 1.2.0 is installed. THU-SuperMoon is still under development. Before the first stable 
  release (1.0), please clone the repository and run
  ```commandline
 pip install .
@@ -49,7 +49,7 @@ pip install .
 Tutorial and Documentation are coming soon!
     
 ## Examples
-We provide examples in classification, regression, segmentation tasks with hypergraph, for more detail refer to our tutorials.
+We provide examples in classification, regression, segmentation tasks with hypergraph. For more details please refer to our tutorials.
 
 ## Citing THU-SuperMoon
 If you find **THU-SuperMoon** is useful in your research, please consider citing:
