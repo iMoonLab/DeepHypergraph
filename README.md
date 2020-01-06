@@ -54,12 +54,12 @@ We provide examples in classification, regression, segmentation tasks with hyper
 ## Citing THU-SuperMoon
 If you find **THU-SuperMoon** is useful in your research, please consider citing:
 
-Yifan Feng, Haoxuan You, Zizhao Zhang, Rongrong Ji, Yue Gao.\\
-**Hypergraph Neural Networks**\\
+Yifan Feng, Haoxuan You, Zizhao Zhang, Rongrong Ji, Yue Gao.  
+**Hypergraph Neural Networks**  
 AAAI 2019. [paper](http://gaoyue.org/paper/HGNN.pdf)
 
-Yue Gao, Meng Wang, Dacheng Tao, Rongrong Ji, Qionghai Dai.\\
-**3D Object Retrieval and Recognition with Hypergraph Analysis**\\
+Yue Gao, Meng Wang, Dacheng Tao, Rongrong Ji, Qionghai Dai.  
+**3D Object Retrieval and Recognition with Hypergraph Analysis**  
 TIP 2014. [paper](http://imt.xmu.edu.cn/publication/Image%20Processing-3D%20Object%20Retrieval%20and%20Recognition.pdf)
 
 ## Contributing
