@@ -27,7 +27,7 @@
  
  * **Utils**: some convenient util functions(to be continue... ):
     * **Data**: multiple modality data supported (to be continue...)
-        * **MRI**: mri series read and write functions.
+        * **MRI**: MRI series read and write functions.
         * **Pathology**: sample patches from WSI slide return patch coordinates(left top point) and patch width and height. 
         draw sampled patches on WSI slide function for overview or visualization.
     * **Meter**: evaluate meters in hypergraph learning.
