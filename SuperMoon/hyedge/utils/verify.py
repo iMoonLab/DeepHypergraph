@@ -3,16 +3,21 @@ import torch
 from .degree import degree_hyedge
 
 
-def contiguous_hyedge_idx(H, hyedge_num=None):
+def contiguous_hyedge_idx(H):
     node_idx, hyedge_idx = H
-    DE = degree_hyedge(H, hyedge_num)
-    zero_idx = torch.where(DE == 0)[0]
-
-    bias = torch.zeros_like(hyedge_idx)
-    for _idx in zero_idx:
-        bias[hyedge_idx > _idx] -= 1
-
-    hyedge_idx += bias
+    unorder_pairs = [(hyedge_id, sequence_id) for sequence_id, hyedge_id in enumerate(hyedge_idx.numpy().tolist())]
+    unorder_pairs.sort(key=lambda x: x[0])
+    new_hyedge_id = -1
+    pre_hyedge_id = None
+    new_hyedge_idx = list()
+    sequence_idx = list()
+    for (hyedge_id, sequence_id) in unorder_pairs:
+        if hyedge_id != pre_hyedge_id:
+            new_hyedge_id += 1
+            pre_hyedge_id = hyedge_id
+        new_hyedge_idx.append(new_hyedge_id)
+        sequence_idx.append(sequence_id)
+    hyedge_idx[sequence_idx] = torch.LongTensor(new_hyedge_idx)
     return torch.stack([node_idx, hyedge_idx])
 
 
