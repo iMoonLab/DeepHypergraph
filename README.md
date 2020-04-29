@@ -1,5 +1,5 @@
-# THU-SuperMoon: A pytorch library for hypergraph learning.
-**THU-SuperMoon** is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
+# THU-DeepHypergraph: A pytorch library for hypergraph learning.
+**THU-DeepHypergraph**(THU-DH) is a python toolbox for hypergraph-based deep learning, which is built upon [pytorch](https://pytorch.org/). 
  Edge in hypergraph named hyperedge can link more than two nodes, which allows hyperedge to express more than pair-wise 
  relation(like: entity-attribute relation, group relation, hierarchical relation and so on.). Thus, hypergraph owns more 
  powerful model ability than common graph. 
@@ -39,7 +39,7 @@
 
 
  ## Installation
- Ensure that at least Python3, PyTorch 1.2.0 is installed. THU-SuperMoon is still under development. Before the first stable 
+ Ensure that at least Python3, PyTorch 1.2.0 is installed. THU-DH is still under development. Before the first stable 
  release (1.0), please clone the repository and run
  ```commandline
 pip install .
@@ -51,8 +51,8 @@ Tutorial and Documentation are coming soon!
 ## Examples
 We provide examples in classification, regression, segmentation tasks with hypergraph. For more details please refer to our tutorials.
 
-## Citing THU-SuperMoon
-If you find **THU-SuperMoon** is useful in your research, please consider citing:
+## Citing THU-DH
+If you find **THU-DH** is useful in your research, please consider citing:
 
 Yifan Feng, Haoxuan You, Zizhao Zhang, Rongrong Ji, Yue Gao.  
 **Hypergraph Neural Networks**  
@@ -63,5 +63,5 @@ Yue Gao, Meng Wang, Dacheng Tao, Rongrong Ji, Qionghai Dai.
 TIP 2012. [paper](http://imt.xmu.edu.cn/publication/Image%20Processing-3D%20Object%20Retrieval%20and%20Recognition.pdf)
 
 ## Contributing
-We always welcome contributions to help make THU-SuperMoon better, and apply hypergraph in more applications. If you would like 
+We always welcome contributions to help make THU-DH better, and apply hypergraph in more applications. If you would like 
 to contribute, please [contact us](mailto:evanfeng97@gmail.com).
