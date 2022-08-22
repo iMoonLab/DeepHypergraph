@@ -2,15 +2,18 @@
     <img src="https://deephypergraph.com/logo_DHG.png" height="200">
 </p>
 
+[![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
 ![license](https://img.shields.io/hexpm/l/plug)
 ---------------------------------------------------------------
 
-**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/en/latest/)** | **[Tutorials]()** | **[Official Examples]()**
+**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[Official Examples]()** **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
 
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
-It supports a wide variety of structures like low-order structures (simple graphs, directed graphs, bipartite graphs, etc.), high-order structures (simple hypergraphs, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. In addition, DHG's `experiments` module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
+It supports a wide variety of structures like low-order structures (simple graphs, directed graphs, bipartite graphs, etc.), high-order structures (simple hypergraphs, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
+
+In addition, DHG's `experiments` module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
 * [Hightlights](#highlights)
 * [Installation](#installation)
@@ -51,7 +54,7 @@ The Optuna library endows DHG with the Auto-ML ability. DHG supports automatical
 
 ## Installation
 
-DHG is available for **Python 3.8**, **Pytorch 1.11.0**, and **Optuna 2.10.0** and above. 
+DHG is available for **Python 3.8** and **Pytorch 1.11.0** and above. 
 
 ### Install with pip
 
