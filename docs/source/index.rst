@@ -52,44 +52,55 @@ If you find our library useful for your research, please cite our papers:
       year={2019}
    }
 
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Get Started
+   :hidden:
 
    start/install
    start/structure
    start/low_order
    start/high_order
-   start/exp_cls
-   start/exp_recommender
-   start/exp_autoML
+   start/contribution
 
+
+.. toctree:: 
+   :maxdepth: 2
+   :caption: Examples
+   :hidden:
+   
+   examples/vertex_cls
+   examples/recommender
+   examples/auto_ml
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
+   :hidden:
 
-   Overview <tutorial/overview>
-   Build Structure <tutorial/structure>
-   Build Dataset <tutorial/dataset>
-   Build Model <tutorial/model>
-   Build Evaluator <tutorial/metric>
-   Model Training <tutorial/train>
-   Auto-ML <tutorial/auto_ml>
-   Random Structure Generation <tutorial/random>
-   tutorial/structure/index
+   tutorial/overview
+   tutorial/structure
+   tutorial/dataset
+   tutorial/model
+   tutorial/metric
+   tutorial/train
+   tutorial/auto_ml
+   tutorial/random
 
 .. toctree:: 
    :maxdepth: 2
    :caption: 中文文档
+   :hidden:
 
    zh/start/index
-   zh/tutorial/index
-
+   zh/examples/index
+   zh/tutorials/index
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
+   :hidden:
 
    dhg <api/dhg>
    dhg.nn <api/nn>

@@ -1,4 +1,4 @@
-Examples of Training with Auto-ML
+Training with Auto-ML
 =====================================
 
 On Cora 

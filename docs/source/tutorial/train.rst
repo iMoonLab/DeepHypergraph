@@ -1,4 +1,4 @@
-Model Training
+Training Model
 ========================
 
 Vertex Classification on Graphs

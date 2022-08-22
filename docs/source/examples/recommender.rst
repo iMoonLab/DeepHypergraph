@@ -1,4 +1,4 @@
-Examples for Recommender System
+Recommender System 
 ====================================
 
 On ML-10k

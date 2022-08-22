@@ -1,4 +1,4 @@
-Examples for Vertex Classification
+Vertex Classification
 ==========================================
 
 GNN

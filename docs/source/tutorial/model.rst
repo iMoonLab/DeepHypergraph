@@ -1,4 +1,4 @@
-Build Your Model
+Build Model
 ======================
 
 1. select your correlation
