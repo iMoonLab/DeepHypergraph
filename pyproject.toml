@@ -7,6 +7,28 @@ license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://deephypergraph.com"
 repository = "https://github.com/iMoonLab/DeepHypergraph"
+documentation = "https://deephypergraph.com/docs"
+keywords = ["pytorch", "deep learning", "graph neural networks", "hypergraph neural networks"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Environment :: GPU :: NVIDIA CUDA",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: Apache Software License",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
