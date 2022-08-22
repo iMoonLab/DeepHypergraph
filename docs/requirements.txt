@@ -1,0 +1,10 @@
+sphinx==4.4.0
+sphinx-rtd-theme
+sphinx_copybutton
+sphinxcontrib-bibtex
+numpy
+optuna
+torch>=1.11.0
+matplotlib
+pycairo
+sklearn

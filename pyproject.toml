@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "dhg"
+version = "0.9.0"
+description = "DHG is a Deep Learning Framework for Graph Neural Network and Hypergraph Neural Networks."
+authors = ["yifanfeng97 <evanfeng97@qq.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://deephypergraph.com"
+repository = "https://github.com/imoonlab/deephypergraph"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+torch = "^1.11"
+optuna = "^1.10"
+numpy = "*"
+sklearn = "*"
+requests = "*"
+matplotlib = "*"
+
+[tool.poetry.dev-dependencies]
+
+[tool.black]
+include = '\.pyi?$'
+line-length = 119
+
+[tool.isort]
+profile = "black"
+line_length = 119
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

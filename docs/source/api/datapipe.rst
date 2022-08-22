@@ -1,0 +1,32 @@
+dhg.datapipe
+==============
+
+We have implemented some datapipes to help you with the data processing.
+
+Compose Datapipes 
+----------------------
+
+.. autofunction:: dhg.datapipe.compose_pipes
+
+
+Transforms
+--------------
+
+.. autofunction:: dhg.datapipe.norm_ft
+
+.. autofunction:: dhg.datapipe.to_tensor 
+
+.. autofunction:: dhg.datapipe.to_bool_tensor 
+
+.. autofunction:: dhg.datapipe.to_long_tensor 
+
+
+Loaders
+---------
+
+.. autofunction:: dhg.datapipe.load_from_pickle 
+
+.. autofunction:: dhg.datapipe.load_from_txt
+
+.. autofunction:: dhg.datapipe.load_from_json
+

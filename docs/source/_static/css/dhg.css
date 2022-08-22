@@ -1,0 +1,13 @@
+.wy-nav-content {
+  /* raw 800px */
+  max-width: 1100px;
+}
+
+.rst-content .line-block {
+  margin-bottom: 0;
+}
+
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+  white-space: normal;
+}
