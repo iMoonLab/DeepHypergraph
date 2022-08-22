@@ -61,7 +61,7 @@ pip install dhg
 ### Install from Github Repository
 
 ```bash
-pip install git+https://github.com/**********.git
+pip install git+https://github.com/iMoonLab/DeepHypergraph.git
 ```
 
 ## Quick Start
