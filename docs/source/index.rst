@@ -52,7 +52,6 @@ Please cite our `paper <https://ieeexplore.ieee.org/abstract/document/9795251/>`
    Build Evaluator <tutorial/metric>
    Model Training <tutorial/train>
    Auto-ML <tutorial/auto_ml>
-   Visualization <tutorial/visualization>
    Random Structure Generation <tutorial/random>
    tutorial/structure/index
 
@@ -75,7 +74,6 @@ Please cite our `paper <https://ieeexplore.ieee.org/abstract/document/9795251/>`
    dhg.datapipe <api/datapipe>
    dhg.metrics <api/metrics>
    dhg.experiments <api/experiments>
-   dhg.visualization <api/vis/index>
    dhg.random <api/random>
    dhg.utils <api/utils>
 
