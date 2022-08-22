@@ -24,6 +24,8 @@ def test_save(g1):
     from pathlib import Path
 
     save_path = Path("./tmp/test_save.dhg")
+    if not save_path.parent.exists():
+        save_path.parent.mkdir()
     g1.save(save_path)
     g2 = load_structure(save_path)
 

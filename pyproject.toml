@@ -6,7 +6,7 @@ authors = ["yifanfeng97 <evanfeng97@qq.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://deephypergraph.com"
-repository = "https://github.com/imoonlab/deephypergraph"
+repository = "https://github.com/iMoonLab/DeepHypergraph"
 
 [tool.poetry.dependencies]
 python = "^3.8"
