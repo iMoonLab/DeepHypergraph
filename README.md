@@ -248,7 +248,7 @@ Currently, we have added the following datasets:
 
 - **[Citeseer]()**: A citation network dataset for vertex classification task.
 
-- **[PubMed]()**: A publication network dataset for vertex classification task.
+- **[PubMed]()**: A citation network dataset for vertex classification task.
 
 - **[Cooking200]()**: A cooking recipe dataset for vertex classification task.
 

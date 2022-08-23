@@ -9,7 +9,9 @@ from dhg.datapipe import (
 
 
 class Cooking200(BaseData):
-    r"""The Content of the Cooking200 dataset includes the following:
+    r"""A cooking recipe dataset for vertex classification task.
+    
+    The Content of the Cooking200 dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`20`.
     - ``num_vertices``: The number of vertices: :math:`7,403`.

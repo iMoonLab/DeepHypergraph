@@ -33,7 +33,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 torch = "^1.11"
-optuna = "^1.10"
+optuna = "^2.10"
 numpy = "*"
 sklearn = "*"
 requests = "*"

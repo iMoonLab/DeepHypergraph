@@ -38,7 +38,7 @@ class BaseData:
         self._raw = {}
 
     def __repr__(self) -> str:
-        return f"{self.name} Dataset:\n" + "\n".join(f"  ->  {k}" for k in self.content)
+        return f"{self.name} dataset:\n" + "\n".join(f"  ->  {k}" for k in self.content)
 
     @property
     def content(self):
@@ -93,8 +93,6 @@ class BaseData:
                 else:
                     # here, you should implement a multi-file loader
                     self._raw[key] = cur_cfg["loader"](file_path_list)
-            else:
-                self._raw[key] = cur_cfg
             return self._raw[key]
         else:
             return self._content[key]
