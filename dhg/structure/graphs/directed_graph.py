@@ -84,9 +84,7 @@ class DiGraph(BaseGraph):
         Args:
             ``state_dict`` (``dict``): The state dict to load the directed graph.
         """
-        _g = DiGraph(
-            state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"]
-        )
+        _g = DiGraph(state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"])
         _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
         _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
         return _g
@@ -99,9 +97,7 @@ class DiGraph(BaseGraph):
     def clone(self):
         r"""Clone the directed graph.
         """
-        _g = DiGraph(
-            self.num_v, extra_selfloop=self._has_extra_selfloop, device=self.device
-        )
+        _g = DiGraph(self.num_v, extra_selfloop=self._has_extra_selfloop, device=self.device)
         if self._raw_e_dict is not None:
             _g._raw_e_dict = deepcopy(self._raw_e_dict)
         if self._raw_selfloop_dict is not None:
@@ -186,13 +182,9 @@ class DiGraph(BaseGraph):
         nbr_dist = nbr_dist[:, 1:]
         nbr_idx = nbr_idx[:, 1:]
         if center_as_src:
-            e_list = np.concatenate(
-                [center_idx.reshape(-1, 1), nbr_idx.reshape(-1, 1)], axis=1
-            ).tolist()
+            e_list = np.concatenate([center_idx.reshape(-1, 1), nbr_idx.reshape(-1, 1)], axis=1).tolist()
         else:
-            e_list = np.concatenate(
-                [nbr_idx.reshape(-1, 1), center_idx.reshape(-1, 1)], axis=1
-            ).tolist()
+            e_list = np.concatenate([nbr_idx.reshape(-1, 1), center_idx.reshape(-1, 1)], axis=1).tolist()
         if distance2weight:
             e_weight = np.exp(-nbr_dist).reshape(-1)
         else:
@@ -459,15 +451,14 @@ class DiGraph(BaseGraph):
     # ==============================================================================
     # spectral-based convolution/smoothing
 
+    def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:
+        return super().smoothing(X, L, lamb)
+
     # ==============================================================================
     # spatial-based convolution/message-passing functions
     # general message passing
     def v2v(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e_weight: Optional[torch.Tensor] = None,
-        direction: str = "dst2src",
+        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None, direction: str = "dst2src",
     ) -> torch.Tensor:
         r"""Message passing from vertex to vertex on the directed graph structure.
 
@@ -477,15 +468,8 @@ class DiGraph(BaseGraph):
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
             ``direction`` (``str``, optional): The direction of message passing. Can be ``'src2dst'`` or ``'dst2src'``. Default: ``'dst2src'``.
         """
-        assert aggr in [
-            "mean",
-            "sum",
-            "softmax_then_sum",
-        ], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
-        assert direction in [
-            "src2dst",
-            "dst2src",
-        ], "message passing direction must be one of ['src2dst', 'dst2src']"
+        assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
+        assert direction in ["src2dst", "dst2src",], "message passing direction must be one of ['src2dst', 'dst2src']"
         if self.device != X.device:
             self.to(X.device)
         if direction == "dst2src":
@@ -506,9 +490,7 @@ class DiGraph(BaseGraph):
                 assert (
                     e_weight.shape[0] == self.e_weight.shape[0]
                 ), "The size of e_weight must be equal to the size of self.e_weight."
-                P = torch.sparse_coo_tensor(
-                    self.A._indices(), e_weight, self.A.shape, device=self.device
-                ).coalesce()
+                P = torch.sparse_coo_tensor(self.A._indices(), e_weight, self.A.shape, device=self.device).coalesce()
                 # message passing
                 if aggr == "mean":
                     X = torch.sparse.mm(P, X)
@@ -541,9 +523,7 @@ class DiGraph(BaseGraph):
                     e_weight.shape[0] == self.e_weight.shape[0]
                 ), "The size of e_weight must be equal to the size of self.e_weight."
                 P = (
-                    torch.sparse_coo_tensor(
-                        self.A._indices(), e_weight, self.A.shape, device=self.device
-                    )
+                    torch.sparse_coo_tensor(self.A._indices(), e_weight, self.A.shape, device=self.device)
                     .t()
                     .coalesce()
                 )

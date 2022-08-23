@@ -1,19 +1,15 @@
-
-Learning on High-Order Structures
-=====================================
-
 .. _start_learning_on_simple_hypergraph:
 
-On Simple Hypergraphs
--------------------------
+Learning on Simple Hypergraphs
+=================================
 
 Definition
-^^^^^^^^^^^
+-----------------
 Simple hypergraphs can be 
 
 
-Setup
-^^^^^^
+Construction
+---------------------
 
 Generate a hypergraph structure and a feature matrix.
    
@@ -40,24 +36,23 @@ Generate a hypergraph structure and a feature matrix.
                 [0.7933, 0.7811],
                 [0.4643, 0.6329]])
 
-Structure Visualization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. Structure Visualization
+.. -------------------------------
 
-Draw the hypergraph structure
+.. Draw the hypergraph structure
 
-    .. code:: python
+..     .. code:: python
 
-        >>> fig = hg.draw(edge_style="circle")
-        >>> fig.show()
+..         >>> fig = hg.draw(edge_style="circle")
+..         >>> fig.show()
     
-    This is the image.
+..     This is the image.
 
 Spectral-Based Learning
-^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
-Propagate features on the specified hypergraph structure
-
-**Spectral-Based Feature Smoothing on Simple Hypergraph**
+Smoothing with HGNN's Laplacian
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
     .. code:: python
 
@@ -78,9 +73,10 @@ Propagate features on the specified hypergraph structure
                 [0.4888, 0.6728]])
 
 Spatial-Based Learning
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
-**Spatial-Based Message Propagation on Simple Hypergraph**
+Message Propagation on Simple Hypergraphs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
 

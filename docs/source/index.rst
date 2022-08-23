@@ -17,7 +17,7 @@ It provides multiple common metrics for performance evaluation on different task
 implemented and can be easily used for research. We also provide various visualization tools for both low-order 
 structures and high-order structures. 
 
-In addition, DHG's ``experiments`` module (that implements **Auto-ML** upon `Optuna <https://optuna.org/>`_) 
+In addition, DHG's :doc:`/api/experiments` module (that implements **Auto-ML** upon `Optuna <https://optuna.org/>`_) 
 can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
 **News**
@@ -60,8 +60,8 @@ If you find our library useful for your research, please cite our papers:
 
    start/install
    start/structure
-   start/low_order
-   start/high_order
+   start/low_order/index
+   start/high_order/index
    start/contribution
 
 
