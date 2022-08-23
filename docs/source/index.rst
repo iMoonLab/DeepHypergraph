@@ -22,7 +22,7 @@ can help you automatically tune the hyper-parameters of your models in training 
 
 **News**
 
-- The **v0.9.1 release** is now available!
+- *2022-08-25*  ->  The **v0.9.1 release** is now available!
 
 **Citing**
 

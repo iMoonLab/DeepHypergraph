@@ -40,16 +40,16 @@ Run all tests with
 
 .. code-block:: bash
 
-    pytest
+    pytest .
 
 
 Run individual test with
 
 .. code-block:: bash
 
-    pytest tests/xxxx/xxxxx.py
+    pytest tests/xxx/xxx.py
 
-``tests/xxx/xxx.py`` is an example name.
+``tests/xxx/xxx.py`` is an example filename.
 
 
 Building Documentation
@@ -61,7 +61,7 @@ Building Documentation
         git clone https://github.com/iMoonLab/DeepHypergraph
 
 
-2. Install the ``requirements.txt`` below the ``docs\`` directory.
+2. Install the ``requirements.txt`` below the ``docs/`` directory.
 
     .. code-block:: bash
     
