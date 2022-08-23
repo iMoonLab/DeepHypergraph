@@ -93,8 +93,6 @@ class BaseData:
                 else:
                     # here, you should implement a multi-file loader
                     self._raw[key] = cur_cfg["loader"](file_path_list)
-            else:
-                self._raw[key] = cur_cfg
             return self._raw[key]
         else:
             return self._content[key]

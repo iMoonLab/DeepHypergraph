@@ -13,7 +13,7 @@
 
 It supports a wide variety of structures like low-order structures (simple graphs, directed graphs, bipartite graphs, etc.), high-order structures (simple hypergraphs, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
 
-In addition, DHG's `experiments` module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
+In addition, DHG's [https://deephypergraph.readthedocs.io/en/latest/api/experiments.html](dhg.experiments) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
 * [Hightlights](#highlights)
 * [Installation](#installation)
@@ -244,82 +244,82 @@ class HGNNPConv(nn.Module):
 
 Currently, we have added the following datasets:
 
-- **[Cora]()**: A citation network dataset for vertex classification task.
+- **[Cora](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Cora.html#dhg.data.Cora)**: A citation network dataset for vertex classification task.
 
-- **[Citeseer]()**: A citation network dataset for vertex classification task.
+- **[PubMed](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Pubmed.html#dhg.data.Pubmed)**: A citation network dataset for vertex classification task.
 
-- **[PubMed]()**: A publication network dataset for vertex classification task.
+- **[Citeseer](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Citeseer.html#dhg.data.Citeseer)**: A citation network dataset for vertex classification task.
 
-- **[Cooking200]()**: A cooking recipe dataset for vertex classification task.
+- **[Cooking200](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Cooking200.html#dhg.data.Cooking200)**: A cooking recipe dataset for vertex classification task.
 
-- **[MovieLens1M]()**: A movie dataset for user-item recommendation task.
+- **[MovieLens1M](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.MovieLens1M.html#dhg.data.MovieLens1M)**: A movie dataset for user-item recommendation task.
 
-- **[AmazonBook]()**: An Amazon dataset for user-item recommendation task.
+- **[AmazonBook](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.AmazonBook.html#dhg.data.AmazonBook)**: An Amazon dataset for user-item recommendation task.
 
-- **[Yelp2018]()**: A restaurant review dataset for user-item recommendation task.
+- **[Yelp2018](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Yelp2018.html#dhg.data.Yelp2018)**: A restaurant review dataset for user-item recommendation task.
 
-- **[Gowalla]()**: A location's feedback dataset for user-item recommendation task.
+- **[Gowalla](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Gowalla.html#dhg.data.Gowalla)**: A location's feedback dataset for user-item recommendation task.
 
 ## Metrics
 
 ### Classification Metrics
 
-- **[Accuracy]()**: Calculates the accuracy of the predictions.
+- **[Accuracy](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.classification.accuracy)**: Calculates the accuracy of the predictions.
 
-- **[F1-Score]()**: Calculates the F1-score of the predictions.
+- **[F1-Score](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.classification.f1_score)**: Calculates the F1-score of the predictions.
 
-- **[Confusion Matrix]()**: Calculates the confusion matrix of the predictions.
+- **[Confusion Matrix](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.classification.confusion_matrix)**: Calculates the confusion matrix of the predictions.
 
 ### Recommender Metrics
 
-- **[Precision@k]()**: Calculates the precision@k of the predictions.
+- **[Precision@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.recommender.precision)**: Calculates the precision@k of the predictions.
 
-- **[Recall@k]()**: Calculates the recall@k of the predictions.
+- **[Recall@k](https://deephypergraph.readthedocs.io/en/latest/_modules/dhg/metrics/recommender.html#recall)**: Calculates the recall@k of the predictions.
 
-- **[NDCG@k]()**: Calculates the normalized discounted cumulative gain@k of the predictions.
+- **[NDCG@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.recommender.ndcg)**: Calculates the normalized discounted cumulative gain@k of the predictions.
 
 ### Retrieval Metrics
 
-- **[Precision@k]()**: Calculates the precision@k of the predictions.
+- **[Precision@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.precision)**: Calculates the precision@k of the predictions.
 
-- **[Recall@k]()**: Calculates the recall@k of the predictions.
+- **[Recall@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.recall)**: Calculates the recall@k of the predictions.
 
-- **[mAP@k]()**: Calculates the mAP@k of the predictions.
+- **[mAP@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.map)**: Calculates the mAP@k of the predictions.
 
-- **[NDCG@k]()**: Calculates the normalized Discounted Cumulative Gain@k of the predictions.
+- **[NDCG@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.ndcg)**: Calculates the normalized Discounted Cumulative Gain@k of the predictions.
 
-- **[mRR@k]()**: Calculates the mean Reciprocal Rank@k of the predictions.
+- **[mRR@k](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.mrr)**: Calculates the mean Reciprocal Rank@k of the predictions.
 
-- **[PR-Curve]()**: Calculates the precision-recall curve of the predictions.
+- **[PR-Curve](https://deephypergraph.readthedocs.io/en/latest/api/metrics.html#dhg.metrics.retrieval.pr_curve)**: Calculates the precision-recall curve of the predictions.
 
 ## Implemented Models
 
 ### On Low-Order Structures
 
-- **[GCN]()** model of [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/pdf/1609.02907) paper (ICLR 2017).
+- **[GCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.GCN.html#dhg.models.GCN)** model of [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/pdf/1609.02907) paper (ICLR 2017).
 
-- **[GAT]()** model of [Graph Attention Networks](https://arxiv.org/pdf/1710.10903) paper (ICLR 2018).
+- **[GraphSAGE](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.GraphSAGE.html#dhg.models.GraphSAGE)** model of [Inductive Representation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) paper (NeurIPS 2017).
 
-- **[GraphSAGE]()** model of [Inductive Representation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) paper (NeurIPS 2017).
+- **[GAT](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.GAT.html#dhg.models.GAT)** model of [Graph Attention Networks](https://arxiv.org/pdf/1710.10903) paper (ICLR 2018).
 
-- **[GIN]()** model of [How Powerful are Graph Neural Networks?](https://arxiv.org/pdf/1810.00826) paper (ICLR 2019).
+- **[GIN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.GIN.html#dhg.models.GIN)** model of [How Powerful are Graph Neural Networks?](https://arxiv.org/pdf/1810.00826) paper (ICLR 2019).
 
-- **[NGCF]()** model of [Neural Graph Collaborative Filtering](https://arxiv.org/pdf/1905.08108) paper (SIGIR 2019).
+- **[NGCF](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.NGCF.html#dhg.models.NGCF)** model of [Neural Graph Collaborative Filtering](https://arxiv.org/pdf/1905.08108) paper (SIGIR 2019).
 
-- **[LightGCN]()** model of [LightGCN: Lightweight Graph Convolutional Networks](https://arxiv.org/pdf/2002.02126) paper (SIGIR 2020).
+- **[LightGCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.LightGCN.html#dhg.models.LightGCN)** model of [LightGCN: Lightweight Graph Convolutional Networks](https://arxiv.org/pdf/2002.02126) paper (SIGIR 2020).
 
 
 ### On High-Order Structures
 
-- **[HGNN]()** model of [Hypergraph Neural Networks](https://arxiv.org/pdf/1809.09401) paper (AAAI 2019).
+- **[HGNN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HGNN.html#dhg.models.HGNN)** model of [Hypergraph Neural Networks](https://arxiv.org/pdf/1809.09401) paper (AAAI 2019).
 
-- **[HGNN+]()** model of [HGNN+: General Hypergraph Neural Networks](https://ieeexplore.ieee.org/document/9795251) paper (IEEE T-PAMI 2022).
+- **[HGNN+](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HGNNP.html#dhg.models.HGNNP)** model of [HGNN+: General Hypergraph Neural Networks](https://ieeexplore.ieee.org/document/9795251) paper (IEEE T-PAMI 2022).
 
-- **[HyperGCN]()** model of [HyperGCN: A New Method of Training Graph Convolutional Networks on Hypergraphs](https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf) paper (NeurIPS 2019).
+- **[HyperGCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HyperGCN.html#dhg.models.HyperGCN)** model of [HyperGCN: A New Method of Training Graph Convolutional Networks on Hypergraphs](https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf) paper (NeurIPS 2019).
 
-- **[HNHN]()** model of [HNHN: Hypergraph Networks with Hyperedge Neurons](https://arxiv.org/pdf/2006.12278.pdf) paper (ICML 2020).
+- **[HNHN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HNHN.html#dhg.models.HNHN)** model of [HNHN: Hypergraph Networks with Hyperedge Neurons](https://arxiv.org/pdf/2006.12278.pdf) paper (ICML 2020).
 
-- **[DHCF]()** model of [Dual Channel Hypergraph Collaborative Filtering](https://dl.acm.org/doi/10.1145/3394486.3403253) paper (KDD 2020).
+- **[DHCF](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.DHCF.html#dhg.models.DHCF)** model of [Dual Channel Hypergraph Collaborative Filtering](https://dl.acm.org/doi/10.1145/3394486.3403253) paper (KDD 2020).
 
 
 
