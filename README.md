@@ -13,7 +13,7 @@
 
 It supports a wide variety of structures like low-order structures (simple graph, directed graph, bipartite graph, etc.), high-order structures (simple hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
 
-In addition, DHG's [https://deephypergraph.readthedocs.io/en/latest/api/experiments.html](dhg.experiments) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
+In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
 * [Hightlights](#highlights)
 * [Installation](#installation)
