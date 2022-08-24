@@ -1,4 +1,4 @@
-Learning On Simple Graphs
+Learning on Simple Graphs
 =============================
 
 Definition
@@ -6,17 +6,19 @@ Definition
 `Simple graphs <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}`, a set of **edges** (also called **links** or **lines**), which are unordered pairs of vertices (that is, an edge is associated with two distinct vertices).
+- :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}`, a set of **edges** (also called **links** or **lines**), 
+  which are `unordered pairs <https://en.wikipedia.org/wiki/Unordered_pair>`_ of vertices (that is, an edge is associated with two distinct vertices).
 
 In the edge :math:`\{x, y\}`, the vertices :math:`x` and :math:`y` are called the **endpoints** of the edge. 
 The edge is said to **join** :math:`x` and :math:`y` and to be **incident** on :math:`x` and on :math:`y`. 
-A vertex may exist in a simple graph and not belong to an edge. Multiple edges, not allowed under the definition above, are two or more edges that join the same two vertices.
+A vertex may exist in a simple graph and not belong to an edge. 
+`Multiple edges <https://en.wikipedia.org/wiki/Multiple_edges>`_, not allowed under the definition above, are two or more edges that join the same two vertices.
 
 Construction
 -------------------------
-The simple graph structure can be constructed by the following method. More details can refer to aaaaaaaaaaaaa.
+The simple graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
 
-- Edge list (default) :py:class:`dhg.Graph`
+- Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`
 - Reduced from the simple hypergraph structure
   
@@ -94,7 +96,7 @@ Smoothing with GCN's Laplacian
                 [0.5434, 0.6609],
                 [0.3885, 0.6289]])
 
-Smoothing with symmetrically normalized Laplacian
+Smoothing with Symmetrically Normalized Laplacian
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -122,7 +124,7 @@ Smoothing with symmetrically normalized Laplacian
                 [ 0.8218,  0.7940],
                 [ 0.4756,  0.6351]])
 
-Smoothing with left (random-walk) normalized Laplacian
+Smoothing with Left (random-walk) Normalized Laplacian
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -154,7 +156,7 @@ Smoothing with left (random-walk) normalized Laplacian
 Spatial-Based Learning
 ----------------------------
 
-Message Propagation from vertex to vertex
+Message Propagation from Vertex to Vertex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -175,7 +177,7 @@ Message Propagation from vertex to vertex
                 [0.4113, 0.5738],
                 [0.4051, 0.6875]])
 
-Message Propagation from vertex to vertex with different edge weights
+Message Propagation from Vertex to Vertex with different Edge Weights
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python

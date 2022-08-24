@@ -5,19 +5,40 @@ Learning on Simple Hypergraphs
 
 Definition
 -----------------
-Simple hypergraphs can be 
+`Simple hypergraphs <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraphs) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+
+- :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
+- :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}`, a set of **hyperedges** (also called **edges**), where :math:`\mathcal{P}(\mathcal{V})` is the `power set <https://en.wikipedia.org/wiki/Power_set>`_ of :math:`\mathcal{V}`.
+  Each hyperedge :math:`e \in \mathcal{E}` can contains two or more vertices.
+
+While graph edges connect only 2 vertices, hyperedges connect an arbitrary number of vertices. 
+However, it is often desirable to study hypergraphs where all hyperedges have the same cardinality; 
+a k-uniform hypergraph is a hypergraph such that all its hyperedges have size k. 
+(In other words, one such hypergraph is a collection of sets, 
+each such set a hyperedge connecting k nodes.) So a 2-uniform hypergraph is a graph, 
+a 3-uniform hypergraph is a collection of unordered triples, and so on. 
+An undirected hypergraph is also called a set system or a family of sets drawn from the universal set.
 
 
 Construction
 ---------------------
+The simple hypergraph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
 
-Generate a hypergraph structure and a feature matrix.
+- Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
+- Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
+- Promoted from the low-order structures
+
+    - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
+    - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
+    - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
+
+
+In the following example, we randomly generate a simple hypergraph structure and a feature matrix to perform some basic learning operations on this structure.
    
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> # Generate a random simple hypergraph with 5 vertices and 4 hyperedges
         >>> hg = dhg.random.hypergraph_Gnm(5, 4) 
         >>> # Generate a vertex feature matrix with size 5x2
