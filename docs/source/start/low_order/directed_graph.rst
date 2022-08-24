@@ -1,10 +1,10 @@
 
-Learning on Directed Graphs
+Learning on Directed Graph
 =============================
 
 Definition
 -----------------------
-`Directed graphs <https://en.wikipedia.org/wiki/Directed_graph>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+`Directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ (x, y) \mid (x, y) \in \mathcal{V}^2~and~x \neq y \}`, a set of **edges** (also called **directed edges**, **directed links**, **directed lines**, **arrow**, or **arcs**), 

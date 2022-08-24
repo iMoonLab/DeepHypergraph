@@ -1,12 +1,12 @@
 
 .. _start_learning_on_bipartite_graph:
 
-Learning on Bipartite Graphs
+Learning on Bipartite Graph
 ==============================
 
 Definition
 -------------------------
-`Bipartite graphs <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 
+`Bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 
 whose partition has the parts :math:`\mathcal{U}` and :math:`\mathcal{V}`, with :math:`\mathcal{E}` denoting the edges of the bipartite graph. 
 
 - :math:`\mathcal{U}`, is one set of **vertices** (also called **nodes** or **points**);
@@ -26,7 +26,7 @@ The bipartite graph structure can be constructed by the following methods. More 
 
 - Edge list (**default**) :py:class:`dhg.BiGraph`
 - Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`
-- Hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
+- Simple hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
 
 In the following example, we randomly generate a bipartite graph structure and two feature matrices to perform some basic learning operations on this structure.
 

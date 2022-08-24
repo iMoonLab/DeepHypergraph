@@ -1,9 +1,9 @@
-Learning on Simple Graphs
+Learning on Simple Graph
 =============================
 
 Definition
 -------------------------
-`Simple graphs <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+`Simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}`, a set of **edges** (also called **links** or **lines**), 

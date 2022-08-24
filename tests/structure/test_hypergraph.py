@@ -3,7 +3,7 @@ import torch
 import pytest
 import numpy as np
 import scipy.spatial
-from dhg import Graph, Hypergraph
+from dhg import Graph, BiGraph, Hypergraph
 from dhg.random import graph_Gnm
 
 # from dhg.random.hypergraph import hypergraph_Gnm
@@ -66,6 +66,20 @@ def test_from_graph_kHop():
     hg = Hypergraph.from_graph_kHop(g, k=2, only_kHop=True)
     assert hg.num_e == 4
     assert (1, 3) in hg.e[0]
+
+
+def test_from_bigraph():
+    g = BiGraph(3, 4, [(0, 1), (0, 2), (1, 2), (2, 3)])
+    hg = Hypergraph.from_bigraph(g, U_as_vertex=True)
+    assert hg.num_v == 3 and hg.num_e == 3
+    assert (0,) in hg.e[0]
+    assert (0, 1) in hg.e[0]
+    assert (2,) in hg.e[0]
+    hg = Hypergraph.from_bigraph(g, U_as_vertex=False)
+    assert hg.num_v == 4 and hg.num_e == 3
+    assert (1, 2) in hg.e[0]
+    assert (2,) in hg.e[0]
+    assert (3,) in hg.e[0]
 
 
 # test representation
@@ -195,6 +209,11 @@ def test_add_hyperedges_from_graph_kHop(g1):
             assert e in origin_e
         for e in gg2.e_of_group("main")[0]:
             assert e in origin_e
+
+
+def test_add_hyperedges_from_bigraph():
+    # TODO
+    pass
 
 
 def test_remove_hyperedges(g1):

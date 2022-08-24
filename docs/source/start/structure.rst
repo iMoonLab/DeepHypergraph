@@ -13,22 +13,22 @@ Currently, the **DHG** has implemented the following structures and attached ope
     :widths: 2 2 2 3 3 2
 
     "| Simple
-    | Graphs", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    | Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
     "| Directed
-    | Graphs", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
+    | Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
     "| Bipartite
-    | Graphs", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
+    | Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
     | :math:`v \rightarrow u`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
     "| Simple
-    | Hypergraphs", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    | Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (specified group)
     | :math:`e \rightarrow v`
@@ -44,12 +44,12 @@ Applications
     :header: Structure, "Applications", "Example Code"
     :widths: 2, 6, 4
 
-    "Simple Graphs", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
-    "Directed Graphs", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
-    "Bipartite Graphs", "| Item Recommender of User-Item Graphs,
-    | Correlation Prediction of Potein-Drug Graphs, *etc.*", "aaaaaaaaaaa"
-    "Simple Hypergraphs", "| Vertex Classification of Social Networks, 
-    | Visual Object Classification on Multi-Modal Visual Object Graphs, *etc.*", "aaaaaaaaaa"
+    "Simple Graph", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
+    "Directed Graph", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
+    "Bipartite Graph", "| Item Recommender of User-Item Graph,
+    | Correlation Prediction of Potein-Drug Graph, *etc.*", "aaaaaaaaaaa"
+    "Simple Hypergraph", "| Vertex Classification of Social Networks, 
+    | Visual Object Classification on Multi-Modal Visual Object Graph, *etc.*", "aaaaaaaaaa"
     
 
 Two Core Operations
@@ -115,7 +115,7 @@ Then, for any input vertex features you can smoothing these with the specified b
 
     .. note:: 
 
-        The GCN's Laplacian Matrix of bipartite graphs is achieve by concate the bipartite adjacency matrix :math:`\mathbf{B}` with size :math:`|\mathcal{U}| \times |\mathcal{V}|` to 
+        The GCN's Laplacian Matrix of bipartite graph is achieve by concate the bipartite adjacency matrix :math:`\mathbf{B}` with size :math:`|\mathcal{U}| \times |\mathcal{V}|` to 
         the big adjacency matrix :math:`\mathbf{A}` with size :math:`||\mathcal{U}| + |\mathcal{V}|| \times ||\mathcal{U}| + |\mathcal{V}||`.
 
     .. code:: python

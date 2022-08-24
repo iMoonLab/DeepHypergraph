@@ -6,10 +6,10 @@ from typing import Optional, Union, List, Tuple, Dict, Any, TYPE_CHECKING
 import torch
 import scipy.spatial
 
-from ..base import BaseHypergraph
+from dhg.structure import BaseHypergraph
 
 if TYPE_CHECKING:
-    from ..graphs import Graph
+    from ..graphs import Graph, BiGraph
 
 
 class Hypergraph(BaseHypergraph):
@@ -129,7 +129,7 @@ class Hypergraph(BaseHypergraph):
 
     @staticmethod
     def from_feature_kNN(features: torch.Tensor, k: int, device: torch.device = torch.device("cpu")):
-        r"""Construct the hypergraph from the feature matrix. Each hyperedge in the hypergraph is constructed by the central vertex ans its :math:`k-1` neighbor vertices.
+        r"""Construct the simple hypergraph from the feature matrix. Each hyperedge in the hypergraph is constructed by the central vertex ans its :math:`k-1` neighbor vertices.
 
         .. note::
             The constructed hypergraph is a k-uniform hypergraph. If the feature matrix has the size :math:`N \times C`, the number of vertices and hyperedges of the constructed hypergraph are both :math:`N`.
@@ -144,8 +144,8 @@ class Hypergraph(BaseHypergraph):
         return hg
 
     @staticmethod
-    def from_graph(graph: "Graph", device: torch.device = torch.device("cpu")):
-        r"""Construct the hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph. 
+    def from_graph(graph: "Graph", device: torch.device = torch.device("cpu")) -> "Hypergraph":
+        r"""Construct the simple hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph. 
 
         .. note::
             The construsted hypergraph is a 2-uniform hypergraph, and has the same number of vertices and edges/hyperedges as the graph.
@@ -159,9 +159,7 @@ class Hypergraph(BaseHypergraph):
         return hg
 
     @staticmethod
-    def _e_list_from_graph_kHop(
-        graph: "Graph", k: int, only_kHop: bool = False,
-    ):
+    def _e_list_from_graph_kHop(graph: "Graph", k: int, only_kHop: bool = False,) -> List[tuple]:
         r"""Construct the hyperedge list from the graph by k-Hop neighbors. Each hyperedge in the hypergraph is constructed by the central vertex and its :math:`k`-Hop neighbor vertices.
 
         .. note::
@@ -191,7 +189,7 @@ class Hypergraph(BaseHypergraph):
     @staticmethod
     def from_graph_kHop(
         graph: "Graph", k: int, only_kHop: bool = False, device: torch.device = torch.device("cpu"),
-    ):
+    ) -> "Hypergraph":
         r"""Construct the hypergraph from the graph by k-Hop neighbors. Each hyperedge in the hypergraph is constructed by the central vertex and its :math:`k`-Hop neighbor vertices.
 
         .. note::
@@ -205,6 +203,51 @@ class Hypergraph(BaseHypergraph):
         """
         e_list = Hypergraph._e_list_from_graph_kHop(graph, k, only_kHop)
         hg = Hypergraph(graph.num_v, e_list, device=device)
+        return hg
+
+    @staticmethod
+    def _e_list_from_bigraph(bigraph: "BiGraph", U_as_vertex: bool = True) -> List[tuple]:
+        r"""Construct hyperedges from the bipartite graph. 
+
+        Args:
+            ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
+            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+        """
+        e_list = []
+        if U_as_vertex:
+            for v in range(bigraph.num_v):
+                u_list = bigraph.nbr_u(v)
+                if len(u_list) > 0:
+                    e_list.append(u_list)
+        else:
+            for u in range(bigraph.num_u):
+                v_list = bigraph.nbr_v(u)
+                if len(v_list) > 0:
+                    e_list.append(v_list)
+        return e_list
+
+    @staticmethod
+    def from_bigraph(
+        bigraph: "BiGraph", U_as_vertex: bool = True, device: torch.device = torch.device("cpu")
+    ) -> "Hypergraph":
+        r"""Construct the simple hypergraph from the bipartite graph. 
+
+        Args:
+            ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
+            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+            ``device`` (``torch.device``, optional): The device to store the hypergraph. Defaults to ``torch.device('cpu')``.
+        """
+        e_list = Hypergraph._e_list_from_bigraph(bigraph, U_as_vertex)
+        if U_as_vertex:
+            hg = Hypergraph(bigraph.num_u, e_list, device=device)
+        else:
+            hg = Hypergraph(bigraph.num_v, e_list, device=device)
         return hg
 
     # =====================================================================================
@@ -283,6 +326,28 @@ class Hypergraph(BaseHypergraph):
         """
         assert self.num_v == graph.num_v, "The number of vertices in the hypergraph and the graph are not equal."
         e_list = Hypergraph._e_list_from_graph_kHop(graph, k, only_kHop=only_kHop)
+        self.add_hyperedges(e_list, group_name=group_name)
+
+    def add_hyperedges_from_bigraph(self, bigraph: "BiGraph", U_as_vertex: bool = False, group_name: str = "main"):
+        r"""Add hyperedges from the bipartite graph. 
+
+        Args:
+            ``bigraph`` (``BiGraph``): The bigraph to join the hypergraph.
+            ``U_as_vertex`` (``bool``): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+            ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
+        """
+        if U_as_vertex:
+            assert (
+                self.num_v == bigraph.num_u
+            ), "The number of vertices in the hypergraph and the number of vertices in set U of the bipartite graph are not equal."
+        else:
+            assert (
+                self.num_v == bigraph.num_v
+            ), "The number of vertices in the hypergraph and the number of vertices in set V of the bipartite graph are not equal."
+        e_list = Hypergraph._e_list_from_bigraph(bigraph, U_as_vertex=U_as_vertex)
         self.add_hyperedges(e_list, group_name=group_name)
 
     def remove_hyperedges(
