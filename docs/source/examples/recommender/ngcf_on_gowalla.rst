@@ -1,4 +1,4 @@
-Recommender System 
+NGCF on Gowalla
 ====================================
 
 On ML-10k

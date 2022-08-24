@@ -70,9 +70,9 @@ If you find our library useful for your research, please cite our papers:
    :caption: Examples
    :hidden:
    
-   examples/vertex_cls
-   examples/recommender
-   examples/auto_ml
+   examples/vertex_cls/index
+   examples/recommender/index
+   examples/auto_ml/index
 
 .. toctree::
    :maxdepth: 2
