@@ -47,15 +47,15 @@ if __name__ == "__main__":
     # data = Citeseer()
     X, lbl = data["features"], data["labels"]
     G = Graph(data["num_vertices"], data["edge_list"])
-    HG = Hypergraph.from_graph_kHop(G, k=1)
-    # HG.add_hyperedges_from_graph_kHop(G, k=1)
+    HG = Hypergraph.from_graph(G)
+    HG.add_hyperedges_from_graph_kHop(G, k=1)
     # HG = Hypergraph.from_graph_kHop(G, k=1)
     # HG.add_hyperedges_from_graph_kHop(G, k=2, only_kHop=True)
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
-    net = HGNN(data["dim_features"], 16, data["num_classes"])
+    net = HGNNP(data["dim_features"], 16, data["num_classes"])
     # net = HNHN(data["dim_features"], 16, data["num_classes"], use_bn=True)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
 

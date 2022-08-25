@@ -1,6 +1,35 @@
 On Simple Graph
 ==========================================
 
+In the following examples, four typical graph/hypergraph neural network are used to perform vertex classification task on the simple graph structure.
+
+Models
+---------------------------
+
+- GCN, `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ paper (ICLR 2017).
+- GAT, `Graph Attention Networks <https://arxiv.org/pdf/1710.10903>`_ paper (ICLR 2018).
+- HGNN, `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ paper (AAAI 2019).
+- HGNN+, `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ paper (IEEE T-PAMI 2022).
+
+Dataset Description
+---------------------------
+
+Cora dataset (:py:class:`dhg.data.Cora`) is a citation network dataset for vertex classification task. 
+More details can be found in this `websit <https://relational.fit.cvut.cz/dataset/CORA>`_.
+
+Results
+----------------
+
+========    ======================  ======================  ======================
+Model       Accuracy on Validation  Accuracy on Testing     F1 score on Testing
+========    ======================  ======================  ======================
+GCN         0.800                   0.823                   0.814
+GAT         0.804                   0.824                   0.817
+HGNN        0.804                   0.820                   0.811
+HGNN+       0.802                   0.827                   0.820
+========    ======================  ======================  ======================
+
+
 GCN on Cora
 ----------------
 
@@ -803,10 +832,51 @@ HGNN on Cora
 Import Libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: python
+
+    import time
+    from copy import deepcopy
+
+    import torch
+    import torch.optim as optim
+    import torch.nn.functional as F
+
+    from dhg import Graph, Hypergraph
+    from dhg.data import Cora
+    from dhg.models import HGNN
+    from dhg.random import set_seed
+    from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
+
 
 Define Functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: python
+
+    def train(net, X, G, lbls, train_idx, optimizer, epoch):
+        net.train()
+
+        st = time.time()
+        optimizer.zero_grad()
+        outs = net(X, G)
+        outs, lbls = outs[train_idx], lbls[train_idx]
+        loss = F.cross_entropy(outs, lbls)
+        loss.backward()
+        optimizer.step()
+        print(f"Epoch: {epoch}, Time: {time.time()-st:.5f}s, Loss: {loss.item():.5f}")
+        return loss.item()
+
+
+    @torch.no_grad()
+    def infer(net, X, G, lbls, idx, test=False):
+        net.eval()
+        outs = net(X, G)
+        outs, lbls = outs[idx], lbls[idx]
+        if not test:
+            res = evaluator.validate(lbls, outs)
+        else:
+            res = evaluator.test(lbls, outs)
+        return res
 
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -815,10 +885,307 @@ Main
 
     More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
 
+.. code-block:: python
+
+    if __name__ == "__main__":
+        set_seed(2022)
+        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
+        data = Cora()
+        X, lbl = data["features"], data["labels"]
+        G = Graph(data["num_vertices"], data["edge_list"])
+        HG = Hypergraph.from_graph_kHop(G, k=1)
+        train_mask = data["train_mask"]
+        val_mask = data["val_mask"]
+        test_mask = data["test_mask"]
+
+        net = HGNN(data["dim_features"], 16, data["num_classes"])
+        optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
+
+        X, lbl = X.to(device), lbl.to(device)
+        HG = HG.to(X.device)
+        net = net.to(device)
+
+        best_state = None
+        best_epoch, best_val = 0, 0
+        for epoch in range(200):
+            # train
+            train(net, X, HG, lbl, train_mask, optimizer, epoch)
+            # validation
+            if epoch % 1 == 0:
+                with torch.no_grad():
+                    val_res = infer(net, X, HG, lbl, val_mask)
+                if val_res > best_val:
+                    print(f"update best: {val_res:.5f}")
+                    best_epoch = epoch
+                    best_val = val_res
+                    best_state = deepcopy(net.state_dict())
+        print("\ntrain finished!")
+        print(f"best val: {best_val:.5f}")
+        # test
+        print("test...")
+        net.load_state_dict(best_state)
+        res = infer(net, X, HG, lbl, test_mask, test=True)
+        print(f"final result: epoch: {best_epoch}")
+        print(res)
 
 
 Outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: text
+
+    Epoch: 0, Time: 0.50315s, Loss: 1.94993
+    update best: 0.31600
+    Epoch: 1, Time: 0.00196s, Loss: 1.94627
+    Epoch: 2, Time: 0.00175s, Loss: 1.94413
+    Epoch: 3, Time: 0.00200s, Loss: 1.93941
+    Epoch: 4, Time: 0.00180s, Loss: 1.93488
+    Epoch: 5, Time: 0.00174s, Loss: 1.92980
+    update best: 0.32000
+    Epoch: 6, Time: 0.00184s, Loss: 1.92559
+    update best: 0.36400
+    Epoch: 7, Time: 0.00256s, Loss: 1.91934
+    update best: 0.46400
+    Epoch: 8, Time: 0.00198s, Loss: 1.91385
+    Epoch: 9, Time: 0.00177s, Loss: 1.90319
+    Epoch: 10, Time: 0.00248s, Loss: 1.89834
+    Epoch: 11, Time: 0.00248s, Loss: 1.89127
+    Epoch: 12, Time: 0.00173s, Loss: 1.87880
+    Epoch: 13, Time: 0.00247s, Loss: 1.87467
+    Epoch: 14, Time: 0.00194s, Loss: 1.86688
+    Epoch: 15, Time: 0.00181s, Loss: 1.85891
+    Epoch: 16, Time: 0.00266s, Loss: 1.85094
+    Epoch: 17, Time: 0.00289s, Loss: 1.84161
+    Epoch: 18, Time: 0.00179s, Loss: 1.82744
+    Epoch: 19, Time: 0.00239s, Loss: 1.81666
+    Epoch: 20, Time: 0.00198s, Loss: 1.80902
+    Epoch: 21, Time: 0.00177s, Loss: 1.78956
+    Epoch: 22, Time: 0.00252s, Loss: 1.78221
+    update best: 0.49000
+    Epoch: 23, Time: 0.00191s, Loss: 1.76655
+    update best: 0.50200
+    Epoch: 24, Time: 0.00174s, Loss: 1.76185
+    update best: 0.51600
+    Epoch: 25, Time: 0.00253s, Loss: 1.74321
+    update best: 0.51800
+    Epoch: 26, Time: 0.00187s, Loss: 1.72027
+    update best: 0.52200
+    Epoch: 27, Time: 0.00369s, Loss: 1.70986
+    update best: 0.52600
+    Epoch: 28, Time: 0.00241s, Loss: 1.69354
+    update best: 0.53000
+    Epoch: 29, Time: 0.00309s, Loss: 1.69100
+    update best: 0.53800
+    Epoch: 30, Time: 0.00232s, Loss: 1.66968
+    update best: 0.54400
+    Epoch: 31, Time: 0.00313s, Loss: 1.65087
+    update best: 0.54600
+    Epoch: 32, Time: 0.00224s, Loss: 1.64182
+    update best: 0.56000
+    Epoch: 33, Time: 0.00277s, Loss: 1.60257
+    update best: 0.57800
+    Epoch: 34, Time: 0.00208s, Loss: 1.58798
+    update best: 0.59200
+    Epoch: 35, Time: 0.00176s, Loss: 1.58344
+    update best: 0.60000
+    Epoch: 36, Time: 0.00200s, Loss: 1.56942
+    update best: 0.63200
+    Epoch: 37, Time: 0.00206s, Loss: 1.53224
+    update best: 0.64800
+    Epoch: 38, Time: 0.00215s, Loss: 1.53036
+    update best: 0.67000
+    Epoch: 39, Time: 0.00200s, Loss: 1.50875
+    update best: 0.68000
+    Epoch: 40, Time: 0.00209s, Loss: 1.46828
+    update best: 0.69200
+    Epoch: 41, Time: 0.00243s, Loss: 1.45782
+    update best: 0.69400
+    Epoch: 42, Time: 0.00208s, Loss: 1.42179
+    Epoch: 43, Time: 0.00267s, Loss: 1.40893
+    Epoch: 44, Time: 0.00176s, Loss: 1.40358
+    update best: 0.69800
+    Epoch: 45, Time: 0.00175s, Loss: 1.37788
+    Epoch: 46, Time: 0.00274s, Loss: 1.34310
+    Epoch: 47, Time: 0.00173s, Loss: 1.32779
+    update best: 0.70200
+    Epoch: 48, Time: 0.00175s, Loss: 1.30572
+    update best: 0.71200
+    Epoch: 49, Time: 0.00221s, Loss: 1.28909
+    update best: 0.71800
+    Epoch: 50, Time: 0.00184s, Loss: 1.28903
+    update best: 0.72400
+    Epoch: 51, Time: 0.00345s, Loss: 1.25486
+    update best: 0.73200
+    Epoch: 52, Time: 0.00176s, Loss: 1.22994
+    update best: 0.74200
+    Epoch: 53, Time: 0.00173s, Loss: 1.20690
+    update best: 0.75000
+    Epoch: 54, Time: 0.00241s, Loss: 1.17115
+    Epoch: 55, Time: 0.00198s, Loss: 1.18836
+    update best: 0.75600
+    Epoch: 56, Time: 0.00279s, Loss: 1.17722
+    update best: 0.75800
+    Epoch: 57, Time: 0.00204s, Loss: 1.13414
+    Epoch: 58, Time: 0.00173s, Loss: 1.12058
+    update best: 0.76200
+    Epoch: 59, Time: 0.00228s, Loss: 1.09260
+    update best: 0.77400
+    Epoch: 60, Time: 0.00188s, Loss: 1.07260
+    Epoch: 61, Time: 0.00256s, Loss: 1.09610
+    Epoch: 62, Time: 0.00280s, Loss: 1.02422
+    Epoch: 63, Time: 0.00221s, Loss: 1.03871
+    update best: 0.77800
+    Epoch: 64, Time: 0.00311s, Loss: 1.00255
+    Epoch: 65, Time: 0.00226s, Loss: 0.99640
+    update best: 0.78000
+    Epoch: 66, Time: 0.00296s, Loss: 0.99191
+    update best: 0.78200
+    Epoch: 67, Time: 0.00235s, Loss: 0.95631
+    update best: 0.78600
+    Epoch: 68, Time: 0.00255s, Loss: 0.94336
+    Epoch: 69, Time: 0.00183s, Loss: 0.92673
+    update best: 0.79000
+    Epoch: 70, Time: 0.00165s, Loss: 0.92654
+    update best: 0.79600
+    Epoch: 71, Time: 0.00188s, Loss: 0.86986
+    update best: 0.80000
+    Epoch: 72, Time: 0.00170s, Loss: 0.90749
+    Epoch: 73, Time: 0.00164s, Loss: 0.86787
+    Epoch: 74, Time: 0.00218s, Loss: 0.86549
+    Epoch: 75, Time: 0.00182s, Loss: 0.86944
+    Epoch: 76, Time: 0.00189s, Loss: 0.83897
+    Epoch: 77, Time: 0.00167s, Loss: 0.82139
+    Epoch: 78, Time: 0.00168s, Loss: 0.81658
+    Epoch: 79, Time: 0.00198s, Loss: 0.78883
+    Epoch: 80, Time: 0.00207s, Loss: 0.78880
+    Epoch: 81, Time: 0.00209s, Loss: 0.77039
+    Epoch: 82, Time: 0.00170s, Loss: 0.74785
+    Epoch: 83, Time: 0.00185s, Loss: 0.74238
+    Epoch: 84, Time: 0.00293s, Loss: 0.73360
+    Epoch: 85, Time: 0.00164s, Loss: 0.76029
+    Epoch: 86, Time: 0.00163s, Loss: 0.71382
+    Epoch: 87, Time: 0.00162s, Loss: 0.72503
+    Epoch: 88, Time: 0.00202s, Loss: 0.70878
+    Epoch: 89, Time: 0.00172s, Loss: 0.71945
+    Epoch: 90, Time: 0.00180s, Loss: 0.65032
+    Epoch: 91, Time: 0.00302s, Loss: 0.71030
+    Epoch: 92, Time: 0.00157s, Loss: 0.67237
+    Epoch: 93, Time: 0.00161s, Loss: 0.68624
+    Epoch: 94, Time: 0.00161s, Loss: 0.65738
+    Epoch: 95, Time: 0.00203s, Loss: 0.65683
+    Epoch: 96, Time: 0.00171s, Loss: 0.63819
+    Epoch: 97, Time: 0.00177s, Loss: 0.66612
+    Epoch: 98, Time: 0.00231s, Loss: 0.64060
+    Epoch: 99, Time: 0.00161s, Loss: 0.63596
+    Epoch: 100, Time: 0.00161s, Loss: 0.62215
+    Epoch: 101, Time: 0.00195s, Loss: 0.59992
+    Epoch: 102, Time: 0.00184s, Loss: 0.63610
+    Epoch: 103, Time: 0.00168s, Loss: 0.60803
+    Epoch: 104, Time: 0.00174s, Loss: 0.60519
+    Epoch: 105, Time: 0.00203s, Loss: 0.61317
+    update best: 0.80200
+    Epoch: 106, Time: 0.00163s, Loss: 0.56701
+    Epoch: 107, Time: 0.00160s, Loss: 0.58649
+    Epoch: 108, Time: 0.00202s, Loss: 0.60864
+    Epoch: 109, Time: 0.00171s, Loss: 0.59734
+    Epoch: 110, Time: 0.00174s, Loss: 0.58395
+    Epoch: 111, Time: 0.00262s, Loss: 0.59959
+    Epoch: 112, Time: 0.00166s, Loss: 0.57178
+    Epoch: 113, Time: 0.00162s, Loss: 0.57493
+    Epoch: 114, Time: 0.00166s, Loss: 0.56720
+    Epoch: 115, Time: 0.00207s, Loss: 0.57864
+    Epoch: 116, Time: 0.00174s, Loss: 0.55171
+    Epoch: 117, Time: 0.00201s, Loss: 0.56022
+    Epoch: 118, Time: 0.00295s, Loss: 0.54393
+    Epoch: 119, Time: 0.00162s, Loss: 0.54266
+    Epoch: 120, Time: 0.00162s, Loss: 0.54640
+    Epoch: 121, Time: 0.00165s, Loss: 0.51695
+    Epoch: 122, Time: 0.00193s, Loss: 0.53059
+    Epoch: 123, Time: 0.00175s, Loss: 0.49817
+    Epoch: 124, Time: 0.00168s, Loss: 0.49963
+    Epoch: 125, Time: 0.00280s, Loss: 0.50499
+    Epoch: 126, Time: 0.00165s, Loss: 0.51792
+    Epoch: 127, Time: 0.00162s, Loss: 0.48759
+    Epoch: 128, Time: 0.00188s, Loss: 0.52524
+    Epoch: 129, Time: 0.00192s, Loss: 0.49752
+    Epoch: 130, Time: 0.00182s, Loss: 0.48539
+    Epoch: 131, Time: 0.00178s, Loss: 0.51904
+    Epoch: 132, Time: 0.00210s, Loss: 0.51619
+    Epoch: 133, Time: 0.00164s, Loss: 0.46799
+    Epoch: 134, Time: 0.00168s, Loss: 0.47253
+    Epoch: 135, Time: 0.00220s, Loss: 0.50235
+    Epoch: 136, Time: 0.00179s, Loss: 0.48068
+    Epoch: 137, Time: 0.00181s, Loss: 0.48230
+    Epoch: 138, Time: 0.00311s, Loss: 0.47752
+    Epoch: 139, Time: 0.00165s, Loss: 0.46344
+    Epoch: 140, Time: 0.00168s, Loss: 0.50513
+    Epoch: 141, Time: 0.00175s, Loss: 0.45315
+    Epoch: 142, Time: 0.00234s, Loss: 0.45984
+    Epoch: 143, Time: 0.00184s, Loss: 0.45598
+    Epoch: 144, Time: 0.00181s, Loss: 0.48745
+    Epoch: 145, Time: 0.00208s, Loss: 0.47391
+    Epoch: 146, Time: 0.00167s, Loss: 0.42658
+    Epoch: 147, Time: 0.00164s, Loss: 0.44139
+    Epoch: 148, Time: 0.00211s, Loss: 0.44337
+    Epoch: 149, Time: 0.00174s, Loss: 0.43854
+    Epoch: 150, Time: 0.00194s, Loss: 0.45141
+    Epoch: 151, Time: 0.00337s, Loss: 0.43659
+    Epoch: 152, Time: 0.00223s, Loss: 0.45104
+    Epoch: 153, Time: 0.00217s, Loss: 0.45788
+    Epoch: 154, Time: 0.00256s, Loss: 0.44208
+    Epoch: 155, Time: 0.00216s, Loss: 0.47642
+    Epoch: 156, Time: 0.00289s, Loss: 0.41826
+    Epoch: 157, Time: 0.00219s, Loss: 0.44075
+    Epoch: 158, Time: 0.00212s, Loss: 0.39873
+    Epoch: 159, Time: 0.00235s, Loss: 0.43970
+    Epoch: 160, Time: 0.00170s, Loss: 0.41875
+    Epoch: 161, Time: 0.00185s, Loss: 0.42697
+    Epoch: 162, Time: 0.00185s, Loss: 0.44240
+    Epoch: 163, Time: 0.00165s, Loss: 0.45397
+    Epoch: 164, Time: 0.00217s, Loss: 0.38061
+    Epoch: 165, Time: 0.00187s, Loss: 0.40102
+    Epoch: 166, Time: 0.00194s, Loss: 0.39496
+    Epoch: 167, Time: 0.00208s, Loss: 0.41661
+    Epoch: 168, Time: 0.00187s, Loss: 0.41864
+    Epoch: 169, Time: 0.00262s, Loss: 0.41757
+    Epoch: 170, Time: 0.00188s, Loss: 0.41356
+    Epoch: 171, Time: 0.00180s, Loss: 0.38835
+    Epoch: 172, Time: 0.00213s, Loss: 0.42775
+    Epoch: 173, Time: 0.00187s, Loss: 0.39169
+    Epoch: 174, Time: 0.00164s, Loss: 0.41415
+    Epoch: 175, Time: 0.00290s, Loss: 0.39668
+    update best: 0.80400
+    Epoch: 176, Time: 0.00161s, Loss: 0.42034
+    Epoch: 177, Time: 0.00164s, Loss: 0.40507
+    Epoch: 178, Time: 0.00206s, Loss: 0.39741
+    Epoch: 179, Time: 0.00181s, Loss: 0.40042
+    Epoch: 180, Time: 0.00163s, Loss: 0.37404
+    Epoch: 181, Time: 0.00167s, Loss: 0.40175
+    Epoch: 182, Time: 0.00217s, Loss: 0.35673
+    Epoch: 183, Time: 0.00162s, Loss: 0.39076
+    Epoch: 184, Time: 0.00157s, Loss: 0.39327
+    Epoch: 185, Time: 0.00208s, Loss: 0.38354
+    Epoch: 186, Time: 0.00172s, Loss: 0.36611
+    Epoch: 187, Time: 0.00174s, Loss: 0.38952
+    Epoch: 188, Time: 0.00276s, Loss: 0.39074
+    Epoch: 189, Time: 0.00160s, Loss: 0.36561
+    Epoch: 190, Time: 0.00164s, Loss: 0.37361
+    Epoch: 191, Time: 0.00162s, Loss: 0.37590
+    Epoch: 192, Time: 0.00188s, Loss: 0.36160
+    Epoch: 193, Time: 0.00173s, Loss: 0.37451
+    Epoch: 194, Time: 0.00170s, Loss: 0.36310
+    Epoch: 195, Time: 0.00285s, Loss: 0.39782
+    Epoch: 196, Time: 0.00160s, Loss: 0.36185
+    Epoch: 197, Time: 0.00161s, Loss: 0.35991
+    Epoch: 198, Time: 0.00191s, Loss: 0.37487
+    Epoch: 199, Time: 0.00219s, Loss: 0.36310
+
+    train finished!
+    best val: 0.80400
+    test...
+    final result: epoch: 175
+    {'accuracy': 0.8209999799728394, 'f1_score': 0.8113491851888245, 'f1_score -> average@micro': 0.821}    
 
 HGNN+ on Cora
 ----------------
@@ -826,10 +1193,51 @@ HGNN+ on Cora
 Import Libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: python
+
+    import time
+    from copy import deepcopy
+
+    import torch
+    import torch.optim as optim
+    import torch.nn.functional as F
+
+    from dhg import Graph, Hypergraph
+    from dhg.data import Cora
+    from dhg.models import HGNNP
+    from dhg.random import set_seed
+    from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
+
 
 Define Functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. code-block:: python
+
+    def train(net, X, G, lbls, train_idx, optimizer, epoch):
+        net.train()
+
+        st = time.time()
+        optimizer.zero_grad()
+        outs = net(X, G)
+        outs, lbls = outs[train_idx], lbls[train_idx]
+        loss = F.cross_entropy(outs, lbls)
+        loss.backward()
+        optimizer.step()
+        print(f"Epoch: {epoch}, Time: {time.time()-st:.5f}s, Loss: {loss.item():.5f}")
+        return loss.item()
+
+
+    @torch.no_grad()
+    def infer(net, X, G, lbls, idx, test=False):
+        net.eval()
+        outs = net(X, G)
+        outs, lbls = outs[idx], lbls[idx]
+        if not test:
+            res = evaluator.validate(lbls, outs)
+        else:
+            res = evaluator.test(lbls, outs)
+        return res
 
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -838,6 +1246,296 @@ Main
 
     More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
 
+.. code-block:: python
+
+    if __name__ == "__main__":
+        set_seed(2022)
+        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
+        data = Cora()
+        X, lbl = data["features"], data["labels"]
+        G = Graph(data["num_vertices"], data["edge_list"])
+        HG = Hypergraph.from_graph(G)
+        HG.add_hyperedges_from_graph_kHop(G, k=1)
+        train_mask = data["train_mask"]
+        val_mask = data["val_mask"]
+        test_mask = data["test_mask"]
+
+        net = HGNNP(data["dim_features"], 16, data["num_classes"])
+        optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
+
+        X, lbl = X.to(device), lbl.to(device)
+        HG = HG.to(X.device)
+        net = net.to(device)
+
+        best_state = None
+        best_epoch, best_val = 0, 0
+        for epoch in range(200):
+            # train
+            train(net, X, HG, lbl, train_mask, optimizer, epoch)
+            # validation
+            if epoch % 1 == 0:
+                with torch.no_grad():
+                    val_res = infer(net, X, HG, lbl, val_mask)
+                if val_res > best_val:
+                    print(f"update best: {val_res:.5f}")
+                    best_epoch = epoch
+                    best_val = val_res
+                    best_state = deepcopy(net.state_dict())
+        print("\ntrain finished!")
+        print(f"best val: {best_val:.5f}")
+        # test
+        print("test...")
+        net.load_state_dict(best_state)
+        res = infer(net, X, HG, lbl, test_mask, test=True)
+        print(f"final result: epoch: {best_epoch}")
+        print(res)
+
 
 Outputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: text
+
+    Epoch: 0, Time: 0.50397s, Loss: 1.95489
+    update best: 0.31600
+    Epoch: 1, Time: 0.00688s, Loss: 1.95044
+    Epoch: 2, Time: 0.00594s, Loss: 1.94790
+    Epoch: 3, Time: 0.00777s, Loss: 1.94277
+    Epoch: 4, Time: 0.00543s, Loss: 1.93662
+    Epoch: 5, Time: 0.00805s, Loss: 1.93121
+    Epoch: 6, Time: 0.00549s, Loss: 1.92640
+    update best: 0.31800
+    Epoch: 7, Time: 0.00687s, Loss: 1.91871
+    update best: 0.37600
+    Epoch: 8, Time: 0.00722s, Loss: 1.91161
+    update best: 0.41000
+    Epoch: 9, Time: 0.00553s, Loss: 1.90009
+    update best: 0.50400
+    Epoch: 10, Time: 0.00770s, Loss: 1.89464
+    update best: 0.57000
+    Epoch: 11, Time: 0.00566s, Loss: 1.88557
+    Epoch: 12, Time: 0.00769s, Loss: 1.87337
+    Epoch: 13, Time: 0.00549s, Loss: 1.86598
+    Epoch: 14, Time: 0.00767s, Loss: 1.85734
+    Epoch: 15, Time: 0.00546s, Loss: 1.84511
+    Epoch: 16, Time: 0.00752s, Loss: 1.83575
+    Epoch: 17, Time: 0.00545s, Loss: 1.82488
+    Epoch: 18, Time: 0.00840s, Loss: 1.80935
+    Epoch: 19, Time: 0.00536s, Loss: 1.79647
+    Epoch: 20, Time: 0.00756s, Loss: 1.78831
+    Epoch: 21, Time: 0.00538s, Loss: 1.76364
+    Epoch: 22, Time: 0.00797s, Loss: 1.75609
+    Epoch: 23, Time: 0.00601s, Loss: 1.74039
+    Epoch: 24, Time: 0.00737s, Loss: 1.73402
+    update best: 0.57200
+    Epoch: 25, Time: 0.00510s, Loss: 1.70649
+    Epoch: 26, Time: 0.00626s, Loss: 1.68333
+    update best: 0.57600
+    Epoch: 27, Time: 0.00489s, Loss: 1.67384
+    Epoch: 28, Time: 0.00637s, Loss: 1.64703
+    Epoch: 29, Time: 0.00569s, Loss: 1.65015
+    Epoch: 30, Time: 0.00616s, Loss: 1.61904
+    Epoch: 31, Time: 0.00482s, Loss: 1.60483
+    Epoch: 32, Time: 0.00657s, Loss: 1.58717
+    update best: 0.57800
+    Epoch: 33, Time: 0.00671s, Loss: 1.54870
+    update best: 0.58400
+    Epoch: 34, Time: 0.00547s, Loss: 1.53594
+    update best: 0.59800
+    Epoch: 35, Time: 0.00591s, Loss: 1.52464
+    update best: 0.61000
+    Epoch: 36, Time: 0.00569s, Loss: 1.50577
+    update best: 0.62800
+    Epoch: 37, Time: 0.00447s, Loss: 1.47224
+    update best: 0.64400
+    Epoch: 38, Time: 0.00566s, Loss: 1.46083
+    update best: 0.65800
+    Epoch: 39, Time: 0.00448s, Loss: 1.44008
+    update best: 0.67400
+    Epoch: 40, Time: 0.00560s, Loss: 1.39763
+    update best: 0.68800
+    Epoch: 41, Time: 0.00452s, Loss: 1.38902
+    update best: 0.69600
+    Epoch: 42, Time: 0.00592s, Loss: 1.34805
+    update best: 0.70600
+    Epoch: 43, Time: 0.00460s, Loss: 1.32505
+    update best: 0.71200
+    Epoch: 44, Time: 0.00575s, Loss: 1.32579
+    update best: 0.71600
+    Epoch: 45, Time: 0.00456s, Loss: 1.29263
+    update best: 0.72200
+    Epoch: 46, Time: 0.00590s, Loss: 1.25758
+    update best: 0.72800
+    Epoch: 47, Time: 0.00457s, Loss: 1.25460
+    update best: 0.73000
+    Epoch: 48, Time: 0.00577s, Loss: 1.21283
+    update best: 0.73200
+    Epoch: 49, Time: 0.00555s, Loss: 1.22506
+    update best: 0.73800
+    Epoch: 50, Time: 0.00590s, Loss: 1.20866
+    update best: 0.74200
+    Epoch: 51, Time: 0.00607s, Loss: 1.17283
+    update best: 0.75800
+    Epoch: 52, Time: 0.00558s, Loss: 1.14841
+    update best: 0.78000
+    Epoch: 53, Time: 0.00534s, Loss: 1.12203
+    update best: 0.78800
+    Epoch: 54, Time: 0.00525s, Loss: 1.07957
+    update best: 0.79000
+    Epoch: 55, Time: 0.00598s, Loss: 1.09576
+    update best: 0.79200
+    Epoch: 56, Time: 0.00518s, Loss: 1.08737
+    update best: 0.79400
+    Epoch: 57, Time: 0.00666s, Loss: 1.03506
+    Epoch: 58, Time: 0.00471s, Loss: 1.02326
+    Epoch: 59, Time: 0.00623s, Loss: 1.01210
+    Epoch: 60, Time: 0.00557s, Loss: 0.99087
+    Epoch: 61, Time: 0.00454s, Loss: 0.99048
+    Epoch: 62, Time: 0.00614s, Loss: 0.92911
+    Epoch: 63, Time: 0.00461s, Loss: 0.96758
+    Epoch: 64, Time: 0.00739s, Loss: 0.90397
+    Epoch: 65, Time: 0.00469s, Loss: 0.89135
+    Epoch: 66, Time: 0.00745s, Loss: 0.90936
+    Epoch: 67, Time: 0.00459s, Loss: 0.85870
+    Epoch: 68, Time: 0.00657s, Loss: 0.86560
+    Epoch: 69, Time: 0.00534s, Loss: 0.84675
+    Epoch: 70, Time: 0.00564s, Loss: 0.85727
+    Epoch: 71, Time: 0.00590s, Loss: 0.79680
+    Epoch: 72, Time: 0.00453s, Loss: 0.82477
+    Epoch: 73, Time: 0.00614s, Loss: 0.79762
+    Epoch: 74, Time: 0.00452s, Loss: 0.78480
+    Epoch: 75, Time: 0.00735s, Loss: 0.81077
+    Epoch: 76, Time: 0.00463s, Loss: 0.77174
+    Epoch: 77, Time: 0.00706s, Loss: 0.74386
+    Epoch: 78, Time: 0.00569s, Loss: 0.73486
+    Epoch: 79, Time: 0.00738s, Loss: 0.70369
+    update best: 0.79600
+    Epoch: 80, Time: 0.00563s, Loss: 0.70949
+    Epoch: 81, Time: 0.00649s, Loss: 0.68134
+    Epoch: 82, Time: 0.00542s, Loss: 0.65184
+    update best: 0.79800
+    Epoch: 83, Time: 0.00635s, Loss: 0.66273
+    Epoch: 84, Time: 0.00545s, Loss: 0.65232
+    Epoch: 85, Time: 0.00696s, Loss: 0.69817
+    Epoch: 86, Time: 0.00574s, Loss: 0.64078
+    Epoch: 87, Time: 0.00686s, Loss: 0.65521
+    Epoch: 88, Time: 0.00470s, Loss: 0.63180
+    Epoch: 89, Time: 0.00449s, Loss: 0.65444
+    Epoch: 90, Time: 0.00605s, Loss: 0.56861
+    Epoch: 91, Time: 0.00456s, Loss: 0.64074
+    Epoch: 92, Time: 0.00659s, Loss: 0.59132
+    update best: 0.80200
+    Epoch: 93, Time: 0.00465s, Loss: 0.62925
+    Epoch: 94, Time: 0.00662s, Loss: 0.60163
+    Epoch: 95, Time: 0.00453s, Loss: 0.58727
+    Epoch: 96, Time: 0.00693s, Loss: 0.57620
+    Epoch: 97, Time: 0.00481s, Loss: 0.60987
+    Epoch: 98, Time: 0.00702s, Loss: 0.57996
+    Epoch: 99, Time: 0.00462s, Loss: 0.56781
+    Epoch: 100, Time: 0.00570s, Loss: 0.54706
+    Epoch: 101, Time: 0.00507s, Loss: 0.54080
+    Epoch: 102, Time: 0.00444s, Loss: 0.57735
+    Epoch: 103, Time: 0.00613s, Loss: 0.52275
+    Epoch: 104, Time: 0.00452s, Loss: 0.53871
+    Epoch: 105, Time: 0.00667s, Loss: 0.54541
+    Epoch: 106, Time: 0.00565s, Loss: 0.51127
+    Epoch: 107, Time: 0.00738s, Loss: 0.52514
+    Epoch: 108, Time: 0.00540s, Loss: 0.54392
+    Epoch: 109, Time: 0.00604s, Loss: 0.54753
+    Epoch: 110, Time: 0.00465s, Loss: 0.53154
+    Epoch: 111, Time: 0.00629s, Loss: 0.53460
+    Epoch: 112, Time: 0.00568s, Loss: 0.52337
+    Epoch: 113, Time: 0.00587s, Loss: 0.52842
+    Epoch: 114, Time: 0.00562s, Loss: 0.50907
+    Epoch: 115, Time: 0.00454s, Loss: 0.51616
+    Epoch: 116, Time: 0.00561s, Loss: 0.50364
+    Epoch: 117, Time: 0.00459s, Loss: 0.49458
+    Epoch: 118, Time: 0.00545s, Loss: 0.49913
+    Epoch: 119, Time: 0.00529s, Loss: 0.48824
+    Epoch: 120, Time: 0.00519s, Loss: 0.52106
+    Epoch: 121, Time: 0.00555s, Loss: 0.46541
+    Epoch: 122, Time: 0.00459s, Loss: 0.47356
+    Epoch: 123, Time: 0.00539s, Loss: 0.44043
+    Epoch: 124, Time: 0.00468s, Loss: 0.44389
+    Epoch: 125, Time: 0.00569s, Loss: 0.45298
+    Epoch: 126, Time: 0.00500s, Loss: 0.46986
+    Epoch: 127, Time: 0.00551s, Loss: 0.45141
+    Epoch: 128, Time: 0.00533s, Loss: 0.48571
+    Epoch: 129, Time: 0.00460s, Loss: 0.43895
+    Epoch: 130, Time: 0.00600s, Loss: 0.44426
+    Epoch: 131, Time: 0.00457s, Loss: 0.47401
+    Epoch: 132, Time: 0.00579s, Loss: 0.46865
+    Epoch: 133, Time: 0.00464s, Loss: 0.41215
+    Epoch: 134, Time: 0.00528s, Loss: 0.42941
+    Epoch: 135, Time: 0.00642s, Loss: 0.46532
+    Epoch: 136, Time: 0.00538s, Loss: 0.42108
+    Epoch: 137, Time: 0.00690s, Loss: 0.41919
+    Epoch: 138, Time: 0.00617s, Loss: 0.44285
+    Epoch: 139, Time: 0.00577s, Loss: 0.42653
+    Epoch: 140, Time: 0.00548s, Loss: 0.45898
+    Epoch: 141, Time: 0.00539s, Loss: 0.41800
+    Epoch: 142, Time: 0.00467s, Loss: 0.40399
+    Epoch: 143, Time: 0.00487s, Loss: 0.38347
+    Epoch: 144, Time: 0.00509s, Loss: 0.42234
+    Epoch: 145, Time: 0.00721s, Loss: 0.42908
+    Epoch: 146, Time: 0.00489s, Loss: 0.37335
+    Epoch: 147, Time: 0.00664s, Loss: 0.40119
+    Epoch: 148, Time: 0.00465s, Loss: 0.38477
+    Epoch: 149, Time: 0.00451s, Loss: 0.40037
+    Epoch: 150, Time: 0.00553s, Loss: 0.40168
+    Epoch: 151, Time: 0.00454s, Loss: 0.38555
+    Epoch: 152, Time: 0.00729s, Loss: 0.40183
+    Epoch: 153, Time: 0.00465s, Loss: 0.40610
+    Epoch: 154, Time: 0.00669s, Loss: 0.39806
+    Epoch: 155, Time: 0.00463s, Loss: 0.43478
+    Epoch: 156, Time: 0.00641s, Loss: 0.37409
+    Epoch: 157, Time: 0.00509s, Loss: 0.39802
+    Epoch: 158, Time: 0.00453s, Loss: 0.34516
+    Epoch: 159, Time: 0.00563s, Loss: 0.39663
+    Epoch: 160, Time: 0.00456s, Loss: 0.37089
+    Epoch: 161, Time: 0.00711s, Loss: 0.39547
+    Epoch: 162, Time: 0.00455s, Loss: 0.41472
+    Epoch: 163, Time: 0.00645s, Loss: 0.40523
+    Epoch: 164, Time: 0.00465s, Loss: 0.33511
+    Epoch: 165, Time: 0.00565s, Loss: 0.35864
+    Epoch: 166, Time: 0.00575s, Loss: 0.33017
+    Epoch: 167, Time: 0.00785s, Loss: 0.36668
+    Epoch: 168, Time: 0.00604s, Loss: 0.36207
+    Epoch: 169, Time: 0.00650s, Loss: 0.37902
+    Epoch: 170, Time: 0.00473s, Loss: 0.38248
+    Epoch: 171, Time: 0.00664s, Loss: 0.34953
+    Epoch: 172, Time: 0.00556s, Loss: 0.38132
+    Epoch: 173, Time: 0.00686s, Loss: 0.34698
+    Epoch: 174, Time: 0.00619s, Loss: 0.36063
+    Epoch: 175, Time: 0.00468s, Loss: 0.34594
+    Epoch: 176, Time: 0.00545s, Loss: 0.37555
+    Epoch: 177, Time: 0.00457s, Loss: 0.35946
+    Epoch: 178, Time: 0.00718s, Loss: 0.35694
+    Epoch: 179, Time: 0.00458s, Loss: 0.34922
+    Epoch: 180, Time: 0.00693s, Loss: 0.30437
+    Epoch: 181, Time: 0.00461s, Loss: 0.34730
+    Epoch: 182, Time: 0.00632s, Loss: 0.31228
+    Epoch: 183, Time: 0.00509s, Loss: 0.36002
+    Epoch: 184, Time: 0.00454s, Loss: 0.36114
+    Epoch: 185, Time: 0.00546s, Loss: 0.34812
+    Epoch: 186, Time: 0.00456s, Loss: 0.33244
+    Epoch: 187, Time: 0.00696s, Loss: 0.34411
+    Epoch: 188, Time: 0.00459s, Loss: 0.35262
+    Epoch: 189, Time: 0.00628s, Loss: 0.32643
+    Epoch: 190, Time: 0.00472s, Loss: 0.32591
+    Epoch: 191, Time: 0.00451s, Loss: 0.33036
+    Epoch: 192, Time: 0.00594s, Loss: 0.31552
+    Epoch: 193, Time: 0.00559s, Loss: 0.32376
+    Epoch: 194, Time: 0.00627s, Loss: 0.31232
+    Epoch: 195, Time: 0.00550s, Loss: 0.33725
+    Epoch: 196, Time: 0.00570s, Loss: 0.34083
+    Epoch: 197, Time: 0.00508s, Loss: 0.30638
+    Epoch: 198, Time: 0.00559s, Loss: 0.33905
+    Epoch: 199, Time: 0.00603s, Loss: 0.30302
+
+    train finished!
+    best val: 0.80200
+    test...
+    final result: epoch: 92
+    {'accuracy': 0.8270000219345093, 'f1_score': 0.8198394539104813, 'f1_score -> average@micro': 0.827}
