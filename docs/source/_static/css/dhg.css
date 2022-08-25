@@ -11,3 +11,8 @@
 .wy-table-responsive table th {
   white-space: normal;
 }
+
+pre {
+  overflow: scroll;
+  max-height: 500px;
+}

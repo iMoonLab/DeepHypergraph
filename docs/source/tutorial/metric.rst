@@ -1,3 +1,5 @@
+.. _tutorial_build_evaluator:
+
 Build Evaluator
 =================
 

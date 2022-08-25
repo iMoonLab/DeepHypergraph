@@ -93,6 +93,7 @@ If you find our library useful for your research, please cite our papers:
    :caption: 中文文档
    :hidden:
 
+   zh/overview
    zh/start/index
    zh/examples/index
    zh/tutorials/index
