@@ -40,7 +40,7 @@ Currently, the **DHG** has implemented the following structures and attached ope
 Applications
 -----------------
 
-.. csv-table:: Summary of Applications of Differnet Structures
+.. csv-table:: Summary of Applications of Different Structures
     :header: Structure, "Applications", "Example Code"
     :widths: 2, 6, 4
 
@@ -57,7 +57,7 @@ Two Core Operations
 The most learning on structures (graphs, hypergraphs, etc.) can be divided into two categories: spectral-based convolution and spatial-based message passing.
 The spectral-based convolution methods, like typical GCN and HGNN, learn a Laplacian Matrix for a given structure, and perform ``vertex feature smoothing`` with the generated 
 Laplacian Matrix to embed to low-order and high-order structures to vertex features. The spatial-based message passing methods, like typical GraphSAGE, GAT, and HGNN :sup:`+`, perform ``vertex to vertex``, ``vertex to hyperedge``, ``hyperedge to vertex``, 
-and ``vertex set to vertex set`` message passing to embedd the low-order and high-order structures to vertex features. The learned vertex features can also be pooled to generate the unified structure feature.
+and ``vertex set to vertex set`` message passing to embed the low-order and high-order structures to vertex features. The learned vertex features can also be pooled to generate the unified structure feature.
 Finally, the learned vertex features or structure features can be fed into many down-stream tasks like classification, retrieval, regression, and link prediction, 
 and applications like paper classification, movie recommender, drug exploition, *etc.*
 
@@ -316,7 +316,7 @@ What Can be Done with the Two Operations?
 -------------------------------------------
 
 
-Add Eary Self-loop and Late Self-Loop
+Add Early Self-loop and Late Self-Loop
 ++++++++++++++++++++++++++++++++++++++++++
 
 Self-loop is a important structure for feature learning especially for the simple graph structure. 

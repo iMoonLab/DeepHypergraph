@@ -5,11 +5,11 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-from dhg import Graph, Hypergraph
-from dhg.data import Cora, Pubmed, Citeseer
-from dhg.models import GCN, GIN, HyperGCN, GraphSAGE
+from dhg import Hypergraph
+from dhg.data import Cooking200
+from dhg.models import HGNN, HGNNP
 from dhg.random import set_seed
-from dhg.metrics import GraphVertexClassificationEvaluator as Evaluator
+from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
 def train(net, X, A, lbls, train_idx, optimizer, epoch):
@@ -39,23 +39,18 @@ def infer(net, X, A, lbls, idx, test=False):
 
 
 if __name__ == "__main__":
-    set_seed(2022)
+    set_seed(2021)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
-    data = Cora()
-    # data = Pubmed()
-    # data = Citeseer()
-    X, lbl = data["features"], data["labels"]
-    G = Graph(data["num_vertices"], data["edge_list"])
-    # G = Hypergraph(num_v, data["edge_list"])
+    data = Cooking200()
+
+    X, lbl = torch.eye(data["num_vertices"]), data["labels"]
+    G = Hypergraph(data["num_vertices"], data["edge_list"])
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
-    net = GCN(data["dim_features"], 16, data["num_classes"])
-    # net = GraphSAGE(data["dim_features"], 16, data["num_classes"])
-    # net = HyperGCN(data["dim_features"], 16, data["num_classes"])
-    # net = GIN(data["dim_features"], 16, data["num_classes"], num_layers=5, train_eps=True)
+    net = HGNN(X.shape[1], 32, data["num_classes"], use_bn=True)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
 
     X, lbl = X.to(device), lbl.to(device)

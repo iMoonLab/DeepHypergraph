@@ -9,7 +9,7 @@ class MovieLens1M(BaseData):
     r"""The MovieLens1M dataset is collected for user-item recommendation task. Wherein, movies are viewed as items.
     `Released 2/2003 <https://grouplens.org/datasets/movielens/1m/>`_. The dataset contains 1 million ratings from 6022 users on 3043 items.
     
-    The Content of the MovieLens-1M dataset includes the following:
+    The content of the MovieLens-1M dataset includes the following:
 
     - ``num_users``: The number of users: :math:`6,022`.
     - ``num_items``: The number of items: :math:`3,043`.

@@ -1,8 +1,5 @@
-import os
-from copy import deepcopy
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import time
+from copy import deepcopy
 
 import torch
 import torch.nn as nn
@@ -13,17 +10,8 @@ from dhg.data import MovieLens1M, Gowalla
 from dhg.models import LightGCN, NGCF
 from dhg.nn import BPRLoss, EmbeddingRegularization
 from dhg.metrics import UserItemRecommenderEvaluator as Evaluator
+from dhg.random import set_seed
 from dhg.utils import UserItemDataset, adj_list_to_edge_list
-
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-dim_emb = 64
-lr = 0.001
-num_workers = 0
-batch_sz = 2048
-val_freq = 20
-epoch_max = 1000
-weight_decay = 1e-4
 
 
 class BPR_Reg(nn.Module):
@@ -99,6 +87,15 @@ def test(net, data_loader):
 
 
 if __name__ == "__main__":
+    dim_emb = 64
+    lr = 0.001
+    num_workers = 0
+    batch_sz = 2048
+    val_freq = 20
+    epoch_max = 1000
+    weight_decay = 1e-4
+    set_seed(2022)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     evaluator = Evaluator([{"ndcg": {"k": 20}}, {"recall": {"k": 20}}])
 
     # data = MovieLens1M()

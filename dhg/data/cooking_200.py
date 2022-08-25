@@ -9,9 +9,12 @@ from dhg.datapipe import (
 
 
 class Cooking200(BaseData):
-    r"""A cooking recipe dataset for vertex classification task.
+    r"""The Cooking 200 dataset is collected from `Yummly.com <https://www.yummly.com/>`_ for vertex classification task. 
+    It is a hypergraph dataset, in which vertex denotes the dish and hyperedge denotes
+    the ingredient. Each dish is also associated with category information, which indicates the dish's cuisine like 
+    Chinese, Japanese, French, and Russian.
     
-    The Content of the Cooking200 dataset includes the following:
+    The content of the Cooking200 dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`20`.
     - ``num_vertices``: The number of vertices: :math:`7,403`.

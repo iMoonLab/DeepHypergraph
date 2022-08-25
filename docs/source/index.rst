@@ -54,9 +54,8 @@ If you find our library useful for your research, please cite our papers:
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Get Started
-   :hidden:
 
    start/install
    start/structure
@@ -68,16 +67,14 @@ If you find our library useful for your research, please cite our papers:
 .. toctree:: 
    :maxdepth: 2
    :caption: Examples
-   :hidden:
    
    examples/vertex_cls/index
-   examples/recommender/index
+   examples/recommender
    examples/auto_ml/index
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
-   :hidden:
 
    tutorial/overview
    tutorial/structure
@@ -89,9 +86,8 @@ If you find our library useful for your research, please cite our papers:
    tutorial/random
 
 .. toctree:: 
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: 中文文档
-   :hidden:
 
    zh/overview
    zh/start/index
@@ -101,7 +97,6 @@ If you find our library useful for your research, please cite our papers:
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
-   :hidden:
 
    dhg <api/dhg>
    dhg.nn <api/nn>

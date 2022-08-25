@@ -6,5 +6,4 @@ numpy
 optuna
 torch>=1.11.0
 matplotlib
-pycairo
-sklearn
+scikit-learn

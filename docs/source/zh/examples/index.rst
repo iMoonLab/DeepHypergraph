@@ -1,10 +1,9 @@
 代码样例
-===========
+===============
 
 .. toctree::
-    :maxdepth: 2
-    :caption: 代码样例
+   :maxdepth: 3
 
-    vertex_cls
-    recommender
-    auto_ml
+   vertex_cls/index
+   recommender
+   auto_ml/index

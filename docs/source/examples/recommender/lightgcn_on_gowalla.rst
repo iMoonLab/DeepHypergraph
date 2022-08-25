@@ -1,5 +1,0 @@
-LightGCN on Gowalla
-======================
-
-Config
----------

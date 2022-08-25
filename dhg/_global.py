@@ -13,5 +13,5 @@ AUTHOR_EMAIL = "evanfeng97@gmail.com"
 CACHE_ROOT = get_dhg_cache_root()
 DATASETS_ROOT = CACHE_ROOT / "datasets"
 REMOTE_ROOT = "https://data.deephypergraph.com/"
-# REMOTE_DATASETS_ROOT = REMOTE_ROOT + "datasets/"
-REMOTE_DATASETS_ROOT = "https://data.shrec22.moon-lab.tech:18443/DHG/datasets/"
+REMOTE_DATASETS_ROOT = REMOTE_ROOT + "datasets/"
+# REMOTE_DATASETS_ROOT = "https://data.shrec22.moon-lab.tech:18443/DHG/datasets/"

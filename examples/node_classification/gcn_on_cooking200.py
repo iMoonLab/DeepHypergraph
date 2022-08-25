@@ -1,20 +1,15 @@
-import torch.nn.functional as F
-import torch.optim as optim
-import torch
-
-# import sys
-# sys.path.append('.')
-import dhg
-from dhg import Hypergraph
-from dhg.data import Cooking200
-from dhg.models import HGNN, HGNNP
-from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
-from dhg.random import set_seed
-from copy import deepcopy
 import time
-import os
+from copy import deepcopy
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+import torch
+import torch.optim as optim
+import torch.nn.functional as F
+
+from dhg import Graph, Hypergraph
+from dhg.data import Cooking200
+from dhg.models import HGNN, HGNNP, GCN
+from dhg.random import set_seed
+from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
 def train(net, X, A, lbls, train_idx, optimizer, epoch):
@@ -44,33 +39,29 @@ def infer(net, X, A, lbls, idx, test=False):
 
 
 if __name__ == "__main__":
+    set_seed(2021)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
-    # set_seed(2022)
     data = Cooking200()
-    # data = Pubmed()
-    # data = Citeseer()
-    # x = data['features']
 
-    lbl = data["labels"]
-    num_v = data["labels"].shape[0]
-    X = torch.eye(num_v)
+    X, lbl = torch.eye(data["num_vertices"]), data["labels"]
     ft_dim = X.shape[1]
-    G = Hypergraph(num_v, data["edge_list"])
+    HG = Hypergraph(data["num_vertices"], data["edge_list"])
+    G = Graph.from_hypergraph_clique(HG, weighted=True)
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
-    # net = FHGNN(ft_dim, 32, lbl.max().item() + 1)
-    net = HGNNP(ft_dim, 32, data["num_classes"], use_bn=True)
+    net = GCN(ft_dim, 32, data["num_classes"], use_bn=True)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
 
-    X, lbl = X.cuda(), lbl.cuda()
-    G.to(X.device)
-    net = net.cuda()
+    X, lbl = X.to(device), lbl.to(device)
+    G = G.to(device)
+    net = net.to(device)
 
     best_state = None
     best_epoch, best_val = 0, 0
-    for epoch in range(300):
+    for epoch in range(200):
         # train
         train(net, X, G, lbl, train_mask, optimizer, epoch)
         # validation

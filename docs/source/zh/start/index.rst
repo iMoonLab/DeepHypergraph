@@ -3,8 +3,6 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Get Started
-   :hidden:
 
    install
    structure

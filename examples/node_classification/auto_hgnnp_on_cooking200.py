@@ -1,15 +1,13 @@
-import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
 from dhg import Graph, Hypergraph
 from dhg.data import Cooking200
 from dhg.models import HGNN, HGNNP
 from dhg.random import set_seed
 from dhg.experiments import HypergraphVertexClassificationTask as Task
 from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def structure_builder(trial):
@@ -36,7 +34,9 @@ def train_builder(trial, model):
 
 
 if __name__ == "__main__":
+    work_root = "/home/fengyifan/OS3D/toolbox/exp_cache/tmp"
     set_seed(2022)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     data = Cooking200()
     dim_features = data["num_vertices"]
     num_classes = data["num_classes"]
@@ -50,12 +50,6 @@ if __name__ == "__main__":
     }
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
     task = Task(
-        "/home/fengyifan/OS3D/toolbox/exp_cache/tmp",
-        input_data,
-        model_builder,
-        train_builder,
-        evaluator,
-        torch.device("cuda:0"),
-        structure_builder=structure_builder,
+        work_root, input_data, model_builder, train_builder, evaluator, device, structure_builder=structure_builder,
     )
     task.run(200, 50, "maximize")
