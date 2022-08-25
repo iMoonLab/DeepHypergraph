@@ -1,76 +1,72 @@
-Structures in DHG
+DHG内的关联结构
 ===================================
 
-Introduction
+简介
 ----------------
-The core motivation of **DHG** is to attach those spectral-based and spatial-based operations to each specified structure. 
-When a structure is created, those related Laplacian Matrices and message passing operations with different aggregation functions can be called and combined to manipulate any input features. 
-Currently, the **DHG** has implemented the following structures and attached operations. More structures and operations will be added in the future. **Welcome to contribute!**
+**DHG** 的核心动机是将基于谱域和基于空域的操作加到每种特定关联结构中。
+当关联结构构造后，相关的拉普拉斯矩阵和具有不同聚合函数的信息传递操作可以被调用和组合来操作任意输入特征。
+此时 **DHG** 已经完成以下关联结构和操作。
+更多关联结构和操作将来会被加入。 **我们期待您的贡献!**
 
 
-.. csv-table:: Summary of Supported Structures and Attached Operations
-    :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations", "Aggregations"
+.. csv-table:: 支持的关联结构以及聚合函数总览
+    :header: "关联结构", "类", "类型", "基于谱域的操作", "基于空域的操作", "聚合函数"
     :widths: 2 2 2 3 3 2
 
-    "| Simple
-    | Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    "简单图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
-    "| Directed
-    | Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
+    "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
-    "| Bipartite
-    | Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
+    "二分图", ":py:class:`dhg.BiGraph`", "低阶关联", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v`
     | :math:`v \rightarrow u`", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
-    "| Simple
-    | Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    "简单超图", ":py:class:`dhg.Hypergraph`", "高阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
-    | :math:`v \rightarrow e` (specified group)
+    | :math:`v \rightarrow e` (特定组内)
     | :math:`e \rightarrow v`
-    | :math:`e \rightarrow v` (specified group)", "| ``mean``,
+    | :math:`e \rightarrow v` (特定组内)", "| ``mean``,
     | ``sum``,
     | ``softmax_then_sum``"
 
 
-Applications
+应用
 -----------------
 
-.. csv-table:: Summary of Applications of Differnet Structures
-    :header: Structure, "Applications", "Example Code"
+.. csv-table:: 不同关联结构的应用总览
+    :header: 关联结构, "应用", "示例代码"
     :widths: 2, 6, 4
 
-    "Simple Graph", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
-    "Directed Graph", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
-    "Bipartite Graph", "| Item Recommender of User-Item Graph,
-    | Correlation Prediction of Potein-Drug Graph, *etc.*", "aaaaaaaaaaa"
-    "Simple Hypergraph", "| Vertex Classification of Social Networks, 
-    | Visual Object Classification on Multi-Modal Visual Object Graph, *etc.*", "aaaaaaaaaa"
+    "简单图", "基于引用网络的论文分类等", "aaaaaaaaaa"
+    "有向图", "点云分类等", "aaaaaaaaa"
+    "二分图", "| 基于<用户-物品>二分图的物品推荐、
+    | 基于<蛋白质-药品>二分图的关联预测等", "aaaaaaaaaaa"
+    "简单超图", "| 基于社交网络的顶点分类,
+    | 基于多模态视觉对象图的视觉对象分类等", "aaaaaaaaaa"
     
 
-Two Core Operations
+两个核心操作
 ----------------------------
-The most learning on structures (graphs, hypergraphs, etc.) can be divided into two categories: spectral-based convolution and spatial-based message passing.
-The spectral-based convolution methods, like typical GCN and HGNN, learn a Laplacian Matrix for a given structure, and perform ``vertex feature smoothing`` with the generated 
-Laplacian Matrix to embed to low-order and high-order structures to vertex features. The spatial-based message passing methods, like typical GraphSAGE, GAT, and HGNN :sup:`+`, perform ``vertex to vertex``, ``vertex to hyperedge``, ``hyperedge to vertex``, 
-and ``vertex set to vertex set`` message passing to embedd the low-order and high-order structures to vertex features. The learned vertex features can also be pooled to generate the unified structure feature.
-Finally, the learned vertex features or structure features can be fed into many down-stream tasks like classification, retrieval, regression, and link prediction, 
-and applications like paper classification, movie recommender, drug exploition, *etc.*
+在图、超图中的大多数学习可以分为两类：基于谱域的卷积以及基于空域的信息传递。
+典型GCN和HGNN等基于谱域的卷积方法，学习给定关联结构的拉普拉斯矩阵，使用生成的拉普拉斯矩阵执行 ``vertex feature smoothing`` ，以将低阶和高阶结构嵌入到顶点特征内。
+典型GraphSAGE、GAT、、HGNN :sup:`+` 等基于空域的信息传递方法，
+执行 ``vertex to vertex`` 、``vertex to hyperedge``、 ``hyperedge to vertex``、``vertex set to vertex set`` 等信息传递以将低阶和高阶结构嵌入到顶点特征中。
+也可以将学习得到的顶点特征池化为统一的结构特征。
+最终，学习到的顶点特征或结构特征可以被分类、检索、回归、链路预测等下游任务和论文分类、电影推荐、药物挖掘等应用中。
 
-The Spectral-Based Operations
+基于谱域的操作
 +++++++++++++++++++++++++++++++
-The core of spectral-based convolution is the smoothing matrix like Laplacian Matrix. Some common smoothing matrices are provided in each structure. 
-For example, the Laplacian Matrix proposed in `GCN <_blank>`_ can be called in the simple graph structure and the bipartite graph structure, and the Laplacian Matrix proposed in 
-`HGNN <_blank>`_ can be called in the simple hypergraph structure.
+基于谱域卷积的核心在于如拉普拉斯矩阵的平滑矩阵。
+每种关联结构中都提供常见的平滑矩阵。
+例如, 简单图和二分图结构中可以调用  `GCN <_blank>`_ 中的拉普拉斯矩阵, 简单超图结构中可以调用 `HGNN <_blank>`_ 中的拉普拉斯矩阵。
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
-We can fetch the Laplacian Matrix of the specified simple graph structure with the ``g.L_GCN`` inside attribute.
-The size of the generated Laplacian Matrix is :math:`5 \times 5`. 
-Then, for any input vertex features you can smoothing these with the specified simple graph ``g`` with function ``g.smoothing_with_GCN()``.
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
+我们可以使用 ``g.L_GCN`` 内部属性获取指定图结构的拉普拉斯矩阵，其生成的拉普拉斯矩阵大小为 :math:`5 \times 5` 。
+然后，对于任意输入的顶点特征，您可以使用特定简单图 ``g`` 中的函数  ``g.smoothing_with_GCN()`` 来对特征平滑处理。
 
     .. code:: python
 
@@ -108,15 +104,15 @@ Then, for any input vertex features you can smoothing these with the specified s
                 [0.5434, 0.6609],
                 [0.3885, 0.6289]])
 
-In the following example, we randomly generate a **bipartite graph** structure with 3 vertices in set :math:`\mathcal{U}`, 5 vertices in set :math:`\mathcal{V}`, and 8 edges.
-We can fetch the Laplacian Matrix of the specified bipartite graph structure with ``g.L_GCN`` inside attribute. 
-The size of the generated Laplacian Matrix is :math:`8 \times 8`. 
-Then, for any input vertex features you can smoothing these with the specified bipartite graph ``g`` with function ``g.smoothing_with_GCN()``. More details can refer to :ref:`here <zh_start_learning_on_bipartite_graph>`.
+在如下例子中，我们随机生成集合 :math:`\mathcal{U}` 含有3个顶点、集合 :math:`\mathcal{V}` 含有5个顶点总共8条边的 **二分图**。
+我们可以使用 ``g.L_GCN`` 内部属性获取指定二分图结构的拉普拉斯矩阵，其生成的拉普拉斯矩阵大小为 :math:`8 \times 8` 。
+然后，对于任意输入的顶点特征，您可以使用特定二分图 ``g`` 中的函数  ``g.smoothing_with_GCN()`` 来对特征平滑处理。
+更多细节可以参考自 :ref:`此链接 <zh_start_learning_on_bipartite_graph>` 。
 
     .. note:: 
 
-        The GCN's Laplacian Matrix of bipartite graph is achieve by concate the bipartite adjacency matrix :math:`\mathbf{B}` with size :math:`|\mathcal{U}| \times |\mathcal{V}|` to 
-        the big adjacency matrix :math:`\mathbf{A}` with size :math:`||\mathcal{U}| + |\mathcal{V}|| \times ||\mathcal{U}| + |\mathcal{V}||`.
+        GCN的二分图拉普拉斯矩阵是通过扩展大小为 :math:`|\mathcal{U}| \times |\mathcal{V}|` 的二分图邻接矩阵 :math:`\mathbf{B}` 到
+        大小为 :math:`||\mathcal{U}| + |\mathcal{V}|| \times ||\mathcal{U}| + |\mathcal{V}||` 的大邻接矩阵 :math:`\mathbf{A}` 实现的。
 
     .. code:: python
 
@@ -137,10 +133,10 @@ Then, for any input vertex features you can smoothing these with the specified b
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.2500, 0.0000],
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.0000, 0.2500]])
 
-In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges. 
-We can fetch the Laplacian Matrix of the specified simple hypergraph structure with ``hg.L_HGNN`` inside attribute. 
-The size of the generated Laplacian Matrix is :math:`5 \times 5`.
-Then, for any input vertex features you can smoothing these with the specified simple hypergraph ``hg`` with function ``hg.smoothing_with_HGNN()``. More details can refer to :ref:`here <zh_start_learning_on_simple_hypergraph>`.
+在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **简单超图**。
+我们可以使用 ``hg.L_HGNN`` 内部属性获取指定超图结构的拉普拉斯矩阵，其生成的拉普拉斯矩阵大小为 :math:`5 \times 5` 。
+然后，对于任意输入的顶点特征，您可以使用 特定简单超图 ``hg`` 中的函数  ``hg.smoothing_with_HGNN()`` 来对特征平滑处理。
+更多细节可以参考自 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
 
     .. code:: python
 
@@ -158,17 +154,16 @@ Then, for any input vertex features you can smoothing these with the specified s
                 [0.0000, 0.1443, 0.3127, 0.3611, 0.1944],
                 [0.1925, 0.1443, 0.2646, 0.1944, 0.3056]])
 
-
-The Spatial-Based Operations 
+基于空域的操作
 +++++++++++++++++++++++++++++++
-The core of the spatial-based operation is message passing from ``source domain`` to ``target domain`` and message aggregation with different aggregation function. 
-In **DHG**, the ``soure domain`` and ``target domain`` can be anyone of ``a vertex``, ``a vertex in specified vertex set``, ``a hyperedge``, and ``a vertex set``. 
-The message aggregation function can be ``mean``, ``softmax``, and ``softmax_then_sum``. 
-Thus, unlike `PyG <https://www.pyg.org/>`_ and `DGL <https://www.dgl.ai/>`_ that can only pass messages from ``a vertex`` to ``another vertex or edge``, 
-the **DHG** provides more types of message passing functions on both low-order structure and high-order structure. 
+基于空域信息传递的核心在于从 ``source domain`` 到 ``target domain`` 的信息传递以及使用不同聚合函数的信息聚合。
+在 **DHG** 中， ``source domain`` 和 ``target domain`` 可以是 ``a vertex`` 、 ``a vertex in specified vertex set`` 、 ``a hyperedge`` 、 ``a vertex set`` 的其中之一，
+信息聚合函数可以是 ``mean``、 ``softmax``、  ``softmax_then_sum``。
+因此，与 `PyG <https://www.pyg.org/>`_ 和 `DGL <https://www.dgl.ai/>`_ 中只能将信息从 ``a vertex`` 传输到 ``another vertex or edge`` 不同，
+**DHG** 为低阶和高阶关联结构提供更多种类型的信息传递操作。
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
-The simple graph structure provides propagate message from ``a vertex`` to ``another vertex``, and the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
+简单图结构提供从 ``a vertex`` 到 ``another vertex`` 的信息传递，以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
 
     .. code:: python
 
@@ -220,11 +215,10 @@ The simple graph structure provides propagate message from ``a vertex`` to ``ano
                 [0.4113, 0.5738],
                 [0.4051, 0.6875]])
 
-
-In the following example, we randomly generate a **bipartite graph** structure with 3 vertices in set :math:`\mathcal{U}`, 5 vertices in set :math:`\mathcal{V}`, and 8 edges.
-The bipartite graph structure provides message passing from ``a vertex in a specified vertex set`` to ``another vertex in another specified vertex set``, and 
-the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
-The detailed spatial-based operation on bipartite graph can refer to :ref:`here <zh_start_learning_on_bipartite_graph>`.
+在如下例子中，我们随机生成集合 :math:`\mathcal{U}` 含有3个顶点、集合 :math:`\mathcal{V}` 含有5个顶点总共8条边的 **二分图**。
+二分图关联结构中，提供从 ``a vertex in a specified vertex set`` 到 ``another vertex in another specified vertex set`` 信息传递
+以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+二分图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_bipartite_graph>` 。
 
 
     .. code:: python
@@ -266,12 +260,11 @@ The detailed spatial-based operation on bipartite graph can refer to :ref:`here 
                 [0.3936, 0.5542],
                 [0.3936, 0.5542]])
 
-
-In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges. 
-The simple hypergraph structure provides message passing from ``a vertex`` to ``another vertex``, from ``a vertex set`` to ``a hyperedge``, 
-from ``a hyperedge`` to ``a vertex set``, and from ``a vertex set`` to ``another vertex set``. 
-The supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
-The detailed spatial-based operation on simple hypergraph can refer to :ref:`here <zh_start_learning_on_simple_hypergraph>`.
+在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **简单超图**。
+简单超图关联结构中，提供从 ``a vertex`` 到 ``another vertex`` 、 从 ``a vertex set`` 到 ``a hyperedge`` 、
+从 ``a hyperedge`` 到 ``a vertex set`` 、  从 ``a vertex set`` 到 ``another vertex set`` 四种信息传递
+以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+简单超图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
  
     .. code:: python
     
@@ -312,15 +305,15 @@ The detailed spatial-based operation on simple hypergraph can refer to :ref:`her
                 [0.4114, 0.5893]])
 
 
-What Can be Done with the Two Operations?
+基于两种操作可以实现什么?
 -------------------------------------------
 
 
-Add Eary Self-loop and Late Self-Loop
+增加先自环以及后自环
 ++++++++++++++++++++++++++++++++++++++++++
 
-Self-loop is a important structure for feature learning especially for the simple graph structure. 
-In the following examples, we introduce how to add early self-loop and late self-loop for spatial-based learning on the simple graph structure.
+自环是特征学习特别是简单图关联结构中的重要结构。
+在如下的例子中，我们介绍如何在简单图关联结构中为基于空域的学习增加先自环和后自环。
 
 Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
@@ -345,7 +338,7 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
                 [0.7933, 0.7811],
                 [0.4643, 0.6329]])
 
-Message Passing with Early Self-Loop 
+使用先自环的信息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     
     .. code:: python
@@ -373,7 +366,7 @@ Message Passing with Early Self-Loop
                 [0.4199, 0.6738]])
 
 
-Message Passing with Late Self-Loop
+使用后自环的信息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -398,11 +391,11 @@ Message Passing with Late Self-Loop
                 [0.8695, 1.3204]])
 
 
-Fuse Features Learned from the Spectral and Spatial Domain
+融合从谱域和空域中学习到的特征
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
-Then, we attemp to fuse the features that learned from the different methods but the same structure ``g``.
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
+然后，我们尝试融合从相同关联结构 ``g`` 使用不同方法学习的特征。
 
     .. code:: python
 
@@ -434,12 +427,11 @@ Then, we attemp to fuse the features that learned from the different methods but
                 [0.3968, 0.6582]])
 
 
-Fuse Features Learned from different Structures
+融合从不同关联结构中学习到的特征
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In the following example, we construct two different structures including simple graph structure and simple hypergraph structure on the same vertex set. 
-Then, two structures' message passing functions are adopted to generate vertex features learned from different structure, 
-and the final hybrid vertex features can be generated by the combination of them.
+在如下例子中，我们随机在相同顶点集中生成一个 **简单图** 和一个 **简单超图** 。
+然后，采用两种关联结构中的消息传递函数来生成不同的顶点特征，通过它们的组合连接生成最终的混合顶点特征。
 
     .. code:: python
 
