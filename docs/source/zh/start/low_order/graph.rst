@@ -14,7 +14,7 @@
 可能存在孤立顶点。
 两条或更多的边连接同样的顶点称为 `重边 <https://en.wikipedia.org/wiki/Multiple_edges>`_ ，根据以上定义未被允许。
 
-构造
+结构构建
 -------------------------
 简单图的关联结构可以通过以下方法构建。
 More details can refer to aaaaaaaaaaaaa.

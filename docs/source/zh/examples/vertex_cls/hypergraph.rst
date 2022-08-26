@@ -1,44 +1,40 @@
-On Simple Hypergraph
+简单超图
 ==========================================
 
+在如下的例子中，我们使用三种典型图/超图神经网络在简单超图关联结构中执行节点分类任务。
 
-In the following examples, three typical graph/hypergraph neural networks are used to perform vertex classification task on the simple hypergraph structure.
-
-Models
+模型
 ---------------------------
 
-- GCN (:py:class:`dhg.models.GCN`), `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ paper (ICLR 2017).
-- HGNN (:py:class:`dhg.models.HGNN`), `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ paper (AAAI 2019).
-- HGNN+ (:py:class:`dhg.models.HGNNP`), `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ paper (IEEE T-PAMI 2022).
+- GCN (:py:class:`dhg.models.GCN`), `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ 论文 (ICLR 2017).
+- HGNN (:py:class:`dhg.models.HGNN`), `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ 论文 (AAAI 2019).
+- HGNN+ (:py:class:`dhg.models.HGNNP`), `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ 论文 (IEEE T-PAMI 2022).
 
-Dataset
+数据集
 ---------------------------
 
-The Cooking 200 dataset (:py:class:`dhg.data.Cooking200`) is collected from `Yummly.com <https://www.yummly.com/>`_ for vertex classification task. 
-It is a hypergraph dataset, in which vertex denotes the dish and hyperedge denotes
-the ingredient. Each dish is also associated with category information, which indicates the dish's cuisine like 
-Chinese, Japanese, French, and Russian.
+Cooking 200 数据集 (:py:class:`dhg.data.Cooking200`) 从 `Yummly.com <https://www.yummly.com/>`_ 收集并用于节点分类任务。
+其为超图数据集，顶点代表菜式，超边代表配料。
+每种菜式与一种分类信息关联，为该菜式的菜系（中餐、日本菜、法国菜、俄罗斯菜）。
 
 .. note:: 
 
-    The dataset is a hypergraph dataset, which cannot be directly used for GCN model. 
-    Thus, the ``clique expansion`` is adpoted to reduce the simple hypergraph structure to a simple graph structure.
+    数据集为超图数据集，不能直接用于GCN模型。因此，使用 ``clique expansion`` 将简单超图转为简单图。
 
 .. note:: 
 
-    The dataset donot contain the vertex features. Thus, we generate a identity matrix for vertex features.
+    数据集不包含顶点特征，因此我们生成一个单位矩阵代表顶点特征矩阵。
 
 .. warning:: 
 
-    Generating identity matrix for vertex features will lead to unstable parameters in training stage. 
-    Thus, the batch_norm is used for the GCN, HGNN, and HGNN+ models in the following examples.
+    生成单位矩阵作为顶点特征会导致训练阶段参数不稳定。因此，batch_norm会用于以下示例中的GCN、HGNN和HGNN+模型中。
 
 
-Results
+结果
 ----------------
 
 ========    ======================  ======================  ======================
-Model       Accuracy on Validation  Accuracy on Testing     F1 score on Testing
+模型         验证集的Accuracy         测试集的Accuracy          测试集F1 score
 ========    ======================  ======================  ======================
 GCN         0.500                   0.434                   0.356
 HGNN        0.485                   0.495                   0.376
@@ -46,10 +42,10 @@ HGNN+       0.475                   0.520                   0.391
 ========    ======================  ======================  ======================
 
 
-GCN on Cooking200
+Cooking200上使用GCN
 ---------------------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -68,7 +64,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -99,12 +95,12 @@ Define Functions
         return res
 
 
-Main
+主函数
 ^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -154,7 +150,7 @@ Main
         print(res)
 
 
-Outputs
+输出
 ^^^^^^^^^^^^
 .. code-block:: text
 
@@ -408,10 +404,10 @@ Outputs
     final result: epoch: 189
     {'accuracy': 0.4340996742248535, 'f1_score': 0.35630662515488015, 'f1_score -> average@micro': 0.43409967156932744}
 
-HGNN on Cooking200
+Cooking200上使用HGNN
 ---------------------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -430,7 +426,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -460,12 +456,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -511,8 +507,7 @@ Main
         print(f"final result: epoch: {best_epoch}")
         print(res)
 
-
-Outputs
+输出
 ^^^^^^^^^^^^
 .. code-block:: text
 
@@ -753,10 +748,10 @@ Outputs
     {'accuracy': 0.4949307441711426, 'f1_score': 0.37618299381063885, 'f1_score -> average@micro': 0.49493074396687137}
 
 
-HGNN+ on Cooking200
+Cooking200上使用HGNN+
 ---------------------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -775,7 +770,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -805,12 +800,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -857,7 +852,7 @@ Main
         print(res)
 
 
-Outputs
+输出
 ^^^^^^^^^^^^
 .. code-block:: text
 

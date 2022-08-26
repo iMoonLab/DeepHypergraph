@@ -30,7 +30,7 @@ DHG是免费软件，您可以基于Apache License 2.0协议自由分发或修�
 DHG使用 `black <https://black.readthedocs.io/en/stable/>`_ 包格式代码。
 格式代码的配置在 ``pyproject.toml`` 文件中。
 
-测试
+代码测试
 -------------
 DHG的测试位于 ``tests/`` 文件夹下，您可以在 ``tests/`` 内的子文件夹中为您实现的功能补充新的测试文件。
 使用如下命令运行所有测试

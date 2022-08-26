@@ -20,7 +20,7 @@
 
 
 
-构造
+结构构建
 -------------------------
 二分图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
 

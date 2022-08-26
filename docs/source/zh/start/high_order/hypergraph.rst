@@ -1,40 +1,40 @@
 .. _zh_start_learning_on_simple_hypergraph:
 
-Learning on Simple Hypergraph
+基于简单超图的学习
 =================================
 
-Definition
+定义
 -----------------
-`Simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+`简单超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ (也可以称为无向超图) 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
 
-- :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}`, a set of **hyperedges** (also called **edges**), where :math:`\mathcal{P}(\mathcal{V})` is the `power set <https://en.wikipedia.org/wiki/Power_set>`_ of :math:`\mathcal{V}`.
-  Each hyperedge :math:`e \in \mathcal{E}` can contains two or more vertices.
+- :math:`\mathcal{V}` 是 **顶点** 集(也可以称为 **节点** 或者 **点**);
+- :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}` 是 **超边** 集(也可以称为 **边**), 其中 :math:`\mathcal{P}(\mathcal{V})` 是 :math:`\mathcal{V}` 的 `幂集 <https://en.wikipedia.org/wiki/Power_set>`_ 。
+  每一条超边 :math:`e \in \mathcal{E}` 可以包含两个或更多顶点。
 
-While graph edges connect only 2 vertices, hyperedges connect an arbitrary number of vertices. 
-However, it is often desirable to study hypergraphs where all hyperedges have the same cardinality; 
-a k-uniform hypergraph is a hypergraph such that all its hyperedges have size k. 
-(In other words, one such hypergraph is a collection of sets, 
-each such set a hyperedge connecting k nodes.) So a 2-uniform hypergraph is a graph, 
-a 3-uniform hypergraph is a collection of unordered triples, and so on. 
-An undirected hypergraph is also called a set system or a family of sets drawn from the universal set.
+图内的边仅可以连接2个顶点，而超边可以连接任意数量的顶点。
+然而，通常需要研究每条超边均连接相同个数顶点的超图;
+k-uniform超图是所有超边连接的顶点数均为k的超图。
+(换句话说，这样的超图是一组集合，每个集合包含k个顶点。)
+所以2-uniform超图就是图，
+3-uniform超图就是无序三元组的集合，依此类推。
+无向超图也被称为集合系统或者从全集中提取的集合族。
 
 
-Construction
+结构构建
 ---------------------
-The simple hypergraph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+简单超图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
 
-- Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
-- Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
-- Promoted from the low-order structures
+- 超边列表 (**默认**) :py:class:`dhg.Hypergraph`
+- 使用特征的k近邻 :py:meth:`dhg.Hypergraph.from_feature_kNN`
+- 从低阶关联结构得到
 
-  - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
-  - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
-  - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
+  - 简单图 :py:meth:`dhg.Hypergraph.from_graph`
+  - 简单图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - 二分图 :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
-In the following example, we randomly generate a simple hypergraph structure and a feature matrix to perform some basic learning operations on this structure.
-   
+在如下的例子中，我们随机生成一个简单超图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
+
     .. code:: python
 
         >>> import torch
@@ -69,10 +69,10 @@ In the following example, we randomly generate a simple hypergraph structure and
     
 ..     This is the image.
 
-Spectral-Based Learning
+基于谱域的学习
 -------------------------------
 
-Smoothing with HGNN's Laplacian
+使用HGNN的拉普拉斯进行平滑
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -93,10 +93,10 @@ Smoothing with HGNN's Laplacian
                 [0.4945, 0.5725],
                 [0.4888, 0.6728]])
 
-Spatial-Based Learning
+基于空域的学习
 -------------------------------
 
-Message Propagation from Vertex to Hyperedge
+从顶点到超边的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -117,7 +117,7 @@ Message Propagation from Vertex to Hyperedge
                 [0.4280, 0.5911],
                 [0.5107, 0.5386]])
 
-Message Propagation from Vertex to Hyperedge with different Edge Weights
+从顶点到超边依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -146,7 +146,7 @@ Message Propagation from Vertex to Hyperedge with different Edge Weights
                 [1.2437, 1.4487]])
 
 
-Message Propagation from Hyperedge to Vertex
+从超边到顶点的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -168,7 +168,7 @@ Message Propagation from Hyperedge to Vertex
                 [0.4114, 0.5893]])
 
 
-Message Propagation from Hyperedge to Vertex with different Edge Weights
+从超边到顶点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -196,11 +196,11 @@ Message Propagation from Hyperedge to Vertex with different Edge Weights
                 [0.6650, 0.7853],
                 [1.1605, 1.7178]])
 
-Message Propagation from Vertex Set to Vertex Set
+从顶点集到顶点集的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each hyperedge connects a set of vertices, and it is a message bridge between two sets of vertices.
-In simple hypergraph, the source vertex set and the target vertex set that the hyperedge connects are the same.
+每一条超边连接一个顶点集，其为两个顶点集合的信息桥梁。
+在简单超图中，超边连接的源顶点集和汇顶点集是相同的。
 
     .. code:: python
 
@@ -221,7 +221,7 @@ In simple hypergraph, the source vertex set and the target vertex set that the h
                 [0.4495, 0.5667],
                 [0.4114, 0.5893]])
 
-Message Propagation from Vertex Set to Vertex Set with different Edge Weights in Two Stages
+从顶点集到顶点集依赖边权的两阶段消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python

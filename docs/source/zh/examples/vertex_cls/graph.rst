@@ -1,27 +1,27 @@
-On Simple Graph
+简单图
 ==========================================
 
-In the following examples, four typical graph/hypergraph neural networks are used to perform vertex classification task on the simple graph structure.
+在如下的例子中，我们使用四种典型图/超图神经网络在简单图关联结构中执行节点分类任务。
 
-Models
+模型
 ---------------------------
 
-- GCN (:py:class:`dhg.models.GCN`), `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ paper (ICLR 2017).
-- GAT (:py:class:`dhg.models.GAT`), `Graph Attention Networks <https://arxiv.org/pdf/1710.10903>`_ paper (ICLR 2018).
-- HGNN (:py:class:`dhg.models.HGNN`), `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ paper (AAAI 2019).
-- HGNN+ (:py:class:`dhg.models.HGNNP`), `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ paper (IEEE T-PAMI 2022).
+- GCN (:py:class:`dhg.models.GCN`), `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ 论文 (ICLR 2017).
+- GAT (:py:class:`dhg.models.GAT`), `Graph Attention Networks <https://arxiv.org/pdf/1710.10903>`_ 论文 (ICLR 2018).
+- HGNN (:py:class:`dhg.models.HGNN`), `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ 论文 (AAAI 2019).
+- HGNN+ (:py:class:`dhg.models.HGNNP`), `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ 论文 (IEEE T-PAMI 2022).
 
-Dataset
+数据集
 ---------------------------
 
-The Cora dataset (:py:class:`dhg.data.Cora`) is a citation network dataset for vertex classification task. 
-More details can be found in this `websit <https://relational.fit.cvut.cz/dataset/CORA>`_.
+Cora数据集 (:py:class:`dhg.data.Cora`) 为节点分类任务中使用的引用网络数据集。
+更多细节可以参考此 `网页 <https://relational.fit.cvut.cz/dataset/CORA>`_.
 
-Results
+结果
 ----------------
 
 ========    ======================  ======================  ======================
-Model       Accuracy on Validation  Accuracy on Testing     F1 score on Testing
+模型         验证集的Accuracy         测试集的Accuracy          测试集的F1 score
 ========    ======================  ======================  ======================
 GCN         0.800                   0.823                   0.814
 GAT         0.804                   0.824                   0.817
@@ -30,10 +30,10 @@ HGNN+       0.802                   0.827                   0.820
 ========    ======================  ======================  ======================
 
 
-GCN on Cora
+Cora上使用GCN
 ----------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -51,7 +51,7 @@ Import Libraries
     from dhg.random import set_seed
     from dhg.metrics import GraphVertexClassificationEvaluator as Evaluator
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -81,12 +81,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -131,7 +131,7 @@ Main
         print(f"final result: epoch: {best_epoch}")
         print(res)
 
-Outputs
+输出
 ^^^^^^^^^^^^
 .. code-block:: text
 
@@ -388,10 +388,10 @@ Outputs
     final result: epoch: 157
     {'accuracy': 0.8230000138282776, 'f1_score': 0.8135442845966843, 'f1_score -> average@micro': 0.823}
 
-GAT on Cora
+Cora上使用GAT
 ----------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -410,7 +410,7 @@ Import Libraries
     from dhg.metrics import GraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -441,12 +441,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -491,7 +491,7 @@ Main
         print(f"final result: epoch: {best_epoch}")
         print(res)
 
-Outputs
+输出
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: text
@@ -827,10 +827,10 @@ Outputs
     {'accuracy': 0.8240000009536743, 'f1_score': 0.8174891298012773, 'f1_score -> average@micro': 0.824}
 
 
-HGNN on Cora
+Cora上使用HGNN
 ----------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -849,7 +849,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -879,12 +879,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -931,7 +931,7 @@ Main
         print(res)
 
 
-Outputs
+输出
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: text
@@ -1188,10 +1188,10 @@ Outputs
     final result: epoch: 175
     {'accuracy': 0.8209999799728394, 'f1_score': 0.8113491851888245, 'f1_score -> average@micro': 0.821}    
 
-HGNN+ on Cora
+Cora上使用HGNN+
 ----------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -1210,7 +1210,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -1240,12 +1240,12 @@ Define Functions
             res = evaluator.test(lbls, outs)
         return res
 
-Main
+主函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -1293,7 +1293,7 @@ Main
         print(res)
 
 
-Outputs
+输出
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: text
