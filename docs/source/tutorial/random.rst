@@ -1,16 +1,18 @@
 Structure Generation
 =======================
 
-Random Graph
-------------------
+Comming soon...
 
-generate
+.. Random Graph
+.. ------------------
 
-Random Directed Graph
-----------------------------
+.. generate
 
-generate
+.. Random Directed Graph
+.. ----------------------------
+
+.. generate
 
 
-Examples
---------------
+.. Examples
+.. --------------

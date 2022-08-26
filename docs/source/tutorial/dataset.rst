@@ -1,32 +1,34 @@
 Build Dataset
 ================
 
-Prepare Dataset
------------------
+Comming soon...
 
-Use the intergrated dataset
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. Prepare Dataset
+.. -----------------
 
-Currently, DHG includes the following datasets:
+.. Use the intergrated dataset
+.. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
-
-Dataset Pipeline
-------------------
-
-How to process the data
-
-Available Pipeline Functions
------------------------------
-
-to_tensor
-
-Introduction
-------------------------
-For each dataset in DHG, we have pre-process the feature. and transform them to torch.Tensor.
-
-You can access the raw data by data.raw('attribute_name')
+.. Currently, DHG includes the following datasets:
 
 
-Examples
---------------
+
+.. Dataset Pipeline
+.. ------------------
+
+.. How to process the data
+
+.. Available Pipeline Functions
+.. -----------------------------
+
+.. to_tensor
+
+.. Introduction
+.. ------------------------
+.. For each dataset in DHG, we have pre-process the feature. and transform them to torch.Tensor.
+
+.. You can access the raw data by data.raw('attribute_name')
+
+
+.. Examples
+.. --------------

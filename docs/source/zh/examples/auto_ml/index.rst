@@ -3,7 +3,7 @@
 
 
 .. toctree:: 
-    :maxdepth: 2
+    :maxdepth: 1
 
     gcn_on_cora
     hgnnp_on_cooking200

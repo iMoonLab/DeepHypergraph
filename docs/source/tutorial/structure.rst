@@ -10,7 +10,7 @@ Low-Order Structures
 Build Simple Graph
 +++++++++++++++++++++++
 
-A simple graph is a graph with no loops and no multiple edges, which can be constructed by the following methods:
+A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, which can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`
@@ -51,7 +51,7 @@ Reduced from High-Order Structures
 Build Bipartite Graph
 +++++++++++++++++++++++
 
-A bipartite graph is a graph that contains two types of vertices and edges between them, 
+A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ is a graph that contains two types of vertices and edges between them, 
 whose partition has the parts vertex set :math:`\mathcal{U}` and vertex set :math:`\mathcal{V}`. 
 It can be constructed by the following methods:
 

@@ -1,4 +1,4 @@
-在Gowalla中使用LightGCN
+在Gowalla上使用LightGCN
 =======================
 
 在如下的例子中，我们介绍在<用户-物品>二分图推荐任务中使用Auto-ML。
