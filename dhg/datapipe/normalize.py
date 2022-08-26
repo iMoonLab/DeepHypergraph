@@ -13,6 +13,19 @@ def norm_ft(
     Args:
         ``X`` (``torch.Tensor``): The input feature.
         ``ord`` (``Union[int, float]``, optional): The order of the norm can be either an ``int``, ``float``. If ``ord`` is ``None``, the norm is computed with the 2-norm. Defaults to ``None``.
+
+    Examples:
+        >>> import dhg.datapipe as dd
+        >>> import torch
+        >>> X = torch.tensor([
+                    [0.1, 0.2, 0.5],
+                    [0.5, 0.2, 0.3],
+                    [0.3, 0.2, 0]
+                ])
+        >>> dd.norm_ft(X)
+        tensor([[0.1826, 0.3651, 0.9129],
+                [0.8111, 0.3244, 0.4867],
+                [0.8321, 0.5547, 0.0000]])
     """
     if X.dim() == 1:
         X_norm = 1 / torch.linalg.norm(X, ord=ord)
