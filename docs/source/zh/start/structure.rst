@@ -10,36 +10,28 @@ DHG内的关联结构
 
 
 .. csv-table:: 支持的关联结构以及聚合函数总览
-    :header: "关联结构", "类", "类型", "基于谱域的操作", "基于空域的操作", "聚合函数"
-    :widths: 2 2 2 3 3 2
+    :header: "关联结构", "类", "类型", "基于谱域的操作", "基于空域的操作"
+    :widths: 2 2 2 3 3
 
     "简单图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
-    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
     "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
-    | :math:`v_{dst} \rightarrow v_{src}`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`v_{dst} \rightarrow v_{src}`"
     "二分图", ":py:class:`dhg.BiGraph`", "低阶关联", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v`
-    | :math:`v \rightarrow u`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`v \rightarrow u`"
     "简单超图", ":py:class:`dhg.Hypergraph`", "高阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (特定组内)
     | :math:`e \rightarrow v`
-    | :math:`e \rightarrow v` (特定组内)", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`e \rightarrow v` (特定组内)"
 
 
-应用
+应用场景
 -----------------
 
 .. csv-table:: 不同关联结构的应用总览
     :header: 关联结构, "应用", "示例代码"
-    :widths: 2, 6, 4
+    :widths: 2, 6, 3
 
     "简单图", "基于引用网络的论文分类等", "aaaaaaaaaa"
     "有向图", "点云分类等", "aaaaaaaaa"

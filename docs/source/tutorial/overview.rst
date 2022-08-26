@@ -4,26 +4,21 @@ Overview
 Preparations
 ----------------
 
-1. Build the correlation structure for your task.
-2. Build the input data for your task.
-3. Build the model for your task.
-4. Build the evaluator for your task.
-
-.. toctree:: 
-    :titlesonly:
-
-
+1. :doc:`Build the Correlation Structure for Your Task </tutorial/structure>`.
+2. :doc:`Build the Input Data for Your Task </tutorial/dataset>`.
+3. :doc:`Build the Model for Your Task </tutorial/model>`.
+4. :doc:`Build the Evaluator for Your Task </tutorial/metric>`.
 
 
 Training and Evaluation
 ------------------------------
 
-1. Build your training and evaluation code.
-2. Auto-hyperparameter tuning.
+1. :doc:`Build Your Training and Evaluation Code </tutorial/train>`.
+2. :doc:`Auto-Hyperparameter Tuning </tutorial/auto_ml>`.
 
 
 Others
 -----------
 
-- Random correlation structure generation.
+- :doc:`Random Correlation Structure Generation </tutorial/random>`.
 

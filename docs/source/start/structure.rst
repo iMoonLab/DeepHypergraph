@@ -9,32 +9,24 @@ Currently, the **DHG** has implemented the following structures and attached ope
 
 
 .. csv-table:: Summary of Supported Structures and Attached Operations
-    :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations", "Aggregations"
-    :widths: 2 2 2 3 3 2
+    :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations"
+    :widths: 2 2 2 3 3
 
     "| Simple
     | Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
-    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
     "| Directed
     | Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
-    | :math:`v_{dst} \rightarrow v_{src}`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`v_{dst} \rightarrow v_{src}`"
     "| Bipartite
     | Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
-    | :math:`v \rightarrow u`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`v \rightarrow u`"
     "| Simple
     | Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (specified group)
     | :math:`e \rightarrow v`
-    | :math:`e \rightarrow v` (specified group)", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`e \rightarrow v` (specified group)"
 
 
 Applications
@@ -42,7 +34,7 @@ Applications
 
 .. csv-table:: Summary of Applications of Different Structures
     :header: Structure, "Applications", "Example Code"
-    :widths: 2, 6, 4
+    :widths: 2, 6, 3
 
     "Simple Graph", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
     "Directed Graph", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
