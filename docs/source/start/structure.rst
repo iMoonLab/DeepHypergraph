@@ -12,17 +12,13 @@ Currently, the **DHG** has implemented the following structures and attached ope
     :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations"
     :widths: 2 2 2 3 3
 
-    "| Simple
-    | Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    "| Simple Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
-    "| Directed
-    | Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
+    "| Directed Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`"
-    "| Bipartite
-    | Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
+    "| Bipartite Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
     | :math:`v \rightarrow u`"
-    "| Simple
-    | Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    "| Simple Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (specified group)
     | :math:`e \rightarrow v`

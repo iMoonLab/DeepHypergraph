@@ -92,7 +92,7 @@ If you find our library useful for your research, please cite our papers:
    zh/overview
    zh/start/index
    zh/examples/index
-   zh/tutorials/index
+   zh/tutorial/index
 
 .. toctree::
    :maxdepth: 2

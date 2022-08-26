@@ -52,7 +52,7 @@ def precision(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Precision score for the recommender task.
+    r"""Calculate the Precision score for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -84,7 +84,7 @@ def recall(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Recall score for the recommender task.
+    r"""Calculate the Recall score for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -112,7 +112,7 @@ def recall(
 
 
 def _dcg(matrix: torch.Tensor) -> torch.Tensor:
-    r"""Compute the Discounted Cumulative Gain (DCG).
+    r"""Calculate the Discounted Cumulative Gain (DCG).
     
     Args:
         ``sequence`` (``torch.Tensor``): A 2-D tensor. Size :math:`(N, K)`
@@ -131,7 +131,7 @@ def ndcg(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Normalized Discounted Cumulative Gain (NDCG) for the recommender task.
+    r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.

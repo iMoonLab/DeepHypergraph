@@ -40,7 +40,13 @@ def _format_inputs(y_true: torch.LongTensor, y_pred: torch.Tensor):
 
 
 def accuracy(y_true: torch.LongTensor, y_pred: torch.Tensor):
-    r"""Compute the accuracy score for the classification task.
+    r"""Calculate the accuracy score for the classification task.
+
+    .. math::
+        \text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \mathcal{I}(y_i, \hat{y}_i),
+    
+    where :math:`\mathcal{I}(\cdot, \cdot)` is the indicator function, which is 1 if the two inputs are equal, and 0 otherwise.
+    :math:`y_i` and :math:`\hat{y}_i` are the ground truth and predicted labels for the i-th sample.
 
     Args:
         ``y_true`` (``torch.LongTensor``): The ground truth labels. Size :math:`(N_{samples}, )`.
@@ -63,7 +69,7 @@ def accuracy(y_true: torch.LongTensor, y_pred: torch.Tensor):
 
 
 def f1_score(y_true: torch.LongTensor, y_pred: torch.Tensor, average: str = "macro"):
-    r"""Compute the f1 score for the classification task.
+    r"""Calculate the F1 score for the classification task.
 
     Args:
         ``y_true`` (``torch.LongTensor``): The ground truth labels. Size :math:`(N_{samples}, )`.
@@ -92,7 +98,7 @@ def f1_score(y_true: torch.LongTensor, y_pred: torch.Tensor, average: str = "mac
 
 
 def confusion_matrix(y_true: torch.LongTensor, y_pred: torch.Tensor):
-    r"""Compute the confusion matrix for the classification task.
+    r"""Calculate the confusion matrix for the classification task.
 
     Args:
         ``y_true`` (``torch.LongTensor``): The ground truth labels. Size :math:`(N_{samples}, )`.

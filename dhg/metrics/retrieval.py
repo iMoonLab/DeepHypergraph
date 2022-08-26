@@ -55,7 +55,7 @@ def precision(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Precision score for the retrieval task.
+    r"""Calculate the Precision score for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -87,7 +87,7 @@ def recall(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Recall score for the retrieval task.
+    r"""Calculate the Recall score for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -121,7 +121,7 @@ def ap(
     k: Optional[int] = None,
     method: str = "pascal_voc",
 ) -> Union[float, list]:
-    r"""Compute the Average Precision (AP) for the retrieval task.
+    r"""Calculate the Average Precision (AP) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
@@ -167,7 +167,7 @@ def map(
     method: str = "pascal_voc",
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the mean Average Precision (mAP) for the retrieval task.
+    r"""Calculate the mean Average Precision (mAP) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -205,7 +205,7 @@ def map(
 
 
 def _dcg(matrix: torch.Tensor) -> torch.Tensor:
-    r"""Compute the Discounted Cumulative Gain (DCG).
+    r"""Calculate the Discounted Cumulative Gain (DCG).
     
     Args:
         ``sequence`` (``torch.Tensor``): A 2-D tensor. Size :math:`(N, K)`
@@ -224,7 +224,7 @@ def ndcg(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Normalized Discounted Cumulative Gain (NDCG) for the retrieval task.
+    r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -259,7 +259,7 @@ def ndcg(
 
 
 def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None) -> float:
-    r"""Compute the Reciprocal Rank (RR) for the retrieval task.
+    r"""Calculate the Reciprocal Rank (RR) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)``.
@@ -295,7 +295,7 @@ def mrr(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the mean Reciprocal Rank (MRR) for the retrieval task.
+    r"""Calculate the mean Reciprocal Rank (MRR) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -328,7 +328,7 @@ def _pr_curve(
     method: str = "pascal_voc",
     n_points: int = 11,
 ) -> tuple:
-    r"""Compute the Precision-Recall Curve for the retrieval task.
+    r"""Calculate the Precision-Recall Curve for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
@@ -384,7 +384,7 @@ def pr_curve(
     n_points: int = 11,
     ret_batch: bool = False,
 ) -> tuple:
-    r"""Compute the Precision-Recall Curve for the retrieval task.
+    r"""Calculate the Precision-Recall Curve for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.

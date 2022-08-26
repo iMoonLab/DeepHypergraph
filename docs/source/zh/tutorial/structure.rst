@@ -1,4 +1,4 @@
-Build Structure
+构建关联结构
 ===================================
 Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures 
 and some structure transformation functions of them like: *reducing the high-order structrue to the low-order structure* 

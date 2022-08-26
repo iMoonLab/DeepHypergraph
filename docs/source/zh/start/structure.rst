@@ -21,9 +21,9 @@ DHG内的关联结构
     | :math:`v \rightarrow u`"
     "简单超图", ":py:class:`dhg.Hypergraph`", "高阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
-    | :math:`v \rightarrow e` (特定组内)
+    | :math:`v \rightarrow e` (特定超边组内)
     | :math:`e \rightarrow v`
-    | :math:`e \rightarrow v` (特定组内)"
+    | :math:`e \rightarrow v` (特定超边组内)"
 
 
 应用场景
