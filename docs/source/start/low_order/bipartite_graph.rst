@@ -6,7 +6,7 @@ Learning on Bipartite Graph
 
 Definition
 -------------------------
-`Bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 
+A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 
 whose partition has the parts :math:`\mathcal{U}` and :math:`\mathcal{V}`, with :math:`\mathcal{E}` denoting the edges of the bipartite graph. 
 
 - :math:`\mathcal{U}`, is one set of **vertices** (also called **nodes** or **points**);

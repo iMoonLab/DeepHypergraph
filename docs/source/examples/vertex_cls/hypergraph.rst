@@ -26,7 +26,7 @@ Chinese, Japanese, French, and Russian.
 
 .. note:: 
 
-    The dataset donot contain the vertex features. Thus, we generate a identity matrix for vertex features.
+    The dataset do not contain the vertex features. Thus, we generate a identity matrix for vertex features.
 
 .. warning:: 
 
