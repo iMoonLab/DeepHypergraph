@@ -1,35 +1,35 @@
-User-Item Recommender
+<用户-物品>二分图上的推荐
 ====================================
 
-In the following examples, two typical collaborative filtering neural networks are used to perform item recommender on the User-Item bipartite graph.
+在如下例子中，我们使用两种协同过滤神经网络在<用户-物品>二分图中执行物品推荐任务。
 
-Models
+模型
 ---------------------------
 
-- NGCF (:py:class:`dhg.models.GCN`), `Neural Graph Collaborative Filtering <https://arxiv.org/pdf/1905.08108>`_ paper (SIGIR 2019).
-- LightGCN (:py:class:`dhg.models.LightGCN`), `LightGCN: Lightweight Graph Convolutional Networks <https://arxiv.org/pdf/2002.02126>`_ paper (SIGIR 2020).
+- NGCF (:py:class:`dhg.models.GCN`), `Neural Graph Collaborative Filtering <https://arxiv.org/pdf/1905.08108>`_ 论文 (SIGIR 2019).
+- LightGCN (:py:class:`dhg.models.LightGCN`), `LightGCN: Lightweight Graph Convolutional Networks <https://arxiv.org/pdf/2002.02126>`_ 论文 (SIGIR 2020).
 
-Dataset
+数据集
 ---------------------------
 
-The Gowalla dataset (:py:class:`dhg.data.Gowalla`) is collected for user-item recommendation task. Locations are viewed as items.
-The full dataset can be found in this `websit <https://snap.stanford.edu/data/loc-gowalla.html>`_.
+Gowalla (:py:class:`dhg.data.Gowalla`) 是为<用户-物品>推荐任务收集的数据集。用户的位置被视为物品。
+数据集的全集来自于 `此网站 <https://snap.stanford.edu/data/loc-gowalla.html>`_ 。
 
-Results
+结果汇总
 ----------------
 
 ========    ======================  ==========================
-Model       `NDCG@20` on Testing    `Recall@20` on Testing
+模型         测试集上的 `NDCG@20`      测试集上的 `Recall@20`
 ========    ======================  ==========================
 NGCF        0.1307                  0.1547               
 LightGCN    0.1550                  0.1830              
 ========    ======================  ==========================
 
 
-NGCF on Gowalla
+Gowalla上使用NGCF
 -----------------
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -50,7 +50,7 @@ Import Libraries
     from dhg.utils import UserItemDataset, adj_list_to_edge_list
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -127,12 +127,12 @@ Define Functions
         return evaluator.test_epoch_res()
 
 
-Main
+主函数
 ^^^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -185,7 +185,7 @@ Main
         print(f"test res: {test_res}")
 
 
-Outputs
+输出
 ^^^^^^^^^^^
 
 .. code-block:: text
@@ -383,11 +383,11 @@ Outputs
     Validation: NDCG@20 -> 0.11516925413130324
 
 
-LightGCN
+Gowalla上使用LightGCN
 -----------------------------------
 
 
-Import Libraries
+导入依赖包
 ^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -408,7 +408,7 @@ Import Libraries
     from dhg.utils import UserItemDataset, adj_list_to_edge_list
 
 
-Define Functions
+定义函数
 ^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -485,12 +485,12 @@ Define Functions
         return evaluator.test_epoch_res()
 
 
-Main
+主函数
 ^^^^^^^^^^^
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
 
 .. code-block:: python
 
@@ -542,7 +542,7 @@ Main
         test_res = test(net, test_loader)
         print(f"test res: {test_res}")
 
-Outputs
+输出
 ^^^^^^^^^^^
 
 .. code-block::

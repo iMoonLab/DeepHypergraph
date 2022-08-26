@@ -1,17 +1,16 @@
-GCN on Cora
+Cora上使用GCN
 ===============
 
-In the following example, we present a simple example of Auto-ML for vertex classification on simple graph.
-More details for how to use the :doc:`/api/experiments` to auto tuning your own model can be found in the tutorial <:doc:`/tutorial/auto_ml`>.
+在如下的例子中，我们介绍在简单图节点分类任务中使用Auto-ML。
+关于如何使用 :doc:`/api/experiments` 进行自动模型调优的细节可以参考自 <:doc:`/tutorial/auto_ml`>。
 
-Configuration
+配置
 --------------
 
-- Model: GCN (:py:class:`dhg.models.GCN`): `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ paper (ICLR 2017).
-- Dataset: Cora (:py:class:`dhg.data.Cora`): A citation network dataset for vertex classification task. 
+- 模型: GCN (:py:class:`dhg.models.GCN`): `Semi-Supervised Classification with Graph Convolutional Networks <https://arxiv.org/pdf/1609.02907>`_ 论文 (ICLR 2017)。
+- 数据集: Cora (:py:class:`dhg.data.Cora`): 节点分类任务使用的引用网络数据集。
 
-
-Import Libraries
+导入依赖包
 ---------------------
 
 .. code-block:: python
@@ -29,7 +28,7 @@ Import Libraries
 
 
 
-Define Functions
+定义函数
 -------------------
 
 .. code-block:: python
@@ -47,12 +46,12 @@ Define Functions
             "criterion": criterion,
         }
 
-Main
+主函数
 -----
 
 .. important:: 
 
-    You must change the ``work_root`` to your own work directory.
+    您需要修改 ``work_root`` 变量为您的工作目录。
 
 
 .. code-block:: python
@@ -76,7 +75,7 @@ Main
         task = Task(work_root, input_data, model_builder, train_builder, evaluator, device,)
         task.run(200, 50, "maximize")
 
-Outputs
+输出
 -------------
 
 .. code-block:: text

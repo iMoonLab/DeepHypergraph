@@ -1,17 +1,17 @@
-LightGCN on Gowalla
+在Gowalla中使用LightGCN
 =======================
 
-In the following example, we present a simple example of Auto-ML for recommender task on User-Item bipartite graph.
-More details for how to use the :doc:`/api/experiments` to auto tuning your own model can be found in the tutorial <:doc:`/tutorial/auto_ml`>.
+在如下的例子中，我们介绍在<用户-物品>二分图推荐任务中使用Auto-ML。
+关于如何使用 :doc:`/api/experiments` 进行自动模型调优的细节可以参考自 <:doc:`/tutorial/auto_ml`>。
 
-Configuration
+配置
 --------------
 
-- Model: LightGCN (:py:class:`dhg.models.LightGCN`): `LightGCN: Lightweight Graph Convolutional Networks <https://arxiv.org/pdf/2002.02126>`_ paper (SIGIR 2020).
-- Dataset: Gowalla (:py:class:`dhg.data.Gowalla`): The Gowalla dataset is collected for user-item recommendation task. Locations are viewed as items.
+- 模型: LightGCN (:py:class:`dhg.models.LightGCN`): `LightGCN: Lightweight Graph Convolutional Networks <https://arxiv.org/pdf/2002.02126>`_ 论文 (SIGIR 2020)。
+- 数据集: Gowalla (:py:class:`dhg.data.Gowalla`): Gowalla 是为<用户-物品>推荐任务收集的数据集。用户的位置被视为物品。
 
 
-Import Libraries
+导入依赖包
 ---------------------
 
 .. code-block:: python
@@ -30,7 +30,7 @@ Import Libraries
     from dhg.utils import UserItemDataset, adj_list_to_edge_list
 
 
-Define Functions
+定义函数
 -------------------
 
 .. code-block:: python
@@ -67,12 +67,12 @@ Define Functions
             "criterion": criterion,
         }
 
-Main
+主函数
 -----
 
 .. important:: 
 
-    You must change the ``work_root`` to your own work directory.
+    您需要修改 ``work_root`` 变量为您的工作目录。
 
 .. code-block:: python
 
@@ -112,7 +112,7 @@ Main
 
 
 
-Outputs
+输出
 -------------
 
 .. code-block:: text

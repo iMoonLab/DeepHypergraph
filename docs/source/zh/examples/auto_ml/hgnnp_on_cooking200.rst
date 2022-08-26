@@ -1,17 +1,17 @@
-HGNN+ on Cooking200
+在Cooking200中使用HGNN+
 =======================
 
-In the following example, we present a simple example of Auto-ML for vertex classification on simple hypergraph.
-More details for how to use the :doc:`/api/experiments` to auto tuning your own model can be found in the tutorial <:doc:`/tutorial/auto_ml`>.
+在如下的例子中，我们介绍在简单超图节点分类任务中使用Auto-ML。
+关于如何使用 :doc:`/api/experiments` 进行自动模型调优的细节可以参考自 <:doc:`/tutorial/auto_ml`>。
 
-Configuration
+配置
 --------------
 
-- Model: HGNN+ (:py:class:`dhg.models.HGNNP`): `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ paper (IEEE T-PAMI 2022).
-- Dataset: Cooking 200 (:py:class:`dhg.data.Cooking200`): A cooking recipe hypergraph dataset collected from `Yummly.com <https://www.yummly.com/>`_ for vertex classification task.
+- 模型: HGNN+ (:py:class:`dhg.models.HGNNP`): `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ 论文 (IEEE T-PAMI 2022)。
+- 数据集: Cooking 200 (:py:class:`dhg.data.Cooking200`): 一个用于顶点分类任务的烹饪食谱超图数据集，收集自 `Yummly.com <https://www.yummly.com/>`_ 。
 
 
-Import Libraries
+导入依赖包
 ---------------------
 
 .. code-block:: python
@@ -28,7 +28,7 @@ Import Libraries
     from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
 
-Define Functions
+定义函数
 -------------------
 
 .. code-block:: python
@@ -55,12 +55,12 @@ Define Functions
             "criterion": criterion,
         }
 
-Main
+主函数
 -----
 
 .. important:: 
 
-    You must change the ``work_root`` to your own work directory.
+    您需要修改 ``work_root`` 变量为您的工作目录。
 
 .. code-block:: python
 
@@ -86,7 +86,7 @@ Main
         task.run(200, 50, "maximize")
 
 
-Outputs
+输出
 -------------
 
 .. code-block:: text
