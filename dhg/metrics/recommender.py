@@ -171,6 +171,34 @@ class UserItemRecommenderEvaluator(BaseEvaluator):
     Args:
         ``metric_configs`` (``List[Union[str, Dict[str, dict]]]``): The metric configurations. The key is the metric name and the value is the metric parameters.
         ``validate_index`` (``int``): The specified metric index used for validation. Defaults to ``0``.
+
+    Examples:
+        >>> import torch
+        >>> import dhg.metrics as dm
+        >>> evaluator = dm.UserItemRecommenderEvaluator(
+                [
+                    "precision",
+                    "recall",
+                    "ndcg",
+                ],
+                0
+            )
+        >>> y_true = torch.tensor([0, 1, 0, 0, 1, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> evaluator.validate_epoch_res()
+        0.5
+        >>> y_true = torch.tensor([0, 1, 1, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([1, 1, 0, 0, 1, 0])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> evaluator.test_epoch_res()
+        {'precision': 0.5833333432674408, 'recall': 1.0, 'ndcg': 0.8878978490829468}
     """
 
     def __init__(
