@@ -11,7 +11,7 @@ Models
 - HGNN (:py:class:`dhg.models.HGNN`), `Hypergraph Neural Networks <https://arxiv.org/pdf/1809.09401>`_ paper (AAAI 2019).
 - HGNN+ (:py:class:`dhg.models.HGNNP`), `HGNN+: General Hypergraph Neural Networks <https://ieeexplore.ieee.org/document/9795251>`_ paper (IEEE T-PAMI 2022).
 
-Dataset Description
+Dataset
 ---------------------------
 
 The Cora dataset (:py:class:`dhg.data.Cora`) is a citation network dataset for vertex classification task. 

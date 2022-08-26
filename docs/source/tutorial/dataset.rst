@@ -1,6 +1,16 @@
 Build Dataset
 ================
 
+Prepare Dataset
+-----------------
+
+Use the intergrated dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Currently, DHG includes the following datasets:
+
+
+
 Dataset Pipeline
 ------------------
 

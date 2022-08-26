@@ -107,7 +107,7 @@ Main
             "test_loader": test_loader,
             "structure": ui_bigraph,
         }
-        task = Task(work_root, input_data, model_builder, train_builder, evaluator, torch.device("cuda:0"),)
+        task = Task(work_root, input_data, model_builder, train_builder, evaluator, device)
         task.run(10, 300, "maximize")
 
 

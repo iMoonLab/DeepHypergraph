@@ -9,7 +9,7 @@ Models
 - NGCF (:py:class:`dhg.models.GCN`), `Neural Graph Collaborative Filtering <https://arxiv.org/pdf/1905.08108>`_ paper (SIGIR 2019).
 - LightGCN (:py:class:`dhg.models.LightGCN`), `LightGCN: Lightweight Graph Convolutional Networks <https://arxiv.org/pdf/2002.02126>`_ paper (SIGIR 2020).
 
-Dataset Description
+Dataset
 ---------------------------
 
 The Gowalla dataset (:py:class:`dhg.data.Gowalla`) is collected for user-item recommendation task. Locations are viewed as items.
