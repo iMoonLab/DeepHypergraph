@@ -383,7 +383,7 @@ Outputs
     Validation: NDCG@20 -> 0.11516925413130324
 
 
-LightGCN
+LightGCN on Gowalla
 -----------------------------------
 
 

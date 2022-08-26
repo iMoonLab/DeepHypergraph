@@ -1,21 +1,23 @@
 Training Model
 ========================
 
-Vertex Classification on Graphs
-------------------------------------
-Do something
+Comming soon...
+
+.. Vertex Classification on Graphs
+.. ------------------------------------
+.. Do something
 
 
-Vertex Classification on Hypergraphs
----------------------------------------
+.. Vertex Classification on Hypergraphs
+.. ---------------------------------------
 
-do it 
+.. do it 
 
-Recommendation on Bipartite Graphs
----------------------------------------
+.. Recommendation on Bipartite Graphs
+.. ---------------------------------------
 
-bpr lightgcn
+.. bpr lightgcn
 
 
-Examples
---------------
+.. Examples
+.. --------------

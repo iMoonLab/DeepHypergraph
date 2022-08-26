@@ -1,33 +1,35 @@
 Build Model
 ======================
 
-1. select your correlation
-2. determinate your type
+Comming soon...
 
-Build Spectral-Based Model
----------------------------
+.. 1. select your correlation
+.. 2. determinate your type
 
-
-GCN
-++++++
-
-HGNN
-+++++++
-
-Build Spatial-Based Model
------------------------------
-
-GAT 
-+++++
-
-GraphSAGE
-+++++++++++++++
+.. Build Spectral-Based Model
+.. ---------------------------
 
 
-HGNNP
-++++++++++
+.. GCN
+.. ++++++
+
+.. HGNN
+.. +++++++
+
+.. Build Spatial-Based Model
+.. -----------------------------
+
+.. GAT 
+.. +++++
+
+.. GraphSAGE
+.. +++++++++++++++
+
+
+.. HGNNP
+.. ++++++++++
 
 
 
-Examples
---------------
+.. Examples
+.. --------------
