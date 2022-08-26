@@ -30,6 +30,7 @@ def find_version(filename):
     raise RuntimeError("Unable to find version string.")
 
 
+autodoc_mock_imports = ["numpy", "scipy", "optuna", "sklearn"]
 # -- Project information -----------------------------------------------------
 
 project = "DHG"
