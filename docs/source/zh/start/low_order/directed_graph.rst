@@ -1,32 +1,32 @@
 
-Learning on Directed Graph
+基于有向图的学习
 =============================
 
-Definition
+定义
 -----------------------
-`Directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+`有向图 <https://en.wikipedia.org/wiki/Directed_graph>`_ 可以定义为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
 
-- :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{E} \subseteq \{ (x, y) \mid (x, y) \in \mathcal{V}^2~and~x \neq y \}`, a set of **edges** (also called **directed edges**, **directed links**, **directed lines**, **arrow**, or **arcs**), 
-  which are `ordered pairs <https://en.wikipedia.org/wiki/Ordered_pair>`_ of vertices (that is, an edge is associated with two distinct vertices).
+- :math:`\mathcal{V}` 是 **顶点** 集(也可以称为 **节点** 或者 **点**);
+- :math:`\mathcal{E} \subseteq \{ (x, y) \mid (x, y) \in \mathcal{V}^2~and~x \neq y \}` 是 **边** 集 (也可以称为 **有向边** 、 **有向连接** 、 **有向线** 、 **箭头** 、 **弧**),
+  其为顶点间的 `有序对 <https://en.wikipedia.org/wiki/Ordered_pair>`_ (也就是说，一条边与两个不同的顶点相关联)。
 
-In the edge :math:`(x, y)`, the vertices :math:`x` and :math:`y` are called the **endpoints** of the edge,
-:math:`x` is the **source** (also called **tail**) of the edge and :math:`y` is the **target** (also called **head**) of the edge.
-The edge is said to **join** :math:`x` and :math:`y` and to be **incident** on :math:`x` and on :math:`y`. 
-A vertex may exist in a directed graph and not belong to an edge. The edge :math:`(y, x)` is called the inverted edge of :math:`(x, y)`. 
-`Multiple edges <https://en.wikipedia.org/wiki/Multiple_edges>`_, not allowed under the definition above, are two or more edges with both the same tail and the same head.
+在边 :math:`(x, y)` 中, 顶点 :math:`x` 和 :math:`y` 被称为边的 **端点**，
+:math:`x` 为边的 **源** (也被称作 **尾**)， :math:`y` 为边的 **汇** (也被称为 **头** )。
+称这条边 **连接** :math:`x` 和 :math:`y` 并且 **关联** :math:`x` 和  :math:`y`。
+可能存在孤立顶点。
+边 :math:`(y, x)` 称为边 :math:`(x, y)` 的反向遍。
+两条或更多的边连接同样的源和汇称为 `重边 <https://en.wikipedia.org/wiki/Multiple_edges>`_ ，根据以上定义未被允许。
 
 
-Construction
+构造
 -------------------------
+有向图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
 
-The directed graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+- 边列表 (**默认**) :py:class:`dhg.DiGraph`
+- 邻接表 :py:meth:`dhg.DiGraph.from_adj_list`
+- 使用特征的k近邻 :py:meth:`dhg.DiGraph.from_feature_kNN`
 
-- Edge list (**default**) :py:class:`dhg.DiGraph`
-- Adjacency list :py:meth:`dhg.DiGraph.from_adj_list`
-- Features with k-Nearest Neighbors :py:meth:`dhg.DiGraph.from_feature_kNN`
-
-In the following example, we randomly general a directed graph structure and a feature matrix to perform some basic learning operations on this structure.
+在如下的例子中，我们随机生成一个有向图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
 
     .. code:: python
 
@@ -65,17 +65,15 @@ In the following example, we randomly general a directed graph structure and a f
 ..     Here is the image.
 
 
-Spectral-Based Learning
+基于谱域的学习
 ---------------------------------
 
-Welcome to contribute!
+我们期待您的贡献！
 
-
-Spatial-Based Learning
+基于空域的学习
 ---------------------------------
 
-
-Message Propagation from Source Vertex to Target Vertex
+从源点到汇点的信息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -96,8 +94,7 @@ Message Propagation from Source Vertex to Target Vertex
                 [0.2110, 0.6407],
                 [0.4051, 0.6875]])
 
-
-Message Propagation from Source Vertex to Target Vertex with different Edge Weights
+从源点到汇点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -125,7 +122,7 @@ Message Propagation from Source Vertex to Target Vertex with different Edge Weig
                 [0.3809, 0.6432]])
 
 
-Message Propagation from Target Vertex to Source Vertex
+从汇点到源点的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -147,7 +144,7 @@ Message Propagation from Target Vertex to Source Vertex
                 [0.2110, 0.6407]])
 
 
-Message Propagation from Target Vertex to Source Vertex with different Edge Weights
+从汇点到源点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python

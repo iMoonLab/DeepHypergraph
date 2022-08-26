@@ -1,32 +1,33 @@
-Learning on Simple Graph
+基于简单图的学习
 =============================
 
-Definition
+定义
 -------------------------
-`Simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+`简单图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
 
-- :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}`, a set of **edges** (also called **links** or **lines**), 
-  which are `unordered pairs <https://en.wikipedia.org/wiki/Unordered_pair>`_ of vertices (that is, an edge is associated with two distinct vertices).
+- :math:`\mathcal{V}` 是 **顶点** 集(也可以称为 **节点** 或者 **点**);
+- :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}` 是 **边** 集(也可以称为 **连接** 或者 **线**),
+  其为顶点间的 `无序对 <https://en.wikipedia.org/wiki/Unordered_pair>`_ (也就是说，一条边与两个不同的顶点相关联)。
 
-In the edge :math:`\{x, y\}`, the vertices :math:`x` and :math:`y` are called the **endpoints** of the edge. 
-The edge is said to **join** :math:`x` and :math:`y` and to be **incident** on :math:`x` and on :math:`y`. 
-A vertex may exist in a simple graph and not belong to an edge. 
-`Multiple edges <https://en.wikipedia.org/wiki/Multiple_edges>`_, not allowed under the definition above, are two or more edges that join the same two vertices.
+在边 :math:`\{x, y\}` 中, 顶点 :math:`x` 和 :math:`y` 被称为边的 **端点**。
+称这条边 **连接** :math:`x` 和 :math:`y` 并且 **关联** :math:`x` 和  :math:`y`。
+可能存在孤立顶点。
+两条或更多的边连接同样的顶点称为 `重边 <https://en.wikipedia.org/wiki/Multiple_edges>`_ ，根据以上定义未被允许。
 
-Construction
+构造
 -------------------------
-The simple graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+简单图的关联结构可以通过以下方法构建。
+More details can refer to aaaaaaaaaaaaa.
 
-- Edge list (**default**) :py:class:`dhg.Graph`
-- Adjacency list :py:meth:`dhg.Graph.from_adj_list`
-- Reduced from the simple hypergraph structure
+- 边列表 (**默认**) :py:class:`dhg.Graph`
+- 邻接表 :py:meth:`dhg.Graph.from_adj_list`
+- 从简单超图关联结构简化而来
   
-  - Star expansion :py:meth:`dhg.Graph.from_hypergraph_star`
-  - Clique expansion :py:meth:`dhg.Graph.from_hypergraph_clique`
-  - `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_-based expansion :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
+  - 星扩展 :py:meth:`dhg.Graph.from_hypergraph_star`
+  - 集扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
+  - 基于 `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ 的扩展 :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-In the following example, we randomly generate a simple graph structure and a feature matrix to perform some basic learning operations on this structure.
+在如下的例子中，我们随机生成一个简单图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
 
     .. code:: python
 
@@ -65,10 +66,10 @@ In the following example, we randomly generate a simple graph structure and a fe
 ..     Here is the image.
 
 
-Spectral-Based Learning
+基于谱域的学习
 -------------------------
 
-Smoothing with GCN's Laplacian
+使用GCN的拉普拉斯进行平滑
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -96,7 +97,7 @@ Smoothing with GCN's Laplacian
                 [0.5434, 0.6609],
                 [0.3885, 0.6289]])
 
-Smoothing with Symmetrically Normalized Laplacian
+使用对称归一化的拉普拉斯进行平滑
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -124,7 +125,7 @@ Smoothing with Symmetrically Normalized Laplacian
                 [ 0.8218,  0.7940],
                 [ 0.4756,  0.6351]])
 
-Smoothing with Left (random-walk) Normalized Laplacian
+使用左（随机游走）归一化的拉普拉斯进行平滑
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -153,10 +154,10 @@ Smoothing with Left (random-walk) Normalized Laplacian
                 [ 0.4703,  0.6275]])
 
 
-Spatial-Based Learning
+基于空域的学习
 ----------------------------
 
-Message Propagation from Vertex to Vertex
+从顶点到顶点的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -177,7 +178,7 @@ Message Propagation from Vertex to Vertex
                 [0.4113, 0.5738],
                 [0.4051, 0.6875]])
 
-Message Propagation from Vertex to Vertex with different Edge Weights
+从顶点到顶点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python

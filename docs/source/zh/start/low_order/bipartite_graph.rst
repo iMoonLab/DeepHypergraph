@@ -1,34 +1,34 @@
 
 .. _zh_start_learning_on_bipartite_graph:
 
-Learning on Bipartite Graph
+基于二分图的学习
 ==============================
 
-Definition
+定义
 -------------------------
-`Bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 
-whose partition has the parts :math:`\mathcal{U}` and :math:`\mathcal{V}`, with :math:`\mathcal{E}` denoting the edges of the bipartite graph. 
+`有向图 <https://en.wikipedia.org/wiki/Bipartite_graph>`_ 可以表示为 :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})`，
+其分为 :math:`\mathcal{U}` 和 :math:`\mathcal{V}` 两部分， 通过二分图内的边 :math:`\mathcal{E}` 连接。
 
-- :math:`\mathcal{U}`, is one set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{V}`, is another set of **vertices** (also called **nodes** or **points**);
-- :math:`\mathcal{E} \subseteq \{ (x, y) \mid x \in \mathcal{U}~and~y \in \mathcal{V} \}`, a set of **edges** (also called **links** or **lines**).
+- :math:`\mathcal{U}` 是一个 **顶点** 集(也可以称为 **节点** 或者 **点**);
+- :math:`\mathcal{V}` 是另一个 **顶点** 集(也可以称为 **节点** 或者 **点**);
+- :math:`\mathcal{E} \subseteq \{ (x, y) \mid x \in \mathcal{U}~and~y \in \mathcal{V} \}` 是 **边** 集(也可以称为 **连接** 或者 **线**),
 
-When modelling relations between two different classes of objects, bipartite graphs very often arise naturally. 
-For instance, a bipartite graph of football players and clubs, with an edge between a player and a club if the player has played for that club, 
-is a natural example of an affiliation network, a type of bipartite graph used in social network analysis. 
-Another example is a bipartite graph of user-item interactions, where the user watches/clicks/views/likes/budges an item can model 
-different scenarios like: movie/news/goods/hotels/products/services recommender. 
+当对两类不同对线之间的关系建模时，通常会自然出现二分图。
+例如，足球运动员和俱乐部之间的二分图，如果该球员曾经为该俱乐部效力，那么在该球员和该俱乐部间有一条边，
+这是从隶属网络的自然例子，也是一种用于社交网络分析的二分图。
+另一个例子是表示<用户-物品>交互的二分图，其中用户观看/点击/查看/喜欢/调整一个项目可以建模不同的场景，例如电影/新闻/商品/酒店/产品/服务推荐。
 
 
-Construction
+
+构造
 -------------------------
-The bipartite graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+二分图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
 
-- Edge list (**default**) :py:class:`dhg.BiGraph`
-- Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`
-- Simple hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
+- 边列表 (**默认**) :py:class:`dhg.BiGraph`
+- 邻接表 :py:meth:`dhg.BiGraph.from_adj_list`
+- 简单超图 :py:meth:`dhg.BiGraph.from_hypergraph`
 
-In the following example, we randomly generate a bipartite graph structure and two feature matrices to perform some basic learning operations on this structure.
+在如下的例子中，我们随机生成一个二分图关联结构和两个特征矩阵，并对此结构进行一些基本的学习操作。
 
     .. code:: python
 
@@ -69,10 +69,10 @@ In the following example, we randomly generate a bipartite graph structure and t
 ..     Here is the image.
 
 
-Spectral-Based Learning
+基于谱域的学习
 -----------------------------
 
-Smoothing with GCN's Laplacian
+使用GCN的拉普拉斯进行平滑
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -124,10 +124,10 @@ Smoothing with GCN's Laplacian
                 [0.5261, 0.5961]])
 
 
-Spatial-Based Learning
+基于空域的学习
 ----------------------------
 
-Message Propagation from Vertices in Set :math:`U` to Vertices in Set :math:`V`
+从 :math:`U` 内顶点到 :math:`V` 内顶点的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -146,7 +146,7 @@ Message Propagation from Vertices in Set :math:`U` to Vertices in Set :math:`V`
                 [0.3936, 0.5542],
                 [0.3936, 0.5542]])
 
-Message Propagation from Vertices in Set :math:`U` to Vertices in Set :math:`V` with different Edge Weights
+从 :math:`U` 内顶点到 :math:`V` 内顶点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -171,7 +171,7 @@ Message Propagation from Vertices in Set :math:`U` to Vertices in Set :math:`V` 
                 [1.5306e+00, 2.3305e+00],
                 [6.1360e-01, 1.3660e+00]])
 
-Message Propagation from Vertices in Set :math:`V` to Vertices in Set :math:`U`
+从 :math:`V` 内顶点到 :math:`U` 内顶点的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
@@ -190,7 +190,7 @@ Message Propagation from Vertices in Set :math:`V` to Vertices in Set :math:`U`
                 [0.7740, 0.6469],
                 [0.7526, 0.5763]])
 
-Message Propagation from Vertices in Set :math:`V` to Vertices in Set :math:`U` with different Edge Weights
+从 :math:`V` 内顶点到 :math:`U` 内顶点依赖边权的消息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     .. code:: python
