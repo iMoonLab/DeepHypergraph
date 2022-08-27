@@ -14,7 +14,8 @@ def force_layout(
     pull_e_strength: float,
     pull_center_strength: float,
 ):
-    v_coor = np.random.rand(num_v, 2) - 0.5
+    v_coor = np.random.rand(num_v, 2) * 10 - 5.0
+    assert v_coor.max() <= 5.0 and v_coor.min() >= -5.0
     sim = Simulator(
         nums=num_v,
         forces={

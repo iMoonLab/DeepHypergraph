@@ -41,7 +41,7 @@ def draw_graph(
     pull_center_strength: Optional[float] = None,
 ):
     assert e_style in ["line", "circle"], "e_style must be 'line' or 'circle'"
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(6, 6))
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
     v_color, e_color, e_fill_color, font_family = default_style(
@@ -53,9 +53,7 @@ def draw_graph(
     )
     # layout
     v_coor = force_layout(num_v, e_list, push_v_strength, 0.0, pull_e_strength, pull_center_strength,)
-    draw_vertex(
-        ax, v_coor, v_label, font_size, font_family, v_size, v_color, v_line_width,
-    )
+    
     if e_style == "line":
         draw_line_edge(
             ax, v_coor, v_size, e_list, False, e_color, e_line_width,
@@ -64,6 +62,14 @@ def draw_graph(
         draw_circle_edge(
             ax, v_coor, v_size, e_list, e_color, e_fill_color, e_line_width,
         )
+
+    draw_vertex(
+        ax, v_coor, v_label, font_size, font_family, v_size, v_color, v_line_width,
+    )
+
+    plt.xlim((0, 1.0))
+    plt.ylim((0, 1.0))
+
     fig.tight_layout()
 
 
