@@ -43,6 +43,7 @@ Common Methods
     [1.0, 1.0, 1.0, 1.0]
     >>> g.e_both_side
     ([(0, 1), (0, 2), (1, 2), (3, 4), (1, 0), (2, 0), (2, 1), (4, 3)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> # print the adjacency matrix
     >>> g.A.to_dense()
     tensor([[0., 1., 1., 0., 0.],
             [1., 0., 1., 0., 0.],
@@ -50,6 +51,7 @@ Common Methods
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
 
+You can find that the adjacency matrix of the simple graph is a symmetric matrix.
 The ``g.e`` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
 The ``g.e_both_size`` attribute will return the both side of edges in the simple graph.
 
@@ -199,13 +201,14 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
     :alt: hypergcn
     :height: 200px
 
+
 .. code-block:: python
 
     >>> X = torch.tensor(([[0.6460, 0.0247],
-                            [0.9853, 0.2172],
-                            [0.7791, 0.4780],
-                            [0.0092, 0.4685],
-                            [0.9049, 0.6371]]))
+                           [0.9853, 0.2172],
+                           [0.7791, 0.4780],
+                           [0.0092, 0.4685],
+                           [0.9049, 0.6371]]))
     >>> g = dhg.Graph.from_hypergraph_hypergcn(hg, X)
     >>> g
     Simple Graph(num_v=5, num_e=4)
@@ -233,7 +236,7 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
 Build Directed Graph
 +++++++++++++++++++++++
 
-A `directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ is a graph with directed edges, where the edge ``(x, y)`` and edge ``(y, x)`` can exist in the structure simultaneously.
+A `directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ is a graph with directed edges, where the edge ``(x, y)`` and edge ``(y, x)`` can exist simultaneously in the structure.
 It can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.DiGraph`
@@ -243,7 +246,70 @@ It can be constructed by the following methods:
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
-Comming soon
+.. note:: 
+
+    The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
+
+**Construct a directed graph from edge list with** :py:class:`dhg.DiGraph`
+
+.. code-block:: python
+
+    >>> import dhg
+    >>> g = dhg.DiGraph(5, [(0, 3), (2, 4), (4, 2), (3, 1)])
+    >>> g
+    Directed Graph(num_v=5, num_e=4)
+    >>> g.e
+    ([(0, 3), (2, 4), (4, 2), (3, 1)], [1.0, 1.0, 1.0, 1.0])
+    >>> # print the adjacency matrix
+    >>> g.A.to_dense()
+    tensor([[0., 0., 0., 1., 0.],
+            [0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 1.],
+            [0., 1., 0., 0., 0.],
+            [0., 0., 1., 0., 0.]])
+
+You can find that the adjacency matrix of the directed graph is not symmetric.
+
+
+**Construct a directed graph from adjacency list with** :py:meth:`dhg.DiGraph.from_adj_list`
+
+.. code-block:: python
+
+    >>> g = dhg.DiGraph.from_adj_list(5, [(0, 3, 4), (2, 1, 3), (3, 0)])
+    >>> g
+    Directed Graph(num_v=5, num_e=5)
+    >>> g.e
+    ([(0, 3), (0, 4), (2, 1), (2, 3), (3, 0)], [1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> # print the adjacency matrix
+    >>> g.A.to_dense()
+    tensor([[0., 0., 0., 1., 1.],
+            [0., 0., 0., 0., 0.],
+            [0., 1., 0., 1., 0.],
+            [1., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0.]])
+
+
+**Construct a directed graph from feature k-Nearest Neighbors with** :py:meth:`dhg.DiGraph.from_feature_kNN`
+
+.. code-block:: python
+
+    >>> X = torch.tensor(([[0.6460, 0.0247],
+                           [0.9853, 0.2172],
+                           [0.7791, 0.4780],
+                           [0.0092, 0.4685],
+                           [0.9049, 0.6371]]))
+    >>> g = dhg.DiGraph.from_feature_kNN(X, k=2)
+    >>> g
+    Directed Graph(num_v=5, num_e=10)
+    >>> g.e
+    ([(0, 1), (0, 2), (1, 2), (1, 0), (2, 4), (2, 1), (3, 2), (3, 0), (4, 2), (4, 1)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> g.A.to_dense()
+    tensor([[0., 1., 1., 0., 0.],
+            [1., 0., 1., 0., 0.],
+            [0., 1., 0., 0., 1.],
+            [1., 0., 1., 0., 0.],
+            [0., 1., 1., 0., 0.]], dtype=torch.float64)
+
 
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -264,12 +330,108 @@ It can be constructed by the following methods:
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
-Comming soon
+.. note:: 
+
+    The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
+
+**Construct a bipartite graph from edge list with** :py:class:`dhg.BiGraph`
+
+.. code-block:: python
+
+    >>> import dhg
+    >>> g = dhg.BiGraph(5, 4, [(0, 3), (4, 2), (1, 1), (2, 0)])
+    >>> g
+    Bipartite Graph(num_u=5, num_v=4, num_e=4)
+    >>> g.e
+    ([(0, 3), (4, 2), (1, 1), (2, 0)], [1.0, 1.0, 1.0, 1.0])
+    >>> # print the bipartite adjacency matrix
+    >>> g.B.to_dense()
+    tensor([[0., 0., 0., 1.],
+            [0., 1., 0., 0.],
+            [1., 0., 0., 0.],
+            [0., 0., 0., 0.],
+            [0., 0., 1., 0.]])
+    >>> # print the adjacency matrix
+    >>> g.A.to_dense()
+    tensor([[0., 0., 0., 0., 0., 0., 0., 0., 1.],
+            [0., 0., 0., 0., 0., 0., 1., 0., 0.],
+            [0., 0., 0., 0., 0., 1., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+            [0., 0., 1., 0., 0., 0., 0., 0., 0.],
+            [0., 1., 0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 1., 0., 0., 0., 0.],
+            [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
+
+**Construct a bipartite graph from adjacency list with** :py:meth:`dhg.BiGraph.from_adj_list`
+
+.. code-block:: python
+
+    >>> g = dhg.BiGraph.from_adj_list(5, 4, [(0, 3, 2), (4, 2, 0), (1, 1, 2)])
+    >>> g
+    Bipartite Graph(num_u=5, num_v=4, num_e=6)
+    >>> g.e
+    ([(0, 3), (0, 2), (4, 2), (4, 0), (1, 1), (1, 2)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> g.B.to_dense()
+    tensor([[0., 0., 1., 1.],
+            [0., 1., 1., 0.],
+            [0., 0., 0., 0.],
+            [0., 0., 0., 0.],
+            [1., 0., 1., 0.]])
+    >>> g.A.to_dense()
+    tensor([[0., 0., 0., 0., 0., 0., 0., 1., 1.],
+            [0., 0., 0., 0., 0., 0., 1., 1., 0.],
+            [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 0., 0., 0., 1., 0., 1., 0.],
+            [0., 0., 0., 0., 1., 0., 0., 0., 0.],
+            [0., 1., 0., 0., 0., 0., 0., 0., 0.],
+            [1., 1., 0., 0., 1., 0., 0., 0., 0.],
+            [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
 
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Comming soon
 
+We first define a simple hypergraph as:
+
+.. code-block:: python
+
+    >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (1, 3, 2), (1, 2), (0, 3, 4)])
+    >>> hg.e
+    ([(0, 1, 2), (1, 2, 3), (1, 2), (0, 3, 4)], [1.0, 1.0, 1.0, 1.0])
+    >>> # print hypergraph incidence matrix
+    >>> hg.H.to_dense()
+    tensor([[1., 0., 0., 1.],
+            [1., 1., 1., 0.],
+            [1., 1., 1., 0.],
+            [0., 1., 0., 1.],
+            [0., 0., 0., 1.]])
+
+**Construct a bipartite graph from simple hypergraph with** :py:meth:`dhg.BiGraph.from_hypergraph`
+
+.. code-block:: python
+
+    >>> g = dhg.BiGraph.from_hypergraph(hg, vertex_as_U=True)
+    >>> g
+    Bipartite Graph(num_u=5, num_v=4, num_e=11)
+    >>> g.e
+    ([(0, 0), (1, 0), (2, 0), (1, 1), (2, 1), (3, 1), (1, 2), (2, 2), (0, 3), (3, 3), (4, 3)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> g.B.to_dense()
+    tensor([[1., 0., 0., 1.],
+            [1., 1., 1., 0.],
+            [1., 1., 1., 0.],
+            [0., 1., 0., 1.],
+            [0., 0., 0., 1.]])
+    >>> g = dhg.BiGraph.from_hypergraph(hg, vertex_as_U=False)
+    >>> g
+    Bipartite Graph(num_u=4, num_v=5, num_e=11)
+    >>> g.e
+    ([(0, 0), (0, 1), (0, 2), (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (3, 0), (3, 3), (3, 4)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    >>> g.B.to_dense()
+    tensor([[1., 1., 1., 0., 0.],
+            [0., 1., 1., 1., 0.],
+            [0., 1., 1., 0., 0.],
+            [1., 0., 0., 1., 1.]])
 
 High-Order Structures
 -----------------------
