@@ -11,6 +11,12 @@ def digraph_Gnp(num_v: int, prob: float):
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``prob`` (``float``): Probability of choosing an edge.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> g = random.digraph_Gnp(4, 0.5)
+        >>> g.e
+        ([(0, 1), (0, 2), (1, 2), (2, 1), (3, 0)], [1.0, 1.0, 1.0, 1.0, 1.0])
     """
     assert num_v > 1, "num_v must be greater than 1"
     assert prob >= 0 and prob <= 1, "prob must be between 0 and 1"
@@ -27,6 +33,12 @@ def digraph_Gnp_fast(num_v: int, prob: float):
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``prob`` (``float``): Probability of choosing an edge.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> g = random.digraph_Gnp_fast(4, 0.6)
+        >>> g.e
+        ([(0, 1), (0, 3), (1, 3), (2, 3), (1, 0), (2, 1)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     """
     assert num_v > 1, "num_v must be greater than 1"
     assert prob >= 0 and prob <= 1, "prob must be between 0 and 1"
@@ -63,6 +75,12 @@ def digraph_Gnm(num_v: int, num_e: int):
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``num_e`` (``int``): The Number of edges.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> g = random.digraph_Gnm(4, 6)
+        >>> g.e
+        ([(1, 2), (2, 1), (0, 3), (2, 0), (2, 3), (0, 2)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     """
 
     assert num_v > 1, "num_v must be greater than 1"
