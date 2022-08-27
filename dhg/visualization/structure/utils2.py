@@ -21,7 +21,7 @@ def default_style(
         v_color = [v_color] * num_v
 
     if e_color is None:
-        e_color = (0.2, 0.2, 0.6)
+        e_color = (0.7, 0.7, 0.7)
     if not isinstance(e_color, list):
         e_color = [e_color] * num_e
 
@@ -46,7 +46,7 @@ def default_size(
 ):
     # =============================================================
     # compute default v_size
-    _v_size = 1 / np.sqrt(num_v) * 0.1
+    _v_size = 1 / np.sqrt(num_v + 12) * 0.08
     # =============================================================
     v_size = fill_sizes(v_size, _v_size, num_v)
 
@@ -77,7 +77,7 @@ def default_strength(
 ):
     # =============================================================
     # compute default push_v_strength
-    _push_v_strength = 0.00010
+    _push_v_strength = 0.005
     # =============================================================
     push_v_strength = fill_strength(push_v_strength, _push_v_strength)
 
@@ -89,13 +89,13 @@ def default_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.0
+    _pull_e_strength = 0.01
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_center_strength = 0.5
+    _pull_center_strength = 0.01
     # =============================================================
     pull_center_strength = fill_strength(pull_center_strength, _pull_center_strength)
 
