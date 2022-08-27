@@ -2,12 +2,22 @@
     <img src="https://deephypergraph.com/logo_DHG.png" height="200">
 </p>
 
+[![PyPI version](https://img.shields.io/pypi/v/dhg?color=purple)](https://pypi.org/project/dhg/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/)
 [![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
-![license](https://img.shields.io/hexpm/l/plug)
+[![PyPI downloads](https://img.shields.io/pypi/dm/dhg.svg)](https://pypistats.org/packages/dhg)
+[![license](https://img.shields.io/github/license/imoonlab/DeepHypergraph)](LICENSE)
+[![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
+
+
+**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文教程](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
+
 ---------------------------------------------------------------
 
-**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[Official Examples]()** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
+## News
+- 2022-08-25 -> DHG's first version v0.9.1 is now available!
 
+---------------------------------------------------------------
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
