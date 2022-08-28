@@ -22,7 +22,7 @@ different scenarios like: movie/news/goods/hotels/products/services recommender.
 
 Construction
 -------------------------
-The bipartite graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+The bipartite graph structure can be constructed by the following methods. More details can refer to :ref:`here <build_bipartite_graph>`.
 
 - Edge list (**default**) :py:class:`dhg.BiGraph`
 - Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`

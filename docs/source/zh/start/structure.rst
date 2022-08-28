@@ -33,12 +33,12 @@ DHG内的关联结构
     :header: 关联结构, "应用", "示例代码"
     :widths: 2, 6, 3
 
-    "简单图", "基于引用网络的论文分类等", "aaaaaaaaaa"
-    "有向图", "点云分类等", "aaaaaaaaa"
+    "简单图", "基于引用网络的论文分类等", ":doc:`样例 </zh/examples/vertex_cls/graph>`"
+    "有向图", "点云分类等", "\-"
     "二分图", "| 基于<用户-物品>二分图的物品推荐、
-    | 基于<蛋白质-药品>二分图的关联预测等", "aaaaaaaaaaa"
+    | 基于<蛋白质-药品>二分图的关联预测等", ":doc:`样例 </zh/examples/recommender>`"
     "简单超图", "| 基于社交网络的顶点分类,
-    | 基于多模态视觉对象图的视觉对象分类等", "aaaaaaaaaa"
+    | 基于多模态视觉对象图的视觉对象分类等", ":doc:`样例 </examples/vertex_cls/hypergraph>`"
     
 
 两个核心操作
@@ -306,8 +306,8 @@ DHG内的关联结构
 
 自环是特征学习特别是简单图关联结构中的重要结构。
 在如下的例子中，我们介绍如何在简单图关联结构中为基于空域的学习增加先自环和后自环。
+我们使用 :math:`\mathbf{A} \in \mathbb{R}^{N \times N}` 来表示一个给定简单图的邻接矩阵，:math:`\mathbf{X} \in \mathbb{R}^{N \times C}` 来表示一个给定简单图的节点特征.
 
-Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
     .. code:: python
 
@@ -332,7 +332,17 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
 使用先自环的信息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    
+
+    .. math::
+
+        \left\{  
+        \begin{align}
+        \mathbf{X}^\prime &= \hat{\mathbf{A}} \mathbf{X}\\
+        \hat{\mathbf{A}} &= \mathbf{A} + \mathbf{I}   
+        \end{align}
+        \right.  
+
+
     .. code:: python
         
         >>> # Print edges in the graph
@@ -360,6 +370,11 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
 使用后自环的信息传递
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    .. math::
+
+        \mathbf{X}^\prime = \mathbf{A} \mathbf{X} + \mathbf{X}
+
 
     .. code:: python
         
@@ -422,7 +437,7 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 融合从不同关联结构中学习到的特征
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-在如下例子中，我们随机在相同顶点集中生成一个 **简单图** 和一个 **简单超图** 。
+在如下例子中，我们在相同顶点集上随机构建一个 **简单图** 结构和一个 **简单超图** 结构。
 然后，采用两种关联结构中的消息传递函数来生成不同的顶点特征，通过它们的组合连接生成最终的混合顶点特征。
 
     .. code:: python

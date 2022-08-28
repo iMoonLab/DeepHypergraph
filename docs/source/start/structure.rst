@@ -32,12 +32,12 @@ Applications
     :header: Structure, "Applications", "Example Code"
     :widths: 2, 6, 3
 
-    "Simple Graph", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
-    "Directed Graph", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
+    "Simple Graph", "Paper Classification of Citation Networks, *etc.*", ":doc:`example </examples/vertex_cls/graph>`"
+    "Directed Graph", "Point Clouds Classification, *etc.*", "\-"
     "Bipartite Graph", "| Item Recommender of User-Item Graph,
-    | Correlation Prediction of Potein-Drug Graph, *etc.*", "aaaaaaaaaaa"
+    | Correlation Prediction of Potein-Drug Graph, *etc.*", ":doc:`example </examples/recommender>`"
     "Simple Hypergraph", "| Vertex Classification of Social Networks, 
-    | Visual Object Classification on Multi-Modal Visual Object Graph, *etc.*", "aaaaaaaaaa"
+    | Visual Object Classification on Multi-Modal Visual Object Graph, *etc.*", ":doc:`example </examples/vertex_cls/hypergraph>`"
     
 
 Two Core Operations
@@ -309,8 +309,8 @@ Add Early Self-loop and Late Self-Loop
 
 Self-loop is a important structure for feature learning especially for the simple graph structure. 
 In the following examples, we introduce how to add early self-loop and late self-loop for spatial-based learning on the simple graph structure.
+We use :math:`\mathbf{A} \in \mathbb{R}^{N \times N}` to indicate the adjacency matrix of a given simple graph and :math:`\mathbf{X} \in \mathbb{R}^{N \times C}` to indicate the features of vertices in the given simple graph.
 
-Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
     .. code:: python
 
@@ -336,6 +336,16 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 Message Passing with Early Self-Loop 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     
+    .. math::
+
+        \left\{  
+        \begin{align}
+        \mathbf{X}^\prime &= \hat{\mathbf{A}} \mathbf{X}\\
+        \hat{\mathbf{A}} &= \mathbf{A} + \mathbf{I}   
+        \end{align}
+        \right.  
+
+
     .. code:: python
         
         >>> # Print edges in the graph
@@ -363,6 +373,11 @@ Message Passing with Early Self-Loop
 
 Message Passing with Late Self-Loop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    .. math::
+
+        \mathbf{X}^\prime = \mathbf{A} \mathbf{X} + \mathbf{X}
+
 
     .. code:: python
         

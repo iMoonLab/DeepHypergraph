@@ -21,7 +21,7 @@ A vertex may exist in a directed graph and not belong to an edge. The edge :math
 Construction
 -------------------------
 
-The directed graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+The directed graph structure can be constructed by the following methods. More details can refer to :ref:`here <build_directed_graph>`.
 
 - Edge list (**default**) :py:class:`dhg.DiGraph`
 - Adjacency list :py:meth:`dhg.DiGraph.from_adj_list`

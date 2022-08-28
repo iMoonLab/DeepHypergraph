@@ -16,7 +16,7 @@ A vertex may exist in a simple graph and not belong to an edge.
 
 Construction
 -------------------------
-The simple graph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+The simple graph structure can be constructed by the following methods. More details can refer to :ref:`here <build_graph>`.
 
 - Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`

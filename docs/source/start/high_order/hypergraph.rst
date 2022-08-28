@@ -5,7 +5,7 @@ Learning on Simple Hypergraph
 
 Definition
 -----------------
-`Simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}`, a set of **hyperedges** (also called **edges**), where :math:`\mathcal{P}(\mathcal{V})` is the `power set <https://en.wikipedia.org/wiki/Power_set>`_ of :math:`\mathcal{V}`.
@@ -22,7 +22,7 @@ An undirected hypergraph is also called a set system or a family of sets drawn f
 
 Construction
 ---------------------
-The simple hypergraph structure can be constructed by the following methods. More details can refer to aaaaaaaaaaaaa.
+The simple hypergraph structure can be constructed by the following methods. More details can refer to :ref:`here <build_hypergraph>`.
 
 - Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
 - Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`

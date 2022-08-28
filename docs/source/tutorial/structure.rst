@@ -1,11 +1,18 @@
 Build Structure
 ===================================
 Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures 
-and some structure transformation functions of them like: *reducing the high-order structrue to the low-order structure* 
-and *promoting the low-order structure to the high-order structure.*
+and some structure transformation functions of them like: 
+
+- Reducing the high-order structrue to the low-order structure 
+- Promoting the low-order structure to the high-order structure
 
 Low-Order Structures
 -----------------------
+
+Currently, DHG's low-order structures include simple graph, directed graph, and bipartite graph. 
+In the future, we will add more low-order structures.
+
+.. _build_graph:
 
 Build Simple Graph
 +++++++++++++++++++++++
@@ -232,6 +239,7 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
             [0.3333, 0.3333, 0.3333, 0.0000, 0.3333],
             [0.0000, 0.0000, 0.0000, 0.3333, 0.0000]])
 
+.. _build_directed_graph:
 
 Build Directed Graph
 +++++++++++++++++++++++
@@ -316,6 +324,7 @@ Reduced from High-Order Structures
 
 Welcome to contribute!
 
+.. _build_bipartite_graph:
 
 Build Bipartite Graph
 +++++++++++++++++++++++
@@ -433,17 +442,122 @@ We first define a simple hypergraph as:
             [0., 1., 1., 0., 0.],
             [1., 0., 0., 1., 1.]])
 
+
 High-Order Structures
 -----------------------
-Comming soon
+
+Currently, DHG's high-order structures include simple hypergraph. 
+In the future, we will add more high-order structures like directed hypergraph.
+
+.. _build_hypergraph:
 
 Build Simple Hypergraph
 ++++++++++++++++++++++++++
-Comming soon
+A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge. 
+Each hyperedge in a hypergraph can connect more than two vertices, which can be indicated with a sub-set of total vertices.
+Simple hypergraph can be constructed by the following methods:
+
+- Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
+- Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
+- Promoted from the low-order structures
+
+  - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
+  - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
+
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
-Comming soon
+
+**Construct a simple hypergraph from edge list with** :py:class:`dhg.Hypergraph`
+
+.. code-block:: python
+
+    >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (2, 3), (0, 4)])
+    >>> hg
+    Simple Hypergraph(num_v=5, num_e=3)
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
+    >>> # print the incidence matrix of the simple hypergraph
+    >>> hg.H.to_dense()
+    tensor([[1., 0., 1.],
+            [1., 0., 0.],
+            [1., 1., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]])
+
+.. important:: 
+
+    Each hyperedge in the hypergraph is an unordered set of vertices, which means that ``(0, 1, 2)``, ``(0, 2, 1)``, and ``(2, 1, 0)`` are all the same hyperedge.
+
+.. code-block:: python
+
+    >>> hg = dhg.Hypergraph(5, [(0, 2, 1), (2, 3), (0, 4)])
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
+    >>> hg.H.to_dense()
+    tensor([[1., 0., 1.],
+            [1., 0., 0.],
+            [1., 1., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]])
+    >>> hg = dhg.Hypergraph(5, [(1, 0, 2), (2, 3), (0, 4)])
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
+    >>> hg.H.to_dense()
+    tensor([[1., 0., 1.],
+            [1., 0., 0.],
+            [1., 1., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.]])
+
+.. note:: 
+
+    If the added hyperedges have duplicate hyperedges, those duplicate hyperedges will be automatically merged with specified ``merge_op``.
+
+.. code-block:: python
+
+    >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (2, 3), (2, 3), (0, 4)], merge_op="mean")
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
+    >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (2, 3), (2, 3), (0, 4)], merge_op="sum")
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 2.0, 1.0])
+    >>> hg.add_hyperedges([(0, 2, 1), (0, 4)], merge_op="mean")
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 2.0, 1.0])
+    >>> hg.add_hyperedges([(0, 2, 1), (0, 4)], merge_op="sum")
+    >>> hg.e
+    ([(0, 1, 2), (2, 3), (0, 4)], [2.0, 2.0, 2.0])
+
+You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
+
+
+**Construct a simple hypergraph from feature k-Nearest Neighbors with** :py:meth:`dhg.Hypergraph.from_feature_kNN`
+
+.. code-block:: python
+
+    >>> X = torch.tensor(([[0.6460, 0.0247],
+                           [0.9853, 0.2172],
+                           [0.7791, 0.4780],
+                           [0.0092, 0.4685],
+                           [0.9049, 0.6371]]))
+    >>> hg = dhg.Hypergraph.from_feature_kNN(X, k=2)
+    >>> hg
+    Simple Hypergraph(num_v=5, num_e=3)
+    >>> hg.e
+    ([(0, 1, 2), (1, 2, 4), (0, 2, 3)], [1.0, 1.0, 1.0])
+    >>> hg.H.to_dense()
+    tensor([[1., 0., 1.],
+            [1., 1., 0.],
+            [1., 1., 1.],
+            [0., 0., 1.],
+            [0., 1., 0.]])
+
+.. note:: 
+
+    Those duplicated hyperedges are merged with ``mean`` operation.
+
 
 Prometed from Low-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
