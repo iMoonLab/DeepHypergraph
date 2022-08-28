@@ -3,7 +3,7 @@ from typing import Optional, List
 import numpy as np
 
 from .simulator import Simulator
-from .utils2 import edge_list_to_incidence_matrix
+from .utils2 import edge_list_to_incidence_matrix, init_pos
 
 
 def force_layout(
@@ -14,7 +14,7 @@ def force_layout(
     pull_e_strength: float,
     pull_center_strength: float,
 ):
-    v_coor = np.random.rand(num_v, 2) * 10 - 5.0
+    v_coor = init_pos(num_v, scale=5)
     assert v_coor.max() <= 5.0 and v_coor.min() >= -5.0
     sim = Simulator(
         nums=num_v,
@@ -27,7 +27,6 @@ def force_layout(
         n_centers=1,
     )
     v_coor = sim.simulate(v_coor, edge_list_to_incidence_matrix(num_v, e_list))
-    # v_coor = (v_coor - np.mean(v_coor, axis=0)) / np.std(v_coor, axis=0)
     v_coor = (v_coor - v_coor.min(0)) / (v_coor.max(0) - v_coor.min(0)) * 0.8 + 0.1
     return v_coor
 
@@ -43,7 +42,9 @@ def bipartite_force_layout(
     pull_u_center_strength: float,
     pull_v_center_strength: float,
 ):
-    pos = np.random.rand(num_v + num_u, 2)
+    pos_u = init_pos(num_u, center=(6, 0), scale=4)
+    pos_v = init_pos(num_v, center=(-6, 0), scale=4)
+    pos = np.vstack((pos_u, pos_v))
     sim = Simulator(
         nums=num_v,
         forces={

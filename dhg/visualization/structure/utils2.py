@@ -7,6 +7,17 @@ from matplotlib.patches import Circle, FancyArrowPatch
 from matplotlib.collections import PathCollection, PatchCollection
 
 
+def jitter(f: np.ndarray, scale: float = 0.01) -> np.ndarray:
+    noise = np.random.randn(*f.shape) * 0.01
+    f[np.isnan(f)] = noise[np.isnan(f)]
+    f = np.clip(f, -10, 10)
+    return f
+
+
+def init_pos(num_v: int, center: Tuple[float, float] = (0, 0), scale: float = 1.0):
+    return np.random.rand(num_v, 2) * scale + center
+
+
 def default_style(
     num_v: int,
     num_e: int,
@@ -114,20 +125,35 @@ def default_bipartite_size(
     u_font_size: Optional[int] = None,
     v_font_size: Optional[int] = None,
 ):
-    u_size = 1 if u_size is None else u_size
-    u_size = [u_size] * num_u if not isinstance(u_size, list) else u_size
+    # =============================================================
+    # compute default v_size
+    _u_size = 1 / np.sqrt(num_u + 12) * 0.08
+    # =============================================================
+    u_size = fill_sizes(u_size, _u_size, num_u)
 
-    u_line_width = 1 if u_line_width is None else u_line_width
-    u_line_width = [u_line_width] * num_u if not isinstance(u_line_width, list) else u_line_width
+    # =============================================================
+    # compute default v_size
+    _u_line_width = 1
+    # =============================================================
+    u_line_width = fill_sizes(u_line_width, _u_line_width, num_u)
 
-    v_size = 1 if v_size is None else v_size
-    v_size = [v_size] * num_v if not isinstance(v_size, list) else v_size
+    # =============================================================
+    # compute default v_size
+    _v_size = 1 / np.sqrt(num_v + 12) * 0.08
+    # =============================================================
+    v_size = fill_sizes(v_size, _v_size, num_v)
 
-    v_line_width = 1 if v_line_width is None else v_line_width
-    v_line_width = [v_line_width] * num_v if not isinstance(v_line_width, list) else v_line_width
+    # =============================================================
+    # compute default v_size
+    _v_line_width = 1
+    # =============================================================
+    v_line_width = fill_sizes(v_line_width, _v_line_width, num_v)
 
-    e_line_width = 1 if e_line_width is None else e_line_width
-    e_line_width = [e_line_width] * len(e_list) if not isinstance(e_line_width, list) else e_line_width
+    # =============================================================
+    # compute default e_line_width
+    _e_line_width = 1
+    # =============================================================
+    e_line_width = fill_sizes(e_line_width, _e_line_width, len(e_list))
 
     u_font_size = 12 if u_font_size is None else u_font_size
     v_font_size = 12 if v_font_size is None else v_font_size
@@ -146,13 +172,41 @@ def default_bipartite_strength(
     pull_u_center_strength: Optional[float] = None,
     pull_v_center_strength: Optional[float] = None,
 ):
+    # =============================================================
+    # compute default push_u_strength
+    _push_u_strength = 0.005
+    # =============================================================
+    push_u_strength = fill_strength(push_u_strength, _push_u_strength)
 
-    push_u_strength = 1 if push_u_strength is None else push_u_strength
-    push_v_strength = 1 if push_v_strength is None else push_v_strength
-    push_e_strength = 1 if push_e_strength is None else push_e_strength
-    pull_e_strength = 1 if pull_e_strength is None else pull_e_strength
-    pull_u_center_strength = 1 if pull_u_center_strength is None else pull_u_center_strength
-    pull_v_center_strength = 1 if pull_v_center_strength is None else pull_v_center_strength
+    # =============================================================
+    # compute default push_v_strength
+    _push_v_strength = 0.005
+    # =============================================================
+    push_v_strength = fill_strength(push_v_strength, _push_v_strength)
+
+    # =============================================================
+    # compute default push_e_strength
+    _push_e_strength = 0.0
+    # =============================================================
+    push_e_strength = fill_strength(push_e_strength, _push_e_strength)
+
+    # =============================================================
+    # compute default pull_e_strength
+    _pull_e_strength = 0.0001
+    # =============================================================
+    pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
+
+    # =============================================================
+    # compute default pull_center_strength
+    _pull_u_center_strength = 0.02
+    # =============================================================
+    pull_u_center_strength = fill_strength(pull_u_center_strength, _pull_u_center_strength)
+
+    # =============================================================
+    # compute default pull_center_strength
+    _pull_v_center_strength = 0.02
+    # =============================================================
+    pull_v_center_strength = fill_strength(pull_v_center_strength, _pull_v_center_strength)
 
     return (
         push_u_strength,
