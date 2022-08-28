@@ -22,7 +22,7 @@ k-uniform超图是所有超边连接的顶点数均为k的超图。
 
 结构构建
 ---------------------
-简单超图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
+简单超图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_hypergraph>`。
 
 - 超边列表 (**默认**) :py:class:`dhg.Hypergraph`
 - 使用特征的k近邻 :py:meth:`dhg.Hypergraph.from_feature_kNN`

@@ -6,6 +6,11 @@
 DHG Documentation
 =======================
 
+.. caution:: 
+
+   We are rushing the documentation and tutorials, which will be updated twice a day!
+
+
 **DHG** (*DeepHypergraph*) is a deep learning library built upon `PyTorch <https://pytorch.org/>`_ for learning with both Graph Neural Networks and Hypergraph Neural Networks. 
 It is a general framework that supports both low-order and high-order message passing like 
 **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.

@@ -12,12 +12,15 @@
 
 **[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文教程](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
 
----------------------------------------------------------------
+<p align="center">
+We are rushing the documentation and tutorials, which will be updated twice a day!<br>
+我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！
+</p>
 
 ## News
-- 2022-08-25 -> DHG's first version v0.9.1 is now available!
+- 2022-08-25 -> DHG's first version v0.9.1 is now available! 
+- 2022-08-25 -> DHG的第一个版本 v0.9.1 正式发布！
 
----------------------------------------------------------------
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 

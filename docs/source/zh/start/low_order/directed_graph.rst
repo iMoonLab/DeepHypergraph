@@ -20,7 +20,7 @@
 
 结构构建
 -------------------------
-有向图的关联结构可以通过以下方法构建。 More details can refer to aaaaaaaaaaaaa.
+有向图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_directed_graph>`。
 
 - 边列表 (**默认**) :py:class:`dhg.DiGraph`
 - 邻接表 :py:meth:`dhg.DiGraph.from_adj_list`
