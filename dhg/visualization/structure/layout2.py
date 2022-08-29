@@ -46,7 +46,7 @@ def bipartite_force_layout(
     pos_v = init_pos(num_v, center=(-6, 0), scale=4)
     pos = np.vstack((pos_u, pos_v))
     sim = Simulator(
-        nums=num_v,
+        nums=num_u,
         forces={
             Simulator.NODE_ATTRACTION: pull_e_strength,
             Simulator.NODE_REPULSION: [push_u_strength, push_v_strength],

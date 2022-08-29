@@ -7,8 +7,18 @@ from matplotlib.patches import Circle, FancyArrowPatch
 from matplotlib.collections import PathCollection, PatchCollection
 
 
+def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.001):
+    inv_b = 1.0 / b
+    mask = np.isinf(inv_b)
+    inv_b[mask] = 0.0
+    res = a * inv_b
+    if mask.sum() > 0:
+        res[mask] = np.random.randn(mask.sum()) * jitter_scale
+    return res
+
+
 def jitter(f: np.ndarray, scale: float = 0.01) -> np.ndarray:
-    noise = np.random.randn(*f.shape) * 0.01
+    noise = np.random.randn(*f.shape) * scale
     f[np.isnan(f)] = noise[np.isnan(f)]
     f = np.clip(f, -10, 10)
     return f

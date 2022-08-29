@@ -2,7 +2,7 @@ from math import cos, sin, pi
 from copy import deepcopy
 import numpy as np
 from sklearn.metrics import euclidean_distances
-from .utils2 import jitter
+from .utils2 import safe_div, jitter
 
 
 class Simulator:
@@ -38,8 +38,8 @@ class Simulator:
         damping = 1.0
         for it in range(max_iter):
             position, velocity, stop = self._step(position, velocity, H, epsilon, damping, dt)
-            np.save("./tmp/position_{}.npy".format(it), position)
-            np.save("./tmp/velocity_{}.npy".format(it), velocity)
+            # np.save("./tmp/position_{}.npy".format(it), position)
+            # np.save("./tmp/velocity_{}.npy".format(it), velocity)
             if stop:
                 break
             damping *= self.damping_factor
@@ -108,9 +108,10 @@ class Simulator:
         f_scale = k * x  # (n, m)
         f_dir = e_center[np.newaxis, :, :] - position[:, np.newaxis, :]  # (1, m, 2) - (n, 1, 2) -> (n, m, 2)
         f_dir_len = np.linalg.norm(f_dir, axis=2)  # (n, m)
-        f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, m, 2)
+        # f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, m, 2)
+        f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (n, m, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (n, m, 2)
-        f = jitter(f)
+        # f = jitter(f)
         f = f.sum(axis=1)  # (n, 2)
         return f
 
@@ -126,10 +127,11 @@ class Simulator:
         f_dir = position[:, np.newaxis, :] - position[np.newaxis, :, :]  # (n, 1, 2) - (1, n, 2) -> (n, n, 2)
         f_dir_len = np.linalg.norm(f_dir, axis=2)  # (n, n)
         f_dir_len[r, c] = np.inf
-        f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, n, 2)
+        # f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, n, 2)
+        f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (n, n, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (n, n, 2)
         f[r, c] = 0
-        f = jitter(f)
+        # f = jitter(f)
         f = f.sum(axis=1)  # (n, 2)
         return f
 
@@ -145,10 +147,11 @@ class Simulator:
         f_dir = e_center[:, np.newaxis, :] - e_center[np.newaxis, :, :]  # (m, 1, 2) - (1, m, 2) -> (m, m, 2)
         f_dir_len = np.linalg.norm(f_dir, axis=2)  # (m, m)
         f_dir_len[r, c] = np.inf
-        f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (m, m, 2)
+        # f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (m, m, 2)
+        f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (m, m, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (m, m, 2)
         f[r, c] = 0
-        f = jitter(f)
+        # f = jitter(f)
         f = f.sum(axis=1)  # (m, 2)
         return np.matmul(H, f)
 
@@ -159,9 +162,10 @@ class Simulator:
         f_scale = v2c_dist  # (n, 1)
         f_dir = center[np.newaxis, np.newaxis, :] - position[:, np.newaxis, :]  # (1, 1, 2) - (n, 1, 2) -> (n, 1, 2)
         f_dir_len = np.linalg.norm(f_dir, axis=2)  # (n, 1)
-        f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, 1, 2)
+        # f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, 1, 2)
+        f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (n, 1, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (n, 1, 2)
-        f = jitter(f)
+        # f = jitter(f)
         f = f.sum(axis=1) * k
         return f
 
