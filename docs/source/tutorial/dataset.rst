@@ -140,7 +140,12 @@ To build a simple graph structucture for training in Cora dataset, you can refer
 
 Architechture
 -----------------------
-Coming soon...
+The architecture of constructing DHG's dataset object is shown in the following figure.
+
+.. image:: ../_static/img/dataset_arch.jpg
+    :align: center
+    :alt: dataset_architecture
+    :height: 400px
 
 Build Your Own Dataset
 -----------------------
