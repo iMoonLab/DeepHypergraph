@@ -16,6 +16,7 @@ def force_layout(
 ):
     v_coor = init_pos(num_v, scale=5)
     assert v_coor.max() <= 5.0 and v_coor.min() >= -5.0
+    centers = [np.array([0, 0])]
     sim = Simulator(
         nums=num_v,
         forces={
@@ -24,7 +25,7 @@ def force_layout(
             Simulator.EDGE_REPULSION: push_e_strength,
             Simulator.CENTER_GRAVITY: pull_center_strength,
         },
-        n_centers=1,
+        centers=centers,
     )
     v_coor = sim.simulate(v_coor, edge_list_to_incidence_matrix(num_v, e_list))
     v_coor = (v_coor - v_coor.min(0)) / (v_coor.max(0) - v_coor.min(0)) * 0.8 + 0.1
@@ -42,8 +43,9 @@ def bipartite_force_layout(
     pull_u_center_strength: float,
     pull_v_center_strength: float,
 ):
-    pos_u = init_pos(num_u, center=(6, 0), scale=4)
-    pos_v = init_pos(num_v, center=(-6, 0), scale=4)
+    pos_u = init_pos(num_u, center=(5, 0), scale=4.5)
+    pos_v = init_pos(num_v, center=(-5, 0), scale=4.5)
+    centers = [np.array([5, 0]), np.array([-5, 0])]
     pos = np.vstack((pos_u, pos_v))
     sim = Simulator(
         nums=num_u,
@@ -53,7 +55,7 @@ def bipartite_force_layout(
             Simulator.EDGE_REPULSION: push_e_strength,
             Simulator.CENTER_GRAVITY: [pull_u_center_strength, pull_v_center_strength],
         },
-        n_centers=2,
+        centers=centers,
     )
     pos = sim.simulate(pos, edge_list_to_incidence_matrix(num_v + num_u, e_list))
     # pos = (pos - np.mean(pos, axis=0)) / np.std(pos, axis=0)

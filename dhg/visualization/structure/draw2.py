@@ -11,8 +11,9 @@ from .layout2 import force_layout, bipartite_force_layout
 from .utils2 import (
     default_style,
     default_size,
-    default_bipartite_size,
     default_strength,
+    default_bipartite_style,
+    default_bipartite_size,
     default_bipartite_strength,
     draw_vertex,
     draw_line_edge,
@@ -127,9 +128,8 @@ def draw_bipartite_graph(
     e_color: Optional[Union[str, list]] = None,
     e_line_width: Optional[Union[str, list]] = None,
     u_font_size: Optional[int] = None,
-    u_font_family: Optional[str] = None,
     v_font_size: Optional[int] = None,
-    v_font_family: Optional[str] = None,
+    font_family: Optional[str] = None,
     push_u_strength: Optional[float] = None,
     push_v_strength: Optional[float] = None,
     push_e_strength: Optional[float] = None,
@@ -141,8 +141,9 @@ def draw_bipartite_graph(
     fig, ax = plt.subplots(figsize=(6, 6))
     num_u, num_v, e_list = g.num_u, g.num_v, deepcopy(g.e[0])
     # default configures
-    u_color, e_color, _, u_font_family = default_style(num_u, g.num_e, u_color, e_color, None, u_font_family)
-    v_color, _, _, v_font_family = default_style(num_v, g.num_e, v_color, None, None, v_font_family)
+    u_color, v_color, e_color, _, font_family = default_bipartite_style(
+        num_u, num_v, g.num_e, u_color, v_color, e_color, None, font_family
+    )
     (u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size,) = default_bipartite_size(
         num_u, num_v, e_list, u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size,
     )
@@ -191,7 +192,7 @@ def draw_bipartite_graph(
         np.vstack([u_coor, v_coor]),
         u_label + v_label if u_label is not None and v_label is not None else None,
         u_font_size + v_font_size,
-        u_font_family + v_font_family,
+        font_family,
         u_size + v_size,
         u_color + v_color,
         u_line_width + v_line_width,

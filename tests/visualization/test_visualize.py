@@ -12,14 +12,14 @@ import matplotlib.pyplot as plt
 def test_vis_graph():
     g = graph_Gnp_fast(100, 0.015)
     draw_graph(g, e_style="line")
-    plt.show()
+    # plt.show()
 
 
 def test_vis_bipartite_graph():
     
     g = bigraph_Gnm(40, 80, 100)
     draw_bipartite_graph(g, e_style="line")
-    plt.show()
+    # plt.show()
     # try:
     #     g = bigraph_Gnm(40, 80, 100)
     #     draw_bipartite_graph(g, e_style="line")

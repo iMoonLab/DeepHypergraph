@@ -2,7 +2,7 @@ from math import cos, sin, pi
 from copy import deepcopy
 import numpy as np
 from sklearn.metrics import euclidean_distances
-from .utils2 import safe_div, jitter
+from .utils2 import safe_div
 
 
 class Simulator:
@@ -12,7 +12,7 @@ class Simulator:
     EDGE_REPULSION = 2
     CENTER_GRAVITY = 3
 
-    def __init__(self, nums, forces, n_centers=1, damping_factor=0.999) -> None:
+    def __init__(self, nums, forces, centers=1, damping_factor=0.998) -> None:
         self.nums = [nums] if isinstance(nums, int) else nums
 
         self.node_attraction = forces.get(self.NODE_ATTRACTION, None)
@@ -20,7 +20,8 @@ class Simulator:
         self.edge_repulsion = forces.get(self.EDGE_REPULSION, None)
         self.center_gravity = forces.get(self.CENTER_GRAVITY, None)
 
-        self.n_centers = n_centers
+        self.n_centers = len(centers)
+        self.centers = centers
 
         if self.node_repulsion is not None and isinstance(self.node_repulsion, float):
             self.node_repulsion = [self.node_repulsion] * self.n_centers
@@ -29,7 +30,7 @@ class Simulator:
 
         self.damping_factor = damping_factor
 
-    def simulate(self, init_position, H, max_iter=2000, epsilon=0.001, dt=10.0) -> None:
+    def simulate(self, init_position, H, max_iter=400, epsilon=0.001, dt=8.0) -> None:
         """
         Simulate the force-directed layout algorithm.
         """
@@ -38,8 +39,8 @@ class Simulator:
         damping = 1.0
         for it in range(max_iter):
             position, velocity, stop = self._step(position, velocity, H, epsilon, damping, dt)
-            # np.save("./tmp/position_{}.npy".format(it), position)
-            # np.save("./tmp/velocity_{}.npy".format(it), velocity)
+            np.save("./tmp/position_{}.npy".format(it), position)
+            np.save("./tmp/velocity_{}.npy".format(it), velocity)
             if stop:
                 break
             damping *= self.damping_factor
@@ -54,13 +55,7 @@ class Simulator:
         v2e_dist = euclidean_distances(position, e_center) * H
         e2e_dist = euclidean_distances(e_center)
 
-        if self.n_centers == 1:
-            centers = [np.array((0, 0))]
-        else:
-            centers = [
-                np.array((cos(2 * pi * i / self.n_centers), sin(2 * pi * i / self.n_centers))) * 6
-                for i in range(self.n_centers)
-            ]
+        centers = self.centers
 
         force = np.zeros_like(position)
         if self.node_attraction is not None:
@@ -94,6 +89,7 @@ class Simulator:
 
         force *= damping
 
+        force = np.clip(force, -0.1, 0.1)
         position += force * dt
         velocity = force
 
@@ -111,7 +107,6 @@ class Simulator:
         # f_dir = f_dir / f_dir_len[:, :, np.newaxis]  # (n, m, 2)
         f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (n, m, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (n, m, 2)
-        # f = jitter(f)
         f = f.sum(axis=1)  # (n, 2)
         return f
 
@@ -131,7 +126,6 @@ class Simulator:
         f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (n, n, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (n, n, 2)
         f[r, c] = 0
-        # f = jitter(f)
         f = f.sum(axis=1)  # (n, 2)
         return f
 
@@ -151,7 +145,6 @@ class Simulator:
         f_dir = safe_div(f_dir, f_dir_len[:, :, np.newaxis])  # (m, m, 2)
         f = f_scale[:, :, np.newaxis] * f_dir  # (m, m, 2)
         f[r, c] = 0
-        # f = jitter(f)
         f = f.sum(axis=1)  # (m, 2)
         return np.matmul(H, f)
 

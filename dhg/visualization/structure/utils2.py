@@ -7,25 +7,18 @@ from matplotlib.patches import Circle, FancyArrowPatch
 from matplotlib.collections import PathCollection, PatchCollection
 
 
-def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.001):
+def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.000001):
+    mask = b == 0
+    b[mask] = 1
     inv_b = 1.0 / b
-    mask = np.isinf(inv_b)
-    inv_b[mask] = 0.0
     res = a * inv_b
     if mask.sum() > 0:
-        res[mask] = np.random.randn(mask.sum()) * jitter_scale
+        res[mask.repeat(2, 2)] = np.random.randn(mask.sum() * 2) * jitter_scale
     return res
 
 
-def jitter(f: np.ndarray, scale: float = 0.01) -> np.ndarray:
-    noise = np.random.randn(*f.shape) * scale
-    f[np.isnan(f)] = noise[np.isnan(f)]
-    f = np.clip(f, -10, 10)
-    return f
-
-
 def init_pos(num_v: int, center: Tuple[float, float] = (0, 0), scale: float = 1.0):
-    return np.random.rand(num_v, 2) * scale + center
+    return (np.random.rand(num_v, 2) * 2 - 1) * scale + center
 
 
 def default_style(
@@ -36,25 +29,47 @@ def default_style(
     e_fill_color: Optional[Union[str, list]] = None,
     font_family: Optional[str] = None,
 ):
-    if v_color is None:
-        v_color = (1.0, 0.2, 0.2)
-    if not isinstance(v_color, list):
-        v_color = [v_color] * num_v
+    _v_color = "m"
+    v_color = fill_color(v_color, _v_color, num_v)
 
-    if e_color is None:
-        e_color = (0.7, 0.7, 0.7)
-    if not isinstance(e_color, list):
-        e_color = [e_color] * num_e
+    _e_color = (0.7, 0.7, 0.7)
+    e_color = fill_color(e_color, _e_color, num_e)
 
-    if e_fill_color is None:
-        e_fill_color = (0.2, 0.2, 0.6, 0.1)
-    if not isinstance(e_fill_color, list):
-        e_fill_color = [e_fill_color] * num_e
+    _e_fill_color = (0.2, 0.2, 0.6, 0.1)
+    e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
 
     if font_family is None:
         font_family = "sans-serif"
 
     return v_color, e_color, e_fill_color, font_family
+
+
+def default_bipartite_style(
+    num_u: int,
+    num_v: int,
+    num_e: int,
+    u_color: Optional[Union[str, list]] = None,
+    v_color: Optional[Union[str, list]] = None,
+    e_color: Optional[Union[str, list]] = None,
+    e_fill_color: Optional[Union[str, list]] = None,
+    font_family: Optional[str] = None,
+):
+    _u_color = "m"
+    u_color = fill_color(u_color, _u_color, num_u)
+
+    _v_color = "r"
+    v_color = fill_color(v_color, _v_color, num_v)
+
+    _e_color = (0.7, 0.7, 0.7)
+    e_color = fill_color(e_color, _e_color, num_e)
+
+    _e_fill_color = (0.2, 0.2, 0.6, 0.1)
+    e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
+
+    if font_family is None:
+        font_family = "sans-serif"
+
+    return u_color, v_color, e_color, e_fill_color, font_family
 
 
 def default_size(
@@ -86,41 +101,6 @@ def default_size(
     font_size = 12 if font_size is None else font_size
 
     return v_size, v_line_width, e_line_width, font_size
-
-
-def default_strength(
-    num_v: int,
-    e_list: List[tuple],
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
-):
-    # =============================================================
-    # compute default push_v_strength
-    _push_v_strength = 0.005
-    # =============================================================
-    push_v_strength = fill_strength(push_v_strength, _push_v_strength)
-
-    # =============================================================
-    # compute default push_e_strength
-    _push_e_strength = 0.0
-    # =============================================================
-    push_e_strength = fill_strength(push_e_strength, _push_e_strength)
-
-    # =============================================================
-    # compute default pull_e_strength
-    _pull_e_strength = 0.01
-    # =============================================================
-    pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
-
-    # =============================================================
-    # compute default pull_center_strength
-    _pull_center_strength = 0.01
-    # =============================================================
-    pull_center_strength = fill_strength(pull_center_strength, _pull_center_strength)
-
-    return push_v_strength, push_e_strength, pull_e_strength, pull_center_strength
 
 
 def default_bipartite_size(
@@ -171,6 +151,41 @@ def default_bipartite_size(
     return u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size
 
 
+def default_strength(
+    num_v: int,
+    e_list: List[tuple],
+    push_v_strength: Optional[float] = None,
+    push_e_strength: Optional[float] = None,
+    pull_e_strength: Optional[float] = None,
+    pull_center_strength: Optional[float] = None,
+):
+    # =============================================================
+    # compute default push_v_strength
+    _push_v_strength = 0.006
+    # =============================================================
+    push_v_strength = fill_strength(push_v_strength, _push_v_strength)
+
+    # =============================================================
+    # compute default push_e_strength
+    _push_e_strength = 0.0
+    # =============================================================
+    push_e_strength = fill_strength(push_e_strength, _push_e_strength)
+
+    # =============================================================
+    # compute default pull_e_strength
+    _pull_e_strength = 0.035
+    # =============================================================
+    pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
+
+    # =============================================================
+    # compute default pull_center_strength
+    _pull_center_strength = 0.01
+    # =============================================================
+    pull_center_strength = fill_strength(pull_center_strength, _pull_center_strength)
+
+    return push_v_strength, push_e_strength, pull_e_strength, pull_center_strength
+
+
 def default_bipartite_strength(
     num_u: int,
     num_v: int,
@@ -202,19 +217,19 @@ def default_bipartite_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.0001
+    _pull_e_strength = 0.02
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_u_center_strength = 0.02
+    _pull_u_center_strength = 0.032
     # =============================================================
     pull_u_center_strength = fill_strength(pull_u_center_strength, _pull_u_center_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_v_center_strength = 0.02
+    _pull_v_center_strength = 0.032
     # =============================================================
     pull_v_center_strength = fill_strength(pull_v_center_strength, _pull_v_center_strength)
 
@@ -226,6 +241,20 @@ def default_bipartite_strength(
         pull_u_center_strength,
         pull_v_center_strength,
     )
+
+
+def fill_color(custom_color: Optional[Union[str, list]], default_color: Any, length: int):
+    if custom_color is None:
+        return [default_color] * length
+    elif isinstance(custom_color, list):
+        if isinstance(custom_color[0], str) or isinstance(custom_color[0], tuple) or isinstance(custom_color[0], list):
+            return custom_color
+        else:
+            return [custom_color] * length
+    elif isinstance(custom_color, str):
+        return [custom_color] * length
+    else:
+        raise ValueError("The specified value is not a valid type.")
 
 
 def fill_sizes(custom_scales: Optional[Union[float, list]], default_value: Any, length: int):
