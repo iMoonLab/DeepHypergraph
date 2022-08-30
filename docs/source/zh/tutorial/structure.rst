@@ -1,37 +1,36 @@
 构建关联结构
 ===================================
-Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures 
-and some structure transformation functions of them like: 
+关联结构是 **DHG** 的核心。
+在这一节中，我们介绍不同关联结构的基本构建方法以及它们的一些结构转换函数，如：
 
-- Reducing the high-order structrue to the low-order structure 
-- Promoting the low-order structure to the high-order structure
+- 将高阶关联结构简化为低阶关联结构
+- 将低阶关联结构提升到高阶关联结构
 
 构建低阶关联结构
 -----------------------
 
-Currently, DHG's low-order structures include simple graph, directed graph, and bipartite graph. 
-In the future, we will add more low-order structures.
+现在，DHG的低阶关联结构包括简单图、有向图、二分图，以后我们将增加更多的低阶关联结构。
 
 .. _zh_build_graph:
 
-Build Simple Graph
+构建简单图
 +++++++++++++++++++++++
 
-A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edge ``(x, y)`` and ``(y, x)`` are the same edge. 
-It can be constructed by the following methods:
+`简单图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 为无自环无重边的图，边 ``(x, y)`` 和边 ``(y, x)`` 视为相同的边。
+可以使用如下方式构建：
 
-- Edge list (**default**) :py:class:`dhg.Graph`
-- Adjacency list :py:meth:`dhg.Graph.from_adj_list`
-- Reduced from the simple hypergraph structure
+- 边列表 (**默认**) :py:class:`dhg.Graph`
+- 邻接列表 :py:meth:`dhg.Graph.from_adj_list`
+- 从简单超图关联结构简化而来
   
-  - Star expansion :py:meth:`dhg.Graph.from_hypergraph_star`
-  - Clique expansion :py:meth:`dhg.Graph.from_hypergraph_clique`
-  - `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_-based expansion :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
+  - 星扩展 :py:meth:`dhg.Graph.from_hypergraph_star`
+  - 团扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
+  - 基于 `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ 的扩展 :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-Common Methods
+常用方法
 ^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple graph from edge list with** :py:class:`dhg.Graph`
+使用 :py:class:`dhg.Graph` 类 **从边列表构建一个简单图**
 
 .. code-block:: python
 
@@ -58,13 +57,14 @@ Common Methods
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
 
-You can find that the adjacency matrix of the simple graph is a symmetric matrix.
-The ``g.e`` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
-The ``g.e_both_size`` attribute will return the both side of edges in the simple graph.
+可以发现简单图的邻接矩阵是一个对称矩阵。
+:py:attr:`g.e <dhg.Graph.e>` 属性会返回两个列表的元组，第一个列表是边列表，第二个列表是每条边的权重。
+:py:attr:`g.e_both_side <dhg.Graph.e_both_side>` 属性会返回简单图里所有边及其对应的对称形式。
 
-.. important:: 
+.. important::
 
-    In simple graph the edge is unordered pair, which means ``(0, 1)`` and ``(1, 0)`` are the same edge. Adding edges ``(0, 1)`` and ``(1, 0)`` is equivalent to adding edge ``(0, 1)`` twice.
+    简单图里的边是无序对，也就意味着边 ``(0, 1)`` 和边 ``(1, 0)`` 是同一条边。
+    增加边 ``(0, 1)`` 和边 ``(1, 0)`` 等同于增加边 ``(0, 1)`` 两次。
 
 
 .. code-block:: python
@@ -79,7 +79,7 @@ The ``g.e_both_size`` attribute will return the both side of edges in the simple
 
 .. note:: 
 
-    If the added edges have duplicate edges, those duplicate edges will be automatically merged with specified ``merge_op``.
+    如果增加的边有重边，这些重边将根据指定的 ``merge_op`` 合并。
 
 .. code-block:: python
 
@@ -97,26 +97,26 @@ The ``g.e_both_size`` attribute will return the both side of edges in the simple
     ([(0, 1), (0, 2), (3, 4), (2, 3)], [2.0, 2.0, 1.0, 2.0])
 
 
-You can find the weight of the last edge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
+如果你分别设置 ``merge_op`` 为 ``mean`` 和 ``sum`` ，你会发现最后一条边的权重分别是 ``1.0`` 和 ``2.0`` 。
 
+使用 :py:meth:`dhg.Graph.from_adj_list` 函数 **从邻接列表构建一个简单图**
 
-**Construct a simple graph from adjacency list with** :py:meth:`dhg.Graph.from_adj_list`
-
-The adjacency list is a list of lists, each list contains two parts. The first part is the **first element** of the list, which is the vertex index of the source vertex. 
-The second part is the **remaining elements** of the list, which are the vertex indices of the destination vertices.
-For example, assuming we have a graph with 5 vertices and a adjacency list as:
+邻接列表是一个嵌套列表，每一个内层列表包含两个部分。
+第一个部分是列表的 **第一个元素** ，代表源点的索引。
+第二个部分是列表的 **剩余元素** ，代表汇点的索引。
+例如，假设包含5个顶点的图，其邻接列表为：
 
 .. code-block:: text
 
     [[0, 1, 2], [0, 3], [1, 2], [3, 4]]
 
-Then, the transformed edge list is:
+那么，该邻接列表转换的边列表为：
 
 .. code-block:: text
 
     [(0, 1), (0, 2), (0, 3), (1, 2), (3, 4)]
 
-We can construct a simple graph from the adjacency list as:
+我们可以根据邻接列表构建简单图，如：
 
 .. code-block:: python
 
@@ -131,10 +131,10 @@ We can construct a simple graph from the adjacency list as:
             [1., 1., 1., 1., 0.]])
 
 
-Reduced from High-Order Structures
+从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We first define a simple hypergraph as:
+我们首先定义一个简单超图：
 
 .. code-block:: python
 
@@ -149,13 +149,13 @@ We first define a simple hypergraph as:
             [0., 1., 0., 1.],
             [0., 0., 0., 1.]])
 
-**Star Expansion** :py:meth:`dhg.Graph.from_hypergraph_star`
+**星扩展** :py:meth:`dhg.Graph.from_hypergraph_star`
 
-The star expansion will treat the hyperedges in the hypergraph as virtual vertices in the simple graph. 
-Each virtual vertex will connect to all the vertices in the hyperedge. 
-The :py:meth:`dhg.Graph.from_hypergraph_star` function will return two values.
-The first value is the reduced simple graph and the second value is a ``vertex mask`` that indicates whether the vertex is a actual vertex.
-The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and the ``False`` indicates the vertex is a virtual vertex that is transformed from a hyperedge.
+星扩展会在简单图内将超图的超边视为虚拟顶点。
+每一个虚拟顶点连接超边内所有的顶点。
+:py:meth:`dhg.Graph.from_hypergraph_star` 函数会返回两个值。
+第一个值是简化得到的简单图，第二个值为表示顶点是否为实际顶点的 ``vertex mask`` 。
+``vertex mask`` 为 ``True`` 代表着该顶点为实际顶点，为 ``False`` 表示顶点为从超边转换的虚拟顶点。
 
 .. code-block:: python
 
@@ -177,11 +177,11 @@ The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and 
             [0., 1., 1., 0., 0., 0., 0., 0., 0.],
             [1., 0., 0., 1., 1., 0., 0., 0., 0.]])
 
-**Clique Expansion** :py:meth:`dhg.Graph.from_hypergraph_clique`
+**团扩展** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
-Unlike the star expansion, the clique expansion will not add any virtual vertex to the simple graph. 
-It is designed to reduce the hyperedges in the simple hypergraph to the edges in the simple graph.
-For each hyperedge, the clique expansion will add edges to any two vertices in the hyperedge.
+和星扩展不同的是，团扩展不会在简单图内增加虚拟顶点。
+它将简单超图内的超边简化为简单图的边。
+对于每一条超边，星扩展会增加边把超边内的顶点两两连接。
 
 .. code-block:: python
 
@@ -198,10 +198,9 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
             [1., 1., 1., 0., 1.],
             [1., 0., 0., 1., 0.]])
 
-**HyperGCN-based Expansion** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
+**基于HyperGCN的扩展** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-In the `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ paper, the authors also describe 
-a method to reduce the hyperedges in the hypergraph to the edges in the simple graph as the following figure.
+在论文 `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ 中， 作者介绍了一种将超图的超边简化为图的边的方法，如下图所示。
 
 .. image:: ../../_static/img/hypergcn.png
     :align: center
@@ -241,24 +240,24 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
 
 .. _zh_build_directed_graph:
 
-Build Directed Graph
+构建有向图
 +++++++++++++++++++++++
 
-A `directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ is a graph with directed edges, where the edge ``(x, y)`` and edge ``(y, x)`` can exist simultaneously in the structure.
-It can be constructed by the following methods:
+`有向图 <https://en.wikipedia.org/wiki/Directed_graph>`_ 为包含有向边的图, 边 ``(x, y)`` 和边 ``(y, x)`` 可以同时存在。
+可以使用如下方式构建：
 
-- Edge list (**default**) :py:class:`dhg.DiGraph`
-- Adjacency list :py:meth:`dhg.DiGraph.from_adj_list`
-- Features with k-Nearest Neighbors :py:meth:`dhg.DiGraph.from_feature_kNN`
+- 边列表 (**默认**) :py:class:`dhg.DiGraph`
+- 邻接列表 :py:meth:`dhg.DiGraph.from_adj_list`
+- 使用特征的k近邻 :py:meth:`dhg.DiGraph.from_feature_kNN`
 
 
-Common Methods
+常用方法
 ^^^^^^^^^^^^^^^^^^^
 .. note:: 
 
-    The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
+    有向图同样支持在构建或增加边时，根据 ``merge_op`` 合并重边。
 
-**Construct a directed graph from edge list with** :py:class:`dhg.DiGraph`
+使用 :py:class:`dhg.DiGraph` 类 **从边列表构建一个有向图**
 
 .. code-block:: python
 
@@ -276,10 +275,9 @@ Common Methods
             [0., 1., 0., 0., 0.],
             [0., 0., 1., 0., 0.]])
 
-You can find that the adjacency matrix of the directed graph is not symmetric.
+可以发现有向图的邻接矩阵不是一个对称矩阵。
 
-
-**Construct a directed graph from adjacency list with** :py:meth:`dhg.DiGraph.from_adj_list`
+使用 :py:meth:`dhg.DiGraph.from_adj_list` 函数 **从邻接列表构建一个有向图**
 
 .. code-block:: python
 
@@ -297,7 +295,7 @@ You can find that the adjacency matrix of the directed graph is not symmetric.
             [0., 0., 0., 0., 0.]])
 
 
-**Construct a directed graph from feature k-Nearest Neighbors with** :py:meth:`dhg.DiGraph.from_feature_kNN`
+使用 :py:meth:`dhg.DiGraph.from_feature_kNN` 函数 **根据特征的k近邻构建有向图**
 
 .. code-block:: python
 
@@ -319,31 +317,31 @@ You can find that the adjacency matrix of the directed graph is not symmetric.
             [0., 1., 1., 0., 0.]], dtype=torch.float64)
 
 
-Reduced from High-Order Structures
+从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Welcome to contribute!
+期待您的贡献！
 
 .. _zh_build_bipartite_graph:
 
-Build Bipartite Graph
+构建二分图
 +++++++++++++++++++++++
 
-A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ is a graph that contains two types of vertices and edges between them, 
-whose partition has the parts vertex set :math:`\mathcal{U}` and vertex set :math:`\mathcal{V}`. 
-It can be constructed by the following methods:
+`二分图 <https://en.wikipedia.org/wiki/Bipartite_graph>`_ 包含两种类型的顶点以及连接不同类型顶点的边，
+其分为 :math:`\mathcal{U}` 顶点集和 :math:`\mathcal{V}` 顶点集。
+可以使用如下方式构建：
 
-- Edge list (**default**) :py:class:`dhg.BiGraph`
-- Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`
-- Simple hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
+- 边列表 (**默认**) :py:class:`dhg.BiGraph`
+- 邻接列表 :py:meth:`dhg.BiGraph.from_adj_list`
+- 简单超图 :py:meth:`dhg.BiGraph.from_hypergraph`
 
-Common Methods
+常用方法
 ^^^^^^^^^^^^^^^^^^^
 .. note:: 
 
-    The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
+    二分图同样支持在构建或增加边时，根据 ``merge_op`` 合并重边。
 
-**Construct a bipartite graph from edge list with** :py:class:`dhg.BiGraph`
+使用 :py:class:`dhg.BiGraph` 类 **从边列表构建一个二分图**
 
 .. code-block:: python
 
@@ -372,7 +370,7 @@ Common Methods
             [0., 0., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
 
-**Construct a bipartite graph from adjacency list with** :py:meth:`dhg.BiGraph.from_adj_list`
+使用 :py:meth:`dhg.BiGraph.from_adj_list` 函数 **从邻接列表构建一个二分图**
 
 .. code-block:: python
 
@@ -398,10 +396,10 @@ Common Methods
             [1., 1., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
 
-Reduced from High-Order Structures
+从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We first define a simple hypergraph as:
+我们首先定义一个简单超图：
 
 .. code-block:: python
 
@@ -416,7 +414,7 @@ We first define a simple hypergraph as:
             [0., 1., 0., 1.],
             [0., 0., 0., 1.]])
 
-**Construct a bipartite graph from simple hypergraph with** :py:meth:`dhg.BiGraph.from_hypergraph`
+使用函数 :py:meth:`dhg.BiGraph.from_hypergraph` **从简单超图构建一个二分图**
 
 .. code-block:: python
 
@@ -446,30 +444,29 @@ We first define a simple hypergraph as:
 构建高阶关联结构
 -----------------------
 
-Currently, DHG's high-order structures include simple hypergraph. 
-In the future, we will add more high-order structures like directed hypergraph.
+现在，DHG的高阶关联结构包括简单超图，以后我们将增加更多的高阶关联结构。
 
 .. _zh_build_hypergraph:
 
-Build Simple Hypergraph
+构建简单超图
 ++++++++++++++++++++++++++
-A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge. 
-Each hyperedge in a hypergraph can connect more than two vertices, which can be indicated with a sub-set of total vertices.
-Simple hypergraph can be constructed by the following methods:
+`简单超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ 是超边中不含方向信息的超图。
+超图内的每条超边可以连接两个或更多的顶点，其可以用所有顶点的子集表示。
+可以使用如下方式构建：
 
-- Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
-- Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
-- Promoted from the low-order structures
+- 超边列表 (**默认**) :py:class:`dhg.Hypergraph`
+- 使用特征的k近邻 :py:meth:`dhg.Hypergraph.from_feature_kNN`
+- 从低阶关联结构提升
 
-  - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
-  - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
-  - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
+  - 简单图 :py:meth:`dhg.Hypergraph.from_graph`
+  - 简单图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - 二分图 :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
-Common Methods
+常用方法
 ^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple hypergraph from edge list with** :py:class:`dhg.Hypergraph`
+使用 :py:class:`dhg.Hypergraph` 类 **从边列表构建一个简单超图**
 
 .. code-block:: python
 
@@ -488,7 +485,7 @@ Common Methods
 
 .. important:: 
 
-    Each hyperedge in the hypergraph is an unordered set of vertices, which means that ``(0, 1, 2)``, ``(0, 2, 1)``, and ``(2, 1, 0)`` are all the same hyperedge.
+    简单超图里面的超边是顶点的无序集，也就意味着超边 ``(0, 1, 2)`` 、超边 ``(0, 2, 1)`` 和超边 ``(2, 1, 0)`` 是同一条超边。
 
 .. code-block:: python
 
@@ -513,7 +510,7 @@ Common Methods
 
 .. note:: 
 
-    If the added hyperedges have duplicate hyperedges, those duplicate hyperedges will be automatically merged with specified ``merge_op``.
+    如果增加的超边有重边，这些重边将根据指定的 ``merge_op`` 合并。
 
 .. code-block:: python
 
@@ -530,10 +527,11 @@ Common Methods
     >>> hg.e
     ([(0, 1, 2), (2, 3), (0, 4)], [2.0, 2.0, 2.0])
 
+如果你分别设置 ``merge_op`` 为 ``mean`` 和 ``sum`` ，你会发现最后一条超边的权重分别是 ``1.0`` 和 ``2.0`` 。
 You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
 
 
-**Construct a simple hypergraph from feature k-Nearest Neighbors with** :py:meth:`dhg.Hypergraph.from_feature_kNN`
+使用 :py:meth:`dhg.Hypergraph.from_feature_kNN` 函数 **根据特征的k近邻构建简单超图**
 
 .. code-block:: python
 
@@ -566,13 +564,13 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
 
 .. note:: 
 
-    Those duplicated hyperedges are merged with ``mean`` operation.
+    重边根据 ``mean`` 操作合并。
 
 
-Prometed from Low-Order Structures
+从低阶关联结构提升得到
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple hypergraph from a simple graph with** :py:meth:`dhg.Hypergraph.from_graph`
+使用 :py:meth:`dhg.Hypergraph.from_graph` 函数 **从简单图构建一个简单超图**
 
 
 .. code-block:: python
@@ -597,7 +595,7 @@ Prometed from Low-Order Structures
             [0., 0., 0., 1.]])
 
 
-**Construct a simple hypergraph from vertex's k-Hop neighbors of a simple graph with** :py:meth:`dhg.Hypergraph.from_graph_kHop`
+使用 :py:meth:`dhg.Hypergraph.from_graph_kHop` 函数 **根据简单图顶点的k阶邻居构建一个简单超图**
 
 .. code-block:: python
 
@@ -629,8 +627,7 @@ Prometed from Low-Order Structures
             [0., 1., 1.],
             [1., 1., 0.]])
 
-
-**Construct a simple hypergraph from a bipartite graph with** :py:meth:`dhg.Hypergraph.from_bigraph`
+使用 :py:meth:`dhg.Hypergraph.from_bigraph` 函数 **从二分图构建一个简单超图**
 
     .. code-block:: python
 

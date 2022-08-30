@@ -23,7 +23,7 @@
 - 从简单超图关联结构简化而来
   
   - 星扩展 :py:meth:`dhg.Graph.from_hypergraph_star`
-  - 集扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
+  - 团扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
   - 基于 `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ 的扩展 :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
 在如下的例子中，我们随机生成一个简单图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。

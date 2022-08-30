@@ -341,7 +341,7 @@ Common Methods
 ^^^^^^^^^^^^^^^^^^^
 .. note:: 
 
-    The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
+    The bipartite graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
 
 **Construct a bipartite graph from edge list with** :py:class:`dhg.BiGraph`
 

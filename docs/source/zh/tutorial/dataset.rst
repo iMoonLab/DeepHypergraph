@@ -1,16 +1,15 @@
 构建输入数据
 ================
 
-DHG includes a number of datasets that can be used to train and test your models. 
-In this section, we will introduce how to use DHG's :doc:`data </api/data>` module, 
-the architecture of creating a data object, and how to build your own dataset and specified pre-processing steps.
-We welcome to contribute to the dataset by submitting a pull request on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_, 
-please following the :doc:`instruction </start/contribution>` guide.
+DHG包含许多可用于训练模型和测试模型的数据集。
+在这一节中，将会介绍如何使用DHG的 :doc:`data </api/data>` 模块、构建数据对象的结构和构建自定义数据集的方法及指定预处理步骤。
+我们期待您在 `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_ 提交pull request贡献数据集，
+请参考 :doc:`instruction </start/contribution>` 的指引。
 
-Usage
+使用方法
 -----------------------
 
-If your network is OK, you can directly use any of datasets in :doc:`/api/data` as follows:
+如果您的网络没问题，你可以直接使用 :doc:`/api/data` 内的如下数据集：
 
 .. code-block:: python
 
@@ -48,24 +47,24 @@ If your network is OK, you can directly use any of datasets in :doc:`/api/data` 
     ->  train_adj_list
     ->  test_adj_list
 
-Or you can manually download the dataset from `DHG's data repository <https://data.deephypergraph.com/>`_.
-Then, you can put the dataset in the ``dhg.CAHE_ROOT`` directory or any other directory you want.
-You can fetch your ``CACHE_ROOT`` by:
+或者可以手动从 `DHG's data repository <https://data.deephypergraph.com/>`_ 下载数据集。
+然后，您可以把数据集放置在 ``dhg.CAHE_ROOT`` 文件夹或者其它任何目录。
+可以使用如下代码获取 ``CACHE_ROOT`` ：
 
 .. code-block:: python
 
     >>> dhg.CACHE_ROOT
     PosixPath('/home/fengyifan/.dhg')
 
-If you put the dataset into the your specified directory ``<your-directory>``, you can use the following code to load the dataset:
+如果数据集存放在您的指定目录 ``<your-directory>`` ，可以使用如下代码导入数据集：
 
-.. note:: You should pass the parent directory of your download dataset to the ``data_root`` parameter.
+.. note:: 需要将您下载的数据集的父目录传给参数 ``data_root`` 。
 
 .. code-block:: python
 
     >>> dhg.data.Cora(data_root=<your-directory>)
 
-As soon as you load the dataset and fetch the data object ``d``, you can use the following code to get **preprocessed** items from the dataset:
+一旦您导入了数据集并且获取数据对象 ``d`` ，可以使用如下代码获取数据集的 **预处理** 项。
 
 .. code-block:: python
 
@@ -117,7 +116,7 @@ As soon as you load the dataset and fetch the data object ``d``, you can use the
     >>> d['test_adj_list']
     [[0, 2968, 228, 38, 422, 2769], [1, 621, 900, ...], ..., [..., 1579, 3039, 1699, 1195]]
 
-If you want to get the **un-preprocessed** items you can call the :py:meth:`raw() <dhg.data.BaseData.raw>` method:
+如果需要获取 **未预处理** 项，需要调用 :py:meth:`raw() <dhg.data.BaseData.raw>` 方法：
 
 .. code-block:: python
 
@@ -135,41 +134,42 @@ If you want to get the **un-preprocessed** items you can call the :py:meth:`raw(
             [14.],
             [13.]], dtype=float32)
 
-Defaultly, the vertex featue is pre-processed with L1 normalization in Cora dataset. 
-To build a simple graph structucture for training in Cora dataset, you can refer to the :ref:`construct a simple graph from edge list <build_graph>` tutorial.
+Cora数据集内的顶点特征默认使用L1归一化预处理。
+可以参考 :ref:`从边列表构建简单图 <build_graph>` 教程从Cora数据集中构建用于训练的简单图结构。
 
-Architechture
+模块架构设计
 -----------------------
-The architecture of constructing DHG's dataset object is shown in the following figure.
+下图展示构建DHG数据集模块的架构设计。
 
 .. image:: ../../_static/img/dataset_arch.jpg
     :align: center
     :alt: dataset_architecture
     :height: 400px
 
-Build Your Own Dataset
+建立自己的数据集
 -----------------------
 
-At first you should inherit your data class from the :py:class:`BaseData <dhg.data.BaseData>` class.
+首先，您应该从 :py:class:`BaseData <dhg.data.BaseData>` 类继承您的数据类。
 
 .. code-block:: python
 
     >>> from dhg.data import BaseData
 
-All the items in the dataset are configured in the ``_content`` dictionary. Currently, the following items are supported:
+数据集中的所有项都在 `_content`` 字典中配置。
+同时，支持以下操作：
 
-- download from remote server -> load from local file -> preprocess and return
-- load from local file -> preprocess and return
-- directly return
+- 从远程服务器下载 -> 从本地文件加载 -> 预处理并返回
+- 从本地文件加载 -> 预处理并返回
+- 直接返回
 
-The supported loader functions can be found in :ref:`here <api_datapipe_loader>`.
+可以在 :ref:`此 <api_datapipe_loader>` 找到支持的加载函数。
 
-The supported preprocess functions can be found in :ref:`here <api_datapipe_preprocess>`.
+可以在 :ref:`here <api_datapipe_preprocess>` 找到支持的预处理函数。
 
-If the ``item`` should be downloaded from a remote server, you should specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
-The ``upon`` key is a list of dictionaries, each dictionary at lease contains the ``filename`` and ``md5`` keys. 
-The ``filename`` is the name of the file to be downloaded, and the ``md5`` is the md5 checksum of the file.
-Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT \ data_root \ name \ filename`` directory.
+如果 ``item`` 需要从远程服务器下载，您需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
+键 ``upon`` 为字典列表，每一个字典至少包含 键 ``filename`` 和 ``md5`` 。
+``filename`` 为需要下载的文件名， ``md5`` 为文件的md5校验码。
+默认情况下，远程文件会存放在 ``REMOTE_DATASETS_ROOT \ data_root \ name \ filename`` 目录。
 
 .. code-block:: python
 
@@ -186,9 +186,9 @@ Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT \ data_root \ nam
     }
 
 
-If the ``item`` relay on a local file, you should also specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
-But the file should be put into the ``data_root \ name \ filename`` directory. 
-Then, the :py:class:`BaseData <dhg.data.BaseData>` class will automatically check the file's md5 checksum.
+如果 ``item`` 依赖本地文件，还需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
+但文件需要放置在 ``data_root \ name \ filename`` 文件夹。
+然后， :py:class:`BaseData <dhg.data.BaseData>` 类会自动检查文件的md5校验码。
 
 .. code-block:: python
     
@@ -204,7 +204,7 @@ Then, the :py:class:`BaseData <dhg.data.BaseData>` class will automatically chec
         ...
     }
 
-If the ``item`` is a fixed value, you can directly specify the ``value`` in the ``_content`` dictionary.
+如果 ``item`` 是一个固定的值，您可以直接在 ``_content`` 字典指定 ``value``。
 
 .. code-block:: python
     
@@ -214,7 +214,7 @@ If the ``item`` is a fixed value, you can directly specify the ``value`` in the 
     }
 
 
-Example of Graph Dataset:
+图数据集示例
 ++++++++++++++++++++++++++++
 
 .. code-block:: python
@@ -258,7 +258,7 @@ Example of Graph Dataset:
                 },
             }
 
-Example of Hypergraph Dataset
+超图数据集示例
 ++++++++++++++++++++++++++++++++
 
 .. code-block:: python
@@ -322,7 +322,7 @@ Example of Hypergraph Dataset
             }
 
 
-Example of User-Item Bipartite Dataset
+<用户-物品>二分图示例
 ++++++++++++++++++++++++++++++++++++++++++++
 
 .. code-block:: python
