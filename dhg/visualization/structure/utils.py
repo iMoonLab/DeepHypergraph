@@ -29,7 +29,7 @@ def default_style(
     e_fill_color: Optional[Union[str, list]] = None,
     font_family: Optional[str] = None,
 ):
-    _v_color = "m"
+    _v_color = "r"
     v_color = fill_color(v_color, _v_color, num_v)
 
     _e_color = (0.7, 0.7, 0.7)
@@ -173,7 +173,7 @@ def default_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.035
+    _pull_e_strength = 0.045
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
@@ -217,19 +217,19 @@ def default_bipartite_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.02
+    _pull_e_strength = 0.03
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_u_center_strength = 0.032
+    _pull_u_center_strength = 0.04
     # =============================================================
     pull_u_center_strength = fill_strength(pull_u_center_strength, _pull_u_center_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_v_center_strength = 0.032
+    _pull_v_center_strength = 0.04
     # =============================================================
     pull_v_center_strength = fill_strength(pull_v_center_strength, _pull_v_center_strength)
 

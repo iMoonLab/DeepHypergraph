@@ -8,7 +8,7 @@ import dhg
 
 
 from .layout2 import force_layout, bipartite_force_layout
-from .utils2 import (
+from .utils import (
     default_style,
     default_size,
     default_strength,

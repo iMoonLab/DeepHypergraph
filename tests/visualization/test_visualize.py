@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from dhg.random.graphs.graph import graph_Gnp
 
-from dhg.visualization.structure.draw2 import draw_graph, draw_bipartite_graph
+from dhg.visualization.structure.draw import draw_graph, draw_bipartite_graph
 from dhg.random import graph_Gnm, graph_Gnp, graph_Gnp_fast, bigraph_Gnm
 
 
