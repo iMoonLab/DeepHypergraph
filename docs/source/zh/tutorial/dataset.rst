@@ -4,7 +4,7 @@
 DHG包含许多可用于训练模型和测试模型的数据集。
 在这一节中，将会介绍如何使用DHG的 :doc:`data </api/data>` 模块、构建数据对象的结构和构建自定义数据集的方法及指定预处理步骤。
 我们期待您在 `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_ 提交pull request贡献数据集，
-请参考 :doc:`instruction </start/contribution>` 的指引。
+请参考 :doc:`贡献教程 </start/contribution>` 的指引。
 
 使用方法
 -----------------------

@@ -178,20 +178,156 @@ which can be implamented as follows:
             X = self.drop(self.act(X))
             return X
 
+Finally, the GraphSAGE model can be implemented with stacking multiple GraphSAGEConv layers.
+
 
 **Building HGNN+ model**
 
-Comming soon...
+The HGNN+ is a general message passing model that passes messages from vertex to hyperedge to vertex, which can be implamented as following:
+
+.. code-block:: python
+
+    import dhg
+    import torch
+    import torch.nn as nn
+
+    class HGNNPConv(nn.Module):
+        def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            bias: bool = True,
+            drop_rate: float = 0.5,
+        ):
+            super().__init__()
+            self.act = nn.ReLU(inplace=True)
+            self.drop = nn.Dropout(drop_rate)
+            self.theta = nn.Linear(in_channels, out_channels, bias=bias)
+
+        def forward(self, X: torch.Tensor, hg: dhg.Hypergraph) -> torch.Tensor:
+            X = self.theta(X)
+            Y = hg.v2e(X, aggr="mean")
+            X = hg.e2v(Y, aggr="mean")
+            X = self.drop(self.act(X))
+            return X
+
+Finally, the HGNN+ model can be implemented with stacking multiple HGNNPConv layers.
 
 **Building GAT model**
 
-Comming soon...
+DHG provide a special and convienent way to implement weighted neightborhood aggregation from vertex to vertex.
+In simple graph, each edge have its source and target index. 
+Given vertex features ``X``, simple graph ``g``, and linear layers ``atten_src`` and ``atten_dst``, you can compute the edge weight by follows:
+
+.. code-block:: python
+
+    >>> x_for_src = atten_src(X)
+    >>> x_for_dst = atten_dst(X)
+    >>> e_atten_weight = x_for_src[g.e_src] + x_for_dst[g.e_dst]
+
+Besides, DHG provides ``softmax_then_sum`` aggregation function for neighbor messages aggregation. 
+It can normalize the messages from neighbors with ``softmax`` and then sum them to update the center vertex's message.
+
+Then, the GATConv model can be implamented as follows:
+
+.. code-block:: python
+
+    class GATConv(nn.Module):
+        def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            bias: bool = True,
+            drop_rate: float = 0.5,
+            atten_neg_slope: float = 0.2,
+            is_last: bool = False,
+        ):
+            super().__init__()
+            self.is_last = is_last
+            self.atten_dropout = nn.Dropout(drop_rate)
+            self.atten_act = nn.LeakyReLU(atten_neg_slope)
+            self.act = nn.ELU(inplace=True)
+            self.theta = nn.Linear(in_channels, out_channels, bias=bias)
+            self.atten_src = nn.Linear(out_channels, 1, bias=False)
+            self.atten_dst = nn.Linear(out_channels, 1, bias=False)
+
+        def forward(self, X: torch.Tensor, g: Graph) -> torch.Tensor:
+            X = self.theta(X)
+            x_for_src = self.atten_src(X)
+            x_for_dst = self.atten_dst(X)
+            e_atten_score = x_for_src[g.e_src] + x_for_dst[g.e_dst]
+            e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze())
+            X = g.v2v(X, aggr="softmax_then_sum", e_weight=e_atten_score)
+            X = self.act(X)
+            return X
+
+Finally, the GAT model can be implamented with stacking multiple GATConv layers.
 
 
 **Building hypergraph convolution with different hyperedge weights model**
 
-Comming soon...
+Like varying the edge weights in the simple graph, hyperedge weights can also be varied in the message passing from vertex to hyperedge to vertex.
+But the difference is that the hyperedge weights is more complex than the edge weights in the simple graph.
+Due to the two stages (vertex to hyperedge and hyperedge to vertex) of message passing in the hypergraph,
+varying the hyperedge weights can also be split into two stages: vertex to hyperedge stage and hyperedge to vertex stage.
 
+- In the first stage, the hyperedge weights are controlled by the **source vertex index** (:py:attr:`v2e_src <dhg.Hypergraph.v2e_src>`) 
+  and the **target hyperedge index** (:py:attr:`v2e_dst <dhg.Hypergraph.v2e_dst>`).
+- In the second stage, the hyperedge weights are controlled by the **source hyperedge index** (:py:attr:`e2v_src <dhg.Hypergraph.e2v_src>`) 
+  and the **target vertex index**  (:py:attr:`e2v_dst <dhg.Hypergraph.e2v_dst>`).
+
+In simple hypergraph, the two message passing stages are symmetric. 
+Thus, the same vertex and hyperedge attention layer can be used in the two stages.
+Given the vertex features ``X``, hyperedge features ``Y``, simple hypergraph ``hg``, and linear layers ``atten_vertex`` and ``atten_hyperedge``, 
+you can compute the hyperedge weights for the two stages by follows: 
+
+.. code-block:: python
+
+    >>> x_for_vertex = atten_vertex(X)
+    >>> y_for_hyperedge = atten_hyperedge(Y)
+    >>> v2e_atten_weight = x_for_vertex[hg.v2e_src] + y_for_hyperedge[hg.v2e_dst]
+    >>> e2v_atten_weight = y_for_hyperedge[hg.e2v_src] + x_for_vertex[hg.e2v_dst]
+
+Then, a simple hypergraph convolution with different hyperedge weights model can be implamented as follows:
+
+.. code-block:: python
+
+    class HGATConv(nn.Module):
+        def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            bias: bool = True,
+            drop_rate: float = 0.5,
+            atten_neg_slope: float = 0.2,
+            is_last: bool = False,
+        ):
+            super().__init__()
+            self.is_last = is_last
+            self.atten_dropout = nn.Dropout(drop_rate)
+            self.atten_act = nn.LeakyReLU(atten_neg_slope)
+            self.act = nn.ELU(inplace=True)
+            self.theta_vertex = nn.Linear(in_channels, out_channels, bias=bias)
+            self.theta_hyperedge = nn.Linear(in_channels, out_channels, bias=bias)
+            self.atten_vertex = nn.Linear(out_channels, 1, bias=False)
+            self.atten_hyperedge = nn.Linear(out_channels, 1, bias=False)
+
+        def forward(self, X: torch.Tensor, Y: torch.Tensor, hg: Hypergraph) -> torch.Tensor:
+            X = self.theta_vertex(X)
+            Y = self.theta_hyperedge(Y)
+            x_for_vertex = self.atten_vertex(X)
+            y_for_hyperedge = self.atten_hyperedge(Y)
+            v2e_atten_score = x_for_vertex[hg.v2e_src] + y_for_hyperedge[hg.v2e_dst]
+            e2v_atten_score = y_for_hyperedge[hg.e2v_src] + x_for_vertex[hg.e2v_dst]
+            v2e_atten_score = self.atten_dropout(self.atten_act(v2e_atten_score).squeeze())
+            e2v_atten_score = self.atten_dropout(self.atten_act(e2v_atten_score).squeeze())
+            Y_ = hg.v2e(X, aggr="softmax_then_sum", v2e_weight=v2e_atten_score)
+            X_ = hg.e2v(Y_, aggr="softmax_then_sum", e2v_weight=e2v_atten_score)
+            X_ = self.act(X_)
+            Y_ = self.act(Y_)
+            return X_, Y_
+
+Then, the simple hypergraph convolution with different hyperedge weights model can be implamented with stacking multiple HGATConv layers.
 
 
 .. _build_hybrid_operation_model:
@@ -209,33 +345,3 @@ Building Hybrid Operation on Hybrid Structure Model
 Comming soon...
 
 
-.. 1. select your correlation
-.. 2. determinate your type
-
-.. Building Spectral-Based Model
-.. ---------------------------
-
-
-.. GCN
-.. ++++++
-
-.. HGNN
-.. +++++++
-
-.. Building Spatial-Based Model
-.. -----------------------------
-
-.. GAT 
-.. +++++
-
-.. GraphSAGE
-.. +++++++++++++++
-
-
-.. HGNNP
-.. ++++++++++
-
-
-
-.. Examples
-.. --------------
