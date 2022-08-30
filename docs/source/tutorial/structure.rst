@@ -1,4 +1,4 @@
-Build Structure
+Building Structure
 ===================================
 Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures 
 and some structure transformation functions of them like: 
@@ -14,7 +14,7 @@ In the future, we will add more low-order structures.
 
 .. _build_graph:
 
-Build Simple Graph
+Building Simple Graph
 +++++++++++++++++++++++
 
 A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edge ``(x, y)`` and ``(y, x)`` are the same edge. 
@@ -241,7 +241,7 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
 
 .. _build_directed_graph:
 
-Build Directed Graph
+Building Directed Graph
 +++++++++++++++++++++++
 
 A `directed graph <https://en.wikipedia.org/wiki/Directed_graph>`_ is a graph with directed edges, where the edge ``(x, y)`` and edge ``(y, x)`` can exist simultaneously in the structure.
@@ -326,8 +326,8 @@ Welcome to contribute!
 
 .. _build_bipartite_graph:
 
-Build Bipartite Graph
-+++++++++++++++++++++++
+Building Bipartite Graph
++++++++++++++++++++++++++++
 
 A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ is a graph that contains two types of vertices and edges between them, 
 whose partition has the parts vertex set :math:`\mathcal{U}` and vertex set :math:`\mathcal{V}`. 
@@ -451,8 +451,8 @@ In the future, we will add more high-order structures like directed hypergraph.
 
 .. _build_hypergraph:
 
-Build Simple Hypergraph
-++++++++++++++++++++++++++
+Building Simple Hypergraph
+++++++++++++++++++++++++++++
 A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge. 
 Each hyperedge in a hypergraph can connect more than two vertices, which can be indicated with a sub-set of total vertices.
 Simple hypergraph can be constructed by the following methods:

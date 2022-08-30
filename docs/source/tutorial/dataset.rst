@@ -1,5 +1,5 @@
-Build Dataset
-================
+Building Dataset
+==================
 
 DHG includes a number of datasets that can be used to train and test your models. 
 In this section, we will introduce how to use DHG's :doc:`data </api/data>` module, 
@@ -59,7 +59,7 @@ You can fetch your ``CACHE_ROOT`` by:
 
 If you put the dataset into the your specified directory ``<your-directory>``, you can use the following code to load the dataset:
 
-.. note:: You should pass the parent directory of your download dataset to the ``data_root`` parameter.
+.. note:: You should pass the parent directory of your downloaded dataset to the ``data_root`` parameter.
 
 .. code-block:: python
 
@@ -147,8 +147,8 @@ The architecture of constructing DHG's dataset object is shown in the following 
     :alt: dataset_architecture
     :height: 400px
 
-Build Your Own Dataset
------------------------
+Building Your Own Dataset
+---------------------------
 
 At first you should inherit your data class from the :py:class:`BaseData <dhg.data.BaseData>` class.
 

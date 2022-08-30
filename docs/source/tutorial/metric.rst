@@ -1,7 +1,7 @@
 .. _tutorial_build_evaluator:
 
-Build Evaluator
-=================
+Building Evaluator
+===================
 
 Comming soon...
 
