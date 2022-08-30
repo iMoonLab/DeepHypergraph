@@ -2,7 +2,7 @@ from math import cos, sin, pi
 from copy import deepcopy
 import numpy as np
 from sklearn.metrics import euclidean_distances
-from .utils2 import safe_div
+from .utils import safe_div
 
 
 class Simulator:
@@ -12,7 +12,7 @@ class Simulator:
     EDGE_REPULSION = 2
     CENTER_GRAVITY = 3
 
-    def __init__(self, nums, forces, centers=1, damping_factor=0.998) -> None:
+    def __init__(self, nums, forces, centers=1, damping_factor=0.999) -> None:
         self.nums = [nums] if isinstance(nums, int) else nums
 
         self.node_attraction = forces.get(self.NODE_ATTRACTION, None)
@@ -30,7 +30,7 @@ class Simulator:
 
         self.damping_factor = damping_factor
 
-    def simulate(self, init_position, H, max_iter=400, epsilon=0.001, dt=8.0) -> None:
+    def simulate(self, init_position, H, max_iter=400, epsilon=0.001, dt=2.0) -> None:
         """
         Simulate the force-directed layout algorithm.
         """

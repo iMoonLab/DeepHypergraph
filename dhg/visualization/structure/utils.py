@@ -29,7 +29,7 @@ def default_style(
     e_fill_color: Optional[Union[str, list]] = None,
     font_family: Optional[str] = None,
 ):
-    _v_color = "m"
+    _v_color = "r"
     v_color = fill_color(v_color, _v_color, num_v)
 
     _e_color = (0.7, 0.7, 0.7)
@@ -173,7 +173,7 @@ def default_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.035
+    _pull_e_strength = 0.045
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
@@ -217,19 +217,19 @@ def default_bipartite_strength(
 
     # =============================================================
     # compute default pull_e_strength
-    _pull_e_strength = 0.02
+    _pull_e_strength = 0.03
     # =============================================================
     pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_u_center_strength = 0.032
+    _pull_u_center_strength = 0.04
     # =============================================================
     pull_u_center_strength = fill_strength(pull_u_center_strength, _pull_u_center_strength)
 
     # =============================================================
     # compute default pull_center_strength
-    _pull_v_center_strength = 0.032
+    _pull_v_center_strength = 0.04
     # =============================================================
     pull_v_center_strength = fill_strength(pull_v_center_strength, _pull_v_center_strength)
 
@@ -286,8 +286,8 @@ def draw_line_edge(
     e_color: list,
     e_line_width: list,
 ):
-    arrow_head_width = 3 * e_line_width if show_arrow else 0
-    arrow_head_lenght = 1.5 * arrow_head_width
+    arrow_head_width = [0.015 * w for w in e_line_width] if show_arrow else [0] * len(e_list)
+    arrow_head_lenght = [0.8 * w for w in arrow_head_width]
 
     for eidx, e in enumerate(e_list):
         start_pos = v_coor[e[0]]
@@ -307,10 +307,11 @@ def draw_line_edge(
             y,
             dx,
             dy,
-            head_width=arrow_head_width,
-            head_length=arrow_head_lenght,
+            head_width=arrow_head_width[eidx],
+            head_length=arrow_head_lenght[eidx],
             color=e_color[eidx],
             linewidth=e_line_width[eidx],
+            length_includes_head=True
         )
 
 

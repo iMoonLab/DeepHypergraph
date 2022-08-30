@@ -8,7 +8,7 @@ import dhg
 
 
 from .layout2 import force_layout, bipartite_force_layout
-from .utils2 import (
+from .utils import (
     default_style,
     default_size,
     default_strength,
@@ -101,7 +101,7 @@ def draw_directed_graph(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
     )
     # layout
-    v_coor = force_layout(num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
+    v_coor = force_layout(num_v, e_list, push_v_strength, None, pull_e_strength, pull_center_strength)
 
 
     if e_style == "line":

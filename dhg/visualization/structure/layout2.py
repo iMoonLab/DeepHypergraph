@@ -3,7 +3,7 @@ from typing import Optional, List
 import numpy as np
 
 from .simulator import Simulator
-from .utils2 import edge_list_to_incidence_matrix, init_pos
+from .utils import edge_list_to_incidence_matrix, init_pos
 
 
 def force_layout(
