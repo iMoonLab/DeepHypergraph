@@ -1,3 +1,4 @@
+import enum
 from typing import Optional, Union, List, Tuple, Any
 from itertools import chain
 
@@ -5,6 +6,8 @@ import numpy as np
 import matplotlib
 from matplotlib.patches import Circle, FancyArrowPatch
 from matplotlib.collections import PathCollection, PatchCollection
+
+from .layout2 import hull_layout
 
 
 def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.000001):
@@ -324,7 +327,33 @@ def draw_circle_edge(
     e_fill_color: list,
     e_line_width: list,
 ):
-    pass
+    n_v = len(v_coor)
+    radius_increment = 0.5 * max(e_line_width)
+    init_radius = max(v_size) + radius_increment
+    line_paths, arc_paths, vertices = hull_layout(n_v, e_list, v_coor, init_radius, radius_increment)
+
+    for eidx, line in enumerate(line_paths):
+        start_pos, end_pos = line
+        x, y = start_pos[0], start_pos[1]
+        dx, dy = end_pos[0] - x, end_pos[1] - y
+        ax.arrow(x, y, dx, dy, head_width=0, head_length=0, color=e_color[eidx], linewidth=e_line_width[eidx])
+
+    for eidx, arc in enumerate(arc_paths):
+        center, theta1, theta2, radius = arc
+        x, y = center[0], center[1]
+        ax.add_patch(
+            matplotlib.patches.Arc(
+                (x, y),
+                2 * radius,
+                2 * radius,
+                theta1=theta1,
+                theta2=theta2,
+                color=e_color[eidx],
+                linewidth=e_line_width[eidx],
+                fill=True,
+                edgecolor=e_fill_color[eidx],
+            )
+        )
 
 
 def edge_list_to_incidence_matrix(num_v: int, e_list: List[tuple]) -> np.ndarray:

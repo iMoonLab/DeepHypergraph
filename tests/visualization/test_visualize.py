@@ -3,8 +3,8 @@ import numpy as np
 from dhg.random.graphs.graph import graph_Gnp
 
 
-from dhg.visualization.structure.draw import draw_graph, draw_bipartite_graph, draw_directed_graph
-from dhg.random import graph_Gnm, graph_Gnp, graph_Gnp_fast, bigraph_Gnm, digraph_Gnm
+from dhg.visualization.structure.draw import draw_graph, draw_bipartite_graph, draw_directed_graph, draw_hypergraph
+from dhg.random import graph_Gnm, graph_Gnp, graph_Gnp_fast, bigraph_Gnm, digraph_Gnm, hypergraph_Gnm
 
 
 import matplotlib.pyplot as plt
@@ -44,4 +44,11 @@ def test_vis_di_graph():
 
     g = digraph_Gnm(40, 50)
     draw_directed_graph(g, e_style="line")
+    plt.show()
+
+
+def test_hy():
+
+    g = hypergraph_Gnm(40, 50)
+    draw_hypergraph(g, e_style="circle")
     plt.show()

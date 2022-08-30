@@ -228,23 +228,29 @@ def draw_hypergraph(
     pull_center_strength: Optional[float] = None,
 ):
     assert e_style in ["circle"], "e_style must be 'circle'"
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 6))
+
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
-    v_color, e_color, e_fill_color, font_family = default_style(v_color, e_color, e_fill_color, font_family)
-    v_size, v_line_width, e_line_width = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
+    v_color, e_color, e_fill_color, font_family = default_style(g.num_v, g.num_e, v_color, e_color, e_fill_color, font_family)
+    v_size, v_line_width, e_line_width, font_size = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
     (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_strength(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
     )
     # layout
-    v_coor = force_layout(num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,)
-    draw_vertex(
-        ax, v_coor, v_label, font_size, font_family, v_size, v_color, v_line_width,
-    )
+    v_coor = force_layout(num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
     if e_style == "circle":
         draw_circle_edge(
             ax, v_coor, v_size, e_list, e_color, e_fill_color, e_line_width,
         )
     else:
         raise ValueError("e_style must be 'circle'")
+
+    draw_vertex(
+        ax, v_coor, v_label, font_size, font_family, v_size, v_color, v_line_width,
+    )
+
+    plt.xlim((0, 1.0))
+    plt.ylim((0, 1.0))
+
     fig.tight_layout()
