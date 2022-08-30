@@ -8,6 +8,7 @@ Compose Datapipes
 
 .. autofunction:: dhg.datapipe.compose_pipes
 
+.. _api_datapipe_preprocess:
 
 Transforms
 --------------
@@ -20,6 +21,8 @@ Transforms
 
 .. autofunction:: dhg.datapipe.to_long_tensor 
 
+
+.. _api_datapipe_loader:
 
 Loaders
 ---------

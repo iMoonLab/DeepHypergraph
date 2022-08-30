@@ -10,7 +10,7 @@ please following the :doc:`instruction </start/contribution>` guide.
 Usage
 -----------------------
 
-If your network is OK, you can directly use any of datasets in :doc:`/api/data` as following:
+If your network is OK, you can directly use any of the datasets in :doc:`/api/data` as follows:
 
 .. code-block:: python
 
@@ -149,36 +149,208 @@ The architecture of constructing DHG's dataset object is shown in the following 
 
 Build Your Own Dataset
 -----------------------
-Coming soon...
+
+At first you should inherit your data class from the :py:class:`BaseData <dhg.data.BaseData>` class.
+
+.. code-block:: python
+
+    >>> from dhg.data import BaseData
+
+All the items in the dataset are configured in the ``_content`` dictionary. Currently, the following items are supported:
+
+- download from remote server -> load from local file -> preprocess and return
+- load from local file -> preprocess and return
+- directly return
+
+The supported loader functions can be found in :ref:`here <api_datapipe_loader>`.
+
+The supported preprocess functions can be found in :ref:`here <api_datapipe_preprocess>`.
+
+If the ``item`` should be downloaded from a remote server, you should specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
+The ``upon`` key is a list of dictionaries, each dictionary at lease contains the ``filename`` and ``md5`` keys. 
+The ``filename`` is the name of the file to be downloaded, and the ``md5`` is the md5 checksum of the file.
+Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT \ data_root \ name \ filename`` directory.
+
+.. code-block:: python
+
+    self._content = {
+        'item': {
+            'upon': [
+                {'filename': 'part1.pkl', 'md5': '', bk_url: None},
+                {'filename': 'part2.pkl', 'md5': '', bk_url: None},
+            ],
+            'loader': loader_function,
+            'preprocess': [datapipe1, datapipe2],
+        },
+        ...
+    }
 
 
+If the ``item`` relay on a local file, you should also specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
+But the file should be put into the ``data_root \ name \ filename`` directory. 
+Then, the :py:class:`BaseData <dhg.data.BaseData>` class will automatically check the file's md5 checksum.
 
-.. Prepare Dataset
-.. -----------------
+.. code-block:: python
+    
+    self._content = {
+        'item': {
+            'upon': [
+                {'filename': 'part1.pkl', 'md5': '', bk_url: None},
+                {'filename': 'part2.pkl', 'md5': '', bk_url: None},
+            ],
+            'loader': loader_function,
+            'preprocess': [datapipe1, datapipe2],
+        },
+        ...
+    }
 
-.. Use the intergrated dataset
-.. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If the ``item`` is a fixed value, you can directly specify the ``value`` in the ``_content`` dictionary.
 
-.. Currently, DHG includes the following datasets:
-
-
-
-.. Dataset Pipeline
-.. ------------------
-
-.. How to process the data
-
-.. Available Pipeline Functions
-.. -----------------------------
-
-.. to_tensor
-
-.. Introduction
-.. ------------------------
-.. For each dataset in DHG, we have pre-process the feature. and transform them to torch.Tensor.
-
-.. You can access the raw data by data.raw('attribute_name')
+.. code-block:: python
+    
+    self._content = {
+        'item': 666666,
+        ...
+    }
 
 
-.. Examples
-.. --------------
+Example of Graph Dataset:
+++++++++++++++++++++++++++++
+
+.. code-block:: python
+
+    class Cora(BaseData):
+        def __init__(self, data_root: Optional[str] = None) -> None:
+            super().__init__('cora', data_root)
+            self._content = {
+                "num_classes": 7,
+                "num_vertices": 2708,
+                "num_edges": 10858,
+                "dim_features": 1433,
+                'features': {
+                    'upon': [{ 'filename': 'features.pkl', 'md5': '05b45e9c38cc95f4fc44b3668cc9ddc9' }],
+                    'loader': load_from_pickle,
+                    'preprocess': [to_tensor, partial(norm_ft, ord=1)],
+                },
+                'edge_list': {
+                    'upon': [{ 'filename': 'edge_list.pkl', 'md5': 'f488389c1edd0d898ce273fbd27822b3' }],
+                    'loader': load_from_pickle,
+                },
+                'labels': {
+                    'upon': [{ 'filename': 'labels.pkl', 'md5': 'e506014762052c6a36cb583c28bdae1d' }],
+                    'loader': load_from_pickle,
+                    'preprocess': [to_long_tensor],
+                },
+                'train_mask': {
+                    'upon': [{ 'filename': 'train_mask.pkl', 'md5': 'a11357a40e1f0b5cce728d1a961b8e13' }],
+                    'loader': load_from_pickle,
+                    'preprocess': [to_bool_tensor],
+                },
+                'val_mask': {
+                    'upon': [{ 'filename': 'val_mask.pkl', 'md5': '355544da566452601bcfa74d30539a71' }],
+                    'loader': load_from_pickle,
+                    'preprocess': [to_bool_tensor],
+                },
+                'test_mask': {
+                    'upon': [{ 'filename': 'test_mask.pkl', 'md5': 'bbfc87d661560f55f6946f8cb9d602b9' }],
+                    'loader': load_from_pickle,
+                    'preprocess': [to_bool_tensor],
+                },
+            }
+
+Example of Hypergraph Dataset
+++++++++++++++++++++++++++++++++
+
+.. code-block:: python
+
+    class Cooking200(BaseData):
+        def __init__(self, data_root: Optional[str] = None) -> None:
+            super().__init__("cooking_200", data_root)
+            self._content = {
+                "num_classes": 20,
+                "num_vertices": 7403,
+                "num_edges": 2755,
+                "edge_list": {
+                    "upon": [
+                        {
+                            "filename": "edge_list.pkl",
+                            "md5": "2cd32e13dd4e33576c43936542975220",
+                        }
+                    ],
+                    "loader": load_from_pickle,
+                },
+                "labels": {
+                    "upon": [
+                        {
+                            "filename": "labels.pkl",
+                            "md5": "f1f3c0399c9c28547088f44e0bfd5c81",
+                        }
+                    ],
+                    "loader": load_from_pickle,
+                    "preprocess": [to_long_tensor],
+                },
+                "train_mask": {
+                    "upon": [
+                        {
+                            "filename": "train_mask.pkl",
+                            "md5": "66ea36bae024aaaed289e1998fe894bd",
+                        }
+                    ],
+                    "loader": load_from_pickle,
+                    "preprocess": [to_bool_tensor],
+                },
+                "val_mask": {
+                    "upon": [
+                        {
+                            "filename": "val_mask.pkl",
+                            "md5": "6c0d3d8b752e3955c64788cc65dcd018",
+                        }
+                    ],
+                    "loader": load_from_pickle,
+                    "preprocess": [to_bool_tensor],
+                },
+                "test_mask": {
+                    "upon": [
+                        {
+                            "filename": "test_mask.pkl",
+                            "md5": "0e1564904551ba493e1f8a09d103461e",
+                        }
+                    ],
+                    "loader": load_from_pickle,
+                    "preprocess": [to_bool_tensor],
+                },
+            }
+
+
+Example of User-Item Bipartite Dataset
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: python
+
+    class MovieLens1M(BaseData):
+        def __init__(self, data_root: Optional[str] = None) -> None:
+            super().__init__("movielens_1m", data_root)
+            self._content = {
+                "num_users": 6022,
+                "num_items": 3043,
+                "num_interactions": 995154,
+                "train_adj_list": {
+                    "upon": [
+                        {
+                            "filename": "train.txt",
+                            "md5": "db93f671bc5d1b1544ce4c29664f6778",
+                        }
+                    ],
+                    "loader": partial(load_from_txt, dtype="int", sep=" "),
+                },
+                "test_adj_list": {
+                    "upon": [
+                        {
+                            "filename": "test.txt",
+                            "md5": "5e55bcbb6372ad4c6fafe79989e2f956",
+                        }
+                    ],
+                    "loader": partial(load_from_txt, dtype="int", sep=" "),
+                },
+            }
+

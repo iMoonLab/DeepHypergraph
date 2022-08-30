@@ -12,7 +12,7 @@ class BaseData:
     ::
 
         self._content = {
-            'feature': {
+            'item': {
                 'upon': [
                     {'filename': 'part1.pkl', 'md5': '', bk_url: None},
                     {'filename': 'part2.pkl', 'md5': '', bk_url: None},

@@ -59,8 +59,8 @@ Common Methods
             [0., 0., 0., 1., 0.]])
 
 You can find that the adjacency matrix of the simple graph is a symmetric matrix.
-The ``g.e`` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
-The ``g.e_both_size`` attribute will return the both side of edges in the simple graph.
+The :py:attr:`g.e <dhg.Graph.e>` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
+The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the both side of edges in the simple graph.
 
 .. important:: 
 
