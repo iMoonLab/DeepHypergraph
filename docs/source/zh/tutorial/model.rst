@@ -1,8 +1,8 @@
 构建模型
 ======================
 
-DHG provides various spectral-based and spatial-based operations and correlation structures for building your models. 
-Here, we divide the model into four categories:
+DHG提供多种基于谱域和基于空域的操作及关联结构来构建模型。
+在这里，我们把模型分为四类：
 
 - :ref:`基于谱域的模型 <zh_build_spectral_based_model>`
 - :ref:`基于空域的模型 <zh_build_spatial_based_model>`
@@ -11,36 +11,36 @@ Here, we divide the model into four categories:
 
 .. important:: 
 
-    Before we start, you should have learned some basic usages about learning on :doc:`low-order </start/low_order/index>` and :doc:`high-order </start/high_order/index>` structures with DHG.
+    在开始之前，您需要了解一些使用DHG在 :doc:`低阶 </start/low_order/index>` 和 :doc:`高阶 </start/high_order/index>` 关联结构上学习的基础用法。
 
 .. _zh_build_spectral_based_model:
 
 构建基于谱域的模型
 ------------------------------
 
-In the following examples, we will build two typical spectral-based models (`GCN <https://arxiv.org/pdf/1609.02907>`_ 
-and `HGNN <https://arxiv.org/pdf/1809.09401>`_ ) on simple graph and simple hypergraph, respectively.
+在如下的例子中，我们分别在简单图和简单超图上构建基于谱域的典型模型（`GCN <https://arxiv.org/pdf/1609.02907>`_ 和 `HGNN <https://arxiv.org/pdf/1809.09401>`_ ）。
 
-**Building GCN Model**
+**构建GCN模型**
 
-The GCN model first computes the Laplacian matrix with expanded adjacency matrix, then performs feature smoothing on vertices for each GCN convolution layer.
-For a given :py:class:`simple graph structure <dhg.Graph>`, the GCN's Laplacian matrix have been pre-computed and stored in :py:attr:`L_GCN <dhg.Graph.L_GCN>` attribute, which can be formed as:
+GCN模型首先计算扩展邻接矩阵的拉普拉斯矩阵，然后在每一个GCN卷积层对顶点特征平滑。
+给定 :py:class:`简单图关联结构 <dhg.Graph>` ， GCN的拉普拉斯矩阵会被预先计算并且存储在属性 :py:attr:`L_GCN <dhg.Graph.L_GCN>` 中，其计算公式为：
 
 .. math::
 
     \mathcal{L}_{GCN} = \mathbf{\hat{D}}_v^{-\frac{1}{2}} \mathbf{\hat{A}} \mathbf{\hat{D}}_v^{-\frac{1}{2}},
 
-where :math:`\mathbf{\hat{A}} = \mathbf{A} + \mathbf{I}` and :math:`\mathbf{\hat{D}}_{ii} = \sum_j \mathbf{\hat{A}}_{ij}`, 
-and :math:`\mathbf{A}` is the adjacency matrix of the simple graph. Then, the convolution layer of GCN can be formulated as:
+其中 :math:`\mathbf{\hat{A}} = \mathbf{A} + \mathbf{I}` ， :math:`\mathbf{\hat{D}}_{ii} = \sum_j \mathbf{\hat{A}}_{ij}` ，
+:math:`\mathbf{A}` 为简单图的邻接矩阵。
+然后，GCN的卷积层可以表示为：
 
 .. math::
     \mathbf{X}^{\prime} = \sigma \left( \mathbf{\hat{D}}^{-\frac{1}{2}} \mathbf{\hat{A}}
     \mathbf{\hat{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{\Theta} \right),
 
-where :math:`\mathbf{X}` is the input vertex feature matrix, :math:`\mathbf{\Theta}` is the learnable parameters of the GCN convolution layer.
+其中 :math:`\mathbf{X}` 为输入的顶点特征矩阵， :math:`\mathbf{\Theta}` 为GCN卷积层的可学习参数。
 
-DHG also provide function :py:func:`smoothing_with_GCN <dhg.Graph.smoothing_with_GCN>` that applies GCN's Laplacian matrix to smooth vertex features.
-Then, the convolution layer of GCN can be implamented as:
+DHG也提供 :py:func:`smoothing_with_GCN <dhg.Graph.smoothing_with_GCN>`  函数使用GCN的拉普拉斯矩阵来对顶点特征平滑。
+然后，GCN的卷积层可以实现为：
 
 .. code-block:: python
 
@@ -67,23 +67,21 @@ Then, the convolution layer of GCN can be implamented as:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the GCN model can be implemented with stacking multiple GCNConv layers.
+最后，通过多个GCNConv层的叠加可以实现GCN模型。
 
-**Building HGNN model**
+**构建HGNN模型**
 
-The HGNN model first computes the Laplacian matrix of the given simple hypergraph, then performs feature smoothing on vertices for each HGNN convolution layer.
-For a given :py:class:`simple hypergraph structure <dhg.Hypergraph>`, the HGNN's Laplacian matrix have been pre-computed 
-and stored in :py:attr:`L_HGNN <dhg.Hypergraph.L_HGNN>` attribute, which can be formed as:
+HGNN模型首先计算给定简单超图的拉普拉斯矩阵，然后在每一个HGNN卷积层对顶点特征平滑。
+给定 :py:class:`简单超图关联结构 <dhg.Hypergraph>`，HGNN的拉普拉斯矩阵会被预先计算并且存储在属性 :py:attr:`L_HGNN <dhg.Hypergraph.L_HGNN>` 中，其计算公式为：
 
 
 .. math::
     
     \mathcal{L}_{HGNN} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}}
 
-where :math:`\mathbf{H}` is the hypergraph incidence matrix, :math:`\mathbf{W}_e` is a diagonal hyperedge weight matrix, 
-:math:`\mathbf{D}_v` is a diagonal vertex degree matrix, :math:`\mathbf{D}_e` is a diagonal hyperedge degree matrix.
-Then, the convolution layer of HGNN can be implamented as:
-
+其中 :math:`\mathbf{H}` 为超图关联矩阵， :math:`\mathbf{W}_e` 为超边权重对角矩阵，
+:math:`\mathbf{D}_v` 为顶点度数对角矩阵， :math:`\mathbf{D}_e` 为超边度数对角矩阵。
+然后，HGNN的卷积层可以实现为：
 
 .. math::
     
@@ -91,10 +89,10 @@ Then, the convolution layer of HGNN can be implamented as:
     \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X} \mathbf{\Theta} \right).
 
 
-where :math:`\mathbf{X}` is the input vertex feature matrix, :math:`\mathbf{\Theta}` is the learnable parameters of the HGNN convolution layer.
+其中 :math:`\mathbf{X}` 为输入的顶点特征矩阵， :math:`\mathbf{\Theta}` 为HGNN卷积层的可学习参数。
 
-DHG also provide function :py:func:`smoothing_with_HGNN <dhg.Hypergraph.smoothing_with_HGNN>` that applies HGNN's Laplacian matrix to smooth vertex features.
-Then, the convolution layer of HGNN can be implamented as:
+DHG也提供 :py:func:`smoothing_with_HGNN <dhg.Hypergraph.smoothing_with_HGNN>` 函数使用HGNN的拉普拉斯矩阵来对顶点特征平滑。
+然后，HGNN的卷积层可以实现为：
 
 .. code-block:: python
 
@@ -121,7 +119,7 @@ Then, the convolution layer of HGNN can be implamented as:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the HGNN model can be implemented with stacking multiple HGNNConv layers.
+最后，通过多个HGNNConv层的叠加可以实现HGNN模型。
 
 
 .. _zh_build_spatial_based_model:
@@ -129,19 +127,18 @@ Finally, the HGNN model can be implemented with stacking multiple HGNNConv layer
 构建基于空域的模型
 -----------------------------
 
-In the following examples, we will build four different spatial-based models. 
+在如下的例子中，我们将会构建四种不同基于空域的模型。
 
-- The first two models are `GraphSAGE <https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf>`_ 
-  and `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_, which perform general message passing 
-  from vertex to vertex via edges or from vertex set to vertex set via hyperedges.
-- The last two models are `GAT <https://arxiv.org/pdf/1710.10903>`_ and a hypergraph convolution with different hyperedge weights model, 
-  which show you how to use **different edge/hyperedge weights** on message aggretaion from vertex to vertex or from vertex set to vertex set.
+- 前两个模型为 `GraphSAGE <https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf>`_
+  和 `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ ，其执行通过边从顶点到顶点或者通过超边从顶点集到顶点集的通用消息传递。
+- 后两个模型为 `GAT <https://arxiv.org/pdf/1710.10903>`_ 和 具有不同超边权重的超图卷积模型，
+  其展示了如何使用 **不同的边/超边权重** 来从顶点到顶点或者从顶点集到顶点集进行消息聚合。
 
 
-**Building GraphSAGE model**
+**构建GraphSAGE模型**
 
-The GraphSAGE is a general message passing model that conbines vertex feature and their neighbors' features to form a new vertex feature, 
-which can be implamented as follows:
+GraphSAGE是一个通用的消息传递模型，其通过结合顶点特征以及它们邻居的特征来形成新的顶点特征，
+其可以用如下方式实现：
 
 .. code-block:: python
 
@@ -178,12 +175,12 @@ which can be implamented as follows:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the GraphSAGE model can be implemented with stacking multiple GraphSAGEConv layers.
+最后，通过多个GraphSAGEConv层的叠加可以实现GraphSAGE模型。
 
 
-**Building HGNN+ model**
+**构建HGNN+模型**
 
-The HGNN+ is a general message passing model that passes messages from vertex to hyperedge to vertex, which can be implamented as following:
+HGNN+是一个通用的消息传递模型，其以从顶点到超边再到顶点的方式传播消息，可以用如下方式实现：
 
 .. code-block:: python
 
@@ -211,13 +208,13 @@ The HGNN+ is a general message passing model that passes messages from vertex to
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the HGNN+ model can be implemented with stacking multiple HGNNPConv layers.
+最后，通过多个HGNNPConv层的叠加可以实现HGNN+模型。
 
-**Building GAT model**
+**构建GAT模型**
 
-DHG provide a special and convienent way to implement weighted neightborhood aggregation from vertex to vertex.
-In simple graph, each edge have its source and target index. 
-Given vertex features ``X``, simple graph ``g``, and linear layers ``atten_src`` and ``atten_dst``, you can compute the edge weight by follows:
+DHG提供一种特殊且方便的方式来实现从顶点到顶点的加权邻域聚合。
+在简单图中，每条边有其源点和汇点索引。
+给定顶点特征 ``X`` 、简单图 ``g`` 以及线性层 ``atten_src`` 和 ``atten_dst`` ，可以用以下方式计算边权：
 
 .. code-block:: python
 
@@ -225,10 +222,10 @@ Given vertex features ``X``, simple graph ``g``, and linear layers ``atten_src``
     >>> x_for_dst = atten_dst(X)
     >>> e_atten_weight = x_for_src[g.e_src] + x_for_dst[g.e_dst]
 
-Besides, DHG provides ``softmax_then_sum`` aggregation function for neighbor messages aggregation. 
-It can normalize the messages from neighbors with ``softmax`` and then sum them to update the center vertex's message.
+除此之外，DHG提供 ``softmax_then_sum`` 聚合函数用于邻域消息聚合。
+该函数可以使用 ``softmax`` 对邻居的消息归一化，然后将它们相加来更新中心顶点的消息。
 
-Then, the GATConv model can be implamented as follows:
+然后，GATConv模型可以实现为：
 
 .. code-block:: python
 
@@ -263,25 +260,23 @@ Then, the GATConv model can be implamented as follows:
             X_ = self.act(X_)
             return X_
 
-Finally, the GAT model can be implamented with stacking multiple GATConv layers.
+最后，通过多个GATConv层的叠加可以实现GAT模型。
 
 
-**Building hypergraph convolution with different hyperedge weights model**
+**构建具有不同超边权重的超图卷积模型**
 
-Like varying the edge weights in the simple graph, hyperedge weights can also be varied in the message passing from vertex to hyperedge to vertex.
-But the difference is that the hyperedge weights is more complex than the edge weights in the simple graph.
-Due to the two stages (vertex to hyperedge and hyperedge to vertex) of message passing in the hypergraph,
-varying the hyperedge weights can also be split into two stages: vertex to hyperedge stage and hyperedge to vertex stage.
+像在简单图中改变权重一样，超边权重也可以在从顶点到超边再到顶点的消息传递中改变。
+但不同的是，超边权重比简单图中的边权更复杂。
+由于超图中的消息传递分为两个阶段（从顶点到超边和从超边到顶点），
+改变超边权重也可以分为两个阶段：从顶点到超边阶段和从超边到顶点阶段。
 
-- In the first stage, the hyperedge weights are controlled by the **source vertex index** (:py:attr:`v2e_src <dhg.Hypergraph.v2e_src>`) 
-  and the **target hyperedge index** (:py:attr:`v2e_dst <dhg.Hypergraph.v2e_dst>`).
-- In the second stage, the hyperedge weights are controlled by the **source hyperedge index** (:py:attr:`e2v_src <dhg.Hypergraph.e2v_src>`) 
-  and the **target vertex index**  (:py:attr:`e2v_dst <dhg.Hypergraph.e2v_dst>`).
+- 在第一阶段，超边权重由 **源点索引** (:py:attr:`v2e_src <dhg.Hypergraph.v2e_src>`)和 **目标超边索引** (:py:attr:`v2e_dst <dhg.Hypergraph.v2e_dst>`) 控制。
+- 在第二阶段，超边权重由 **源超边索引** (:py:attr:`e2v_src <dhg.Hypergraph.e2v_src>`)和 **目标顶点索引** (:py:attr:`e2v_dst <dhg.Hypergraph.e2v_dst>`)控制。
 
-In simple hypergraph, the two message passing stages are symmetric. 
-Thus, the same vertex and hyperedge attention layer can be used in the two stages.
-Given the vertex features ``X``, hyperedge features ``Y``, simple hypergraph ``hg``, and linear layers ``atten_vertex`` and ``atten_hyperedge``, 
-you can compute the hyperedge weights for the two stages by follows: 
+在简单超图中，消息传递的两阶段是对称的。
+因此，两阶段中可以使用相同的顶点和超边注意力层，
+给定顶点特征 ``X`` 、 超边特征 ``Y`` 、简单超图 ``hg`` 和线性层 ``atten_vertex`` 及 ``atten_hyperedge`` ，
+可以用以下方式计算两阶段超边边权：
 
 .. code-block:: python
 
@@ -290,7 +285,7 @@ you can compute the hyperedge weights for the two stages by follows:
     >>> v2e_atten_weight = x_for_vertex[hg.v2e_src] + y_for_hyperedge[hg.v2e_dst]
     >>> e2v_atten_weight = y_for_hyperedge[hg.e2v_src] + x_for_vertex[hg.e2v_dst]
 
-Finally, a simple hypergraph convolution with different hyperedge weights model can be implamented as follows:
+然后，具有不同超边权重的超图卷积模型可以实现为：
 
 .. code-block:: python
 
@@ -331,7 +326,7 @@ Finally, a simple hypergraph convolution with different hyperedge weights model 
             Y_ = self.act(Y_)
             return X_, Y_
 
-Finally, the simple hypergraph convolution with different hyperedge weights model can be implamented with stacking multiple HGATConv layers.
+最后，通过多个HGATConv层的叠加可以实现具有不同超边权重的超图卷积模型。
 
 
 .. _zh_build_hybrid_operation_model:
@@ -339,8 +334,8 @@ Finally, the simple hypergraph convolution with different hyperedge weights mode
 构建混合操作模型
 --------------------------------
 
-A hybrid operation model means that the spectral-based convolution or spatial-based convolution can simultaneously be used to embed the correlation into the vertex features.
-Given a correlation structure like simple graph ``g``, you can implament a hybrid operation model as follows:
+混合操作模型意味着可以同时使用基于谱域的卷积或基于空域的卷积来将相关性嵌入到顶点特征中。
+给定关联结构如简单图 ``g`` ，混合操作模型可以实现为：
 
 .. code-block:: python
 
@@ -369,16 +364,16 @@ Given a correlation structure like simple graph ``g``, you can implament a hybri
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the hybrid operation model can be implamented with stacking multiple HOMConv layers.
+最后，通过多个HOMConv层的叠加可以实现混合操作模型。
 
 .. _zh_build_hybrid_structure_model:
 
 构建混合关联结构模型
 -------------------------------------
 
-The hybrid structure model is a model that supports multiple types of correlation structures as input.
-Given a set of vertices and vertex feature ``X``, assume that you have constructed low-order structure like simple graph ``g`` 
-and high-order like simple hypergraph ``hg``. A hybrid structure model can be implamented as follows:
+混合关联结构模型是支持多类型关联结构作为输入的模型。
+给定顶点集和顶点特征 ``X`` ，假设您已经构造了低阶关联结构（如简单图 ``g`` ） 和高阶关联结构（如简单超图 ``hg`` ），
+混合关联结构模型可以实现为：
 
 .. code-block:: python
 
@@ -407,5 +402,5 @@ and high-order like simple hypergraph ``hg``. A hybrid structure model can be im
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the hybrid structure model can be implamented with stacking multiple HSMConv layers.
+最后，通过多个HSMConv层的叠加可以实现混合关联结构模型。
 
