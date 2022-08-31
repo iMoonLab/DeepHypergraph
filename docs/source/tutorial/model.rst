@@ -7,7 +7,7 @@ Here, we divide the model into four categories:
 - :ref:`Spectral-based Model <build_spectral_based_model>`
 - :ref:`Spatial-based Model <build_spatial_based_model>`
 - :ref:`Hybrid Operation Model <build_hybrid_operation_model>`
-- :ref:`Hybrid Operation on Hybrid Structure Model <build_hybrid_operation_on_hybrid_structure_model>`
+- :ref:`Hybrid Structure Model <build_hybrid_structure_model>`
 
 .. important:: 
 
@@ -63,9 +63,9 @@ Then, the convolution layer of GCN can be implamented as:
 
         def forward(self, X: torch.Tensor, g: dhg.Graph) -> torch.Tensor:
             X = self.theta(X)
-            X = g.smoothing_with_GCN(X)
-            X = self.drop(self.act(X))
-            return X
+            X_ = g.smoothing_with_GCN(X)
+            X_ = self.drop(self.act(X_))
+            return X_
 
 Finally, the GCN model can be implemented with stacking multiple GCNConv layers.
 
@@ -117,9 +117,9 @@ Then, the convolution layer of HGNN can be implamented as:
 
         def forward(self, X: torch.Tensor, hg: dhg.Hypergraph) -> torch.Tensor:
             X = self.theta(X)
-            X = hg.smoothing_with_HGNN(X)
-            X = self.drop(self.act(X))
-            return X
+            X_ = hg.smoothing_with_HGNN(X)
+            X_ = self.drop(self.act(X_))
+            return X_
 
 Finally, the HGNN model can be implemented with stacking multiple HGNNConv layers.
 
@@ -174,9 +174,9 @@ which can be implamented as follows:
                 X = torch.cat([X, X_nbr], dim=1)
             else:
                 raise NotImplementedError()
-            X = self.theta(X)
-            X = self.drop(self.act(X))
-            return X
+            X_ = self.theta(X)
+            X_ = self.drop(self.act(X_))
+            return X_
 
 Finally, the GraphSAGE model can be implemented with stacking multiple GraphSAGEConv layers.
 
@@ -207,9 +207,9 @@ The HGNN+ is a general message passing model that passes messages from vertex to
         def forward(self, X: torch.Tensor, hg: dhg.Hypergraph) -> torch.Tensor:
             X = self.theta(X)
             Y = hg.v2e(X, aggr="mean")
-            X = hg.e2v(Y, aggr="mean")
-            X = self.drop(self.act(X))
-            return X
+            X_ = hg.e2v(Y, aggr="mean")
+            X_ = self.drop(self.act(X_))
+            return X_
 
 Finally, the HGNN+ model can be implemented with stacking multiple HGNNPConv layers.
 
@@ -232,6 +232,10 @@ Then, the GATConv model can be implamented as follows:
 
 .. code-block:: python
 
+    import dhg
+    import torch
+    import torch.nn as nn
+
     class GATConv(nn.Module):
         def __init__(
             self,
@@ -240,10 +244,8 @@ Then, the GATConv model can be implamented as follows:
             bias: bool = True,
             drop_rate: float = 0.5,
             atten_neg_slope: float = 0.2,
-            is_last: bool = False,
         ):
             super().__init__()
-            self.is_last = is_last
             self.atten_dropout = nn.Dropout(drop_rate)
             self.atten_act = nn.LeakyReLU(atten_neg_slope)
             self.act = nn.ELU(inplace=True)
@@ -251,15 +253,15 @@ Then, the GATConv model can be implamented as follows:
             self.atten_src = nn.Linear(out_channels, 1, bias=False)
             self.atten_dst = nn.Linear(out_channels, 1, bias=False)
 
-        def forward(self, X: torch.Tensor, g: Graph) -> torch.Tensor:
+        def forward(self, X: torch.Tensor, g: dhg.Graph) -> torch.Tensor:
             X = self.theta(X)
             x_for_src = self.atten_src(X)
             x_for_dst = self.atten_dst(X)
             e_atten_score = x_for_src[g.e_src] + x_for_dst[g.e_dst]
             e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze())
-            X = g.v2v(X, aggr="softmax_then_sum", e_weight=e_atten_score)
-            X = self.act(X)
-            return X
+            X_ = g.v2v(X, aggr="softmax_then_sum", e_weight=e_atten_score)
+            X_ = self.act(X_)
+            return X_
 
 Finally, the GAT model can be implamented with stacking multiple GATConv layers.
 
@@ -288,9 +290,13 @@ you can compute the hyperedge weights for the two stages by follows:
     >>> v2e_atten_weight = x_for_vertex[hg.v2e_src] + y_for_hyperedge[hg.v2e_dst]
     >>> e2v_atten_weight = y_for_hyperedge[hg.e2v_src] + x_for_vertex[hg.e2v_dst]
 
-Then, a simple hypergraph convolution with different hyperedge weights model can be implamented as follows:
+Finally, a simple hypergraph convolution with different hyperedge weights model can be implamented as follows:
 
 .. code-block:: python
+
+    import dhg
+    import torch
+    import torch.nn as nn
 
     class HGATConv(nn.Module):
         def __init__(
@@ -300,10 +306,8 @@ Then, a simple hypergraph convolution with different hyperedge weights model can
             bias: bool = True,
             drop_rate: float = 0.5,
             atten_neg_slope: float = 0.2,
-            is_last: bool = False,
         ):
             super().__init__()
-            self.is_last = is_last
             self.atten_dropout = nn.Dropout(drop_rate)
             self.atten_act = nn.LeakyReLU(atten_neg_slope)
             self.act = nn.ELU(inplace=True)
@@ -312,7 +316,7 @@ Then, a simple hypergraph convolution with different hyperedge weights model can
             self.atten_vertex = nn.Linear(out_channels, 1, bias=False)
             self.atten_hyperedge = nn.Linear(out_channels, 1, bias=False)
 
-        def forward(self, X: torch.Tensor, Y: torch.Tensor, hg: Hypergraph) -> torch.Tensor:
+        def forward(self, X: torch.Tensor, Y: torch.Tensor, hg: dhg.Hypergraph) -> torch.Tensor:
             X = self.theta_vertex(X)
             Y = self.theta_hyperedge(Y)
             x_for_vertex = self.atten_vertex(X)
@@ -327,7 +331,7 @@ Then, a simple hypergraph convolution with different hyperedge weights model can
             Y_ = self.act(Y_)
             return X_, Y_
 
-Then, the simple hypergraph convolution with different hyperedge weights model can be implamented with stacking multiple HGATConv layers.
+Finally, the simple hypergraph convolution with different hyperedge weights model can be implamented with stacking multiple HGATConv layers.
 
 
 .. _build_hybrid_operation_model:
@@ -335,13 +339,73 @@ Then, the simple hypergraph convolution with different hyperedge weights model c
 Building Hybrid Operation Model
 --------------------------------
 
-Comming soon...
+A hybrid operation model means that the spectral-based convolution or spatial-based convolution can simultaneously be used to embed the correlation into the vertex features.
+Given a correlation structure like simple graph ``g``, you can implament a hybrid operation model as follows:
 
-.. _build_hybrid_operation_on_hybrid_structure_model:
+.. code-block:: python
 
-Building Hybrid Operation on Hybrid Structure Model
------------------------------------------------------
+    import dhg
+    import torch
+    import torch.nn as nn
 
-Comming soon...
+    class HOMConv(nn.Module):
+        def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            bias: bool = True,
+            drop_rate: float = 0.5,
+        ):
+            super().__init__()
+            self.act = nn.ReLU(inplace=True)
+            self.drop = nn.Dropout(drop_rate)
+            self.theta = nn.Linear(in_channels, out_channels, bias=bias)
 
+        def forward(self, X: torch.Tensor, g: dhg.Graph) -> torch.Tensor:
+            X = self.theta(X)
+            X_spectral = g.smoothing_with_GCN(X)
+            X_spatial = g.v2v(X, aggr="mean")
+            X_ = (X_spectral + X_spatial) / 2
+            X_ = self.drop(self.act(X_))
+            return X_
+
+Finally, the hybrid operation model can be implamented with stacking multiple HOMConv layers.
+
+.. _build_hybrid_structure_model:
+
+Building Hybrid Structure Model
+-------------------------------------
+
+The hybrid structure model is a model that supports multiple types of correlation structures as input.
+Given a set of vertices and vertex feature ``X``, assume that you have constructed low-order structure like simple graph ``g`` 
+and high-order like simple hypergraph ``hg``. A hybrid structure model can be implamented as follows:
+
+.. code-block:: python
+
+    import dhg
+    import torch
+    import torch.nn as nn
+
+    class HSMConv(nn.Module):
+        def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            bias: bool = True,
+            drop_rate: float = 0.5,
+        ):
+            super().__init__()
+            self.act = nn.ReLU(inplace=True)
+            self.drop = nn.Dropout(drop_rate)
+            self.theta = nn.Linear(in_channels, out_channels, bias=bias)
+
+        def forward(self, X: torch.Tensor, g: dhg.Graph, hg: dhg.Hypergraph) -> torch.Tensor:
+            X = self.theta(X)
+            X_g = g.v2v(X, aggr="mean")
+            X_hg = hg.v2v(X, aggr="mean")
+            X_ = (X_g + X_hg) / 2
+            X_ = self.drop(self.act(X_))
+            return X_
+
+Finally, the hybrid structure model can be implamented with stacking multiple HSMConv layers.
 

@@ -64,7 +64,7 @@ DHG包含许多可用于训练模型和测试模型的数据集。
 
     >>> dhg.data.Cora(data_root=<your-directory>)
 
-一旦您导入了数据集并且获取数据对象 ``d`` ，可以使用如下代码获取数据集的 **预处理** 项。
+一旦您导入了数据集并且获取数据集对象 ``d`` ，可以使用如下代码获取数据集的 **预处理后的数据项**。
 
 .. code-block:: python
 
@@ -116,7 +116,7 @@ DHG包含许多可用于训练模型和测试模型的数据集。
     >>> d['test_adj_list']
     [[0, 2968, 228, 38, 422, 2769], [1, 621, 900, ...], ..., [..., 1579, 3039, 1699, 1195]]
 
-如果需要获取 **未预处理** 项，需要调用 :py:meth:`raw() <dhg.data.BaseData.raw>` 方法：
+如果需要获取 **未预处理的数据项**，需要调用 :py:meth:`raw() <dhg.data.BaseData.raw>` 方法：
 
 .. code-block:: python
 
@@ -135,7 +135,7 @@ DHG包含许多可用于训练模型和测试模型的数据集。
             [13.]], dtype=float32)
 
 Cora数据集内的顶点特征默认使用L1归一化预处理。
-可以参考 :ref:`从边列表构建简单图 <build_graph>` 教程从Cora数据集中构建用于训练的简单图结构。
+下一步，可以参考 :ref:`从边列表构建简单图 <build_graph>` 教程，来从Cora数据集中构建用于训练的简单图结构。
 
 模块架构设计
 -----------------------
@@ -149,13 +149,13 @@ Cora数据集内的顶点特征默认使用L1归一化预处理。
 建立自己的数据集
 -----------------------
 
-首先，您应该从 :py:class:`BaseData <dhg.data.BaseData>` 类继承您的数据类。
+首先，您的数据集类应该继承DHG数据集的基类 :py:class:`BaseData <dhg.data.BaseData>` 。
 
 .. code-block:: python
 
     >>> from dhg.data import BaseData
 
-数据集中的所有项都在 `_content`` 字典中配置。
+数据集中的所有数据项都在 ``_content`` 字典中配置。
 同时，支持以下操作：
 
 - 从远程服务器下载 -> 从本地文件加载 -> 预处理并返回
@@ -164,9 +164,9 @@ Cora数据集内的顶点特征默认使用L1归一化预处理。
 
 可以在 :ref:`此 <api_datapipe_loader>` 找到支持的加载函数。
 
-可以在 :ref:`here <api_datapipe_preprocess>` 找到支持的预处理函数。
+可以在 :ref:`这里 <api_datapipe_preprocess>` 找到支持的预处理函数。
 
-如果 ``item`` 需要从远程服务器下载，您需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
+如果数据项 ``item`` 需要从远程服务器下载，您需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
 键 ``upon`` 为字典列表，每一个字典至少包含 键 ``filename`` 和 ``md5`` 。
 ``filename`` 为需要下载的文件名， ``md5`` 为文件的md5校验码。
 默认情况下，远程文件会存放在 ``REMOTE_DATASETS_ROOT \ data_root \ name \ filename`` 目录。
@@ -186,7 +186,7 @@ Cora数据集内的顶点特征默认使用L1归一化预处理。
     }
 
 
-如果 ``item`` 依赖本地文件，还需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
+如果数据项 ``item`` 依赖本地文件，还需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
 但文件需要放置在 ``data_root \ name \ filename`` 文件夹。
 然后， :py:class:`BaseData <dhg.data.BaseData>` 类会自动检查文件的md5校验码。
 
@@ -204,7 +204,7 @@ Cora数据集内的顶点特征默认使用L1归一化预处理。
         ...
     }
 
-如果 ``item`` 是一个固定的值，您可以直接在 ``_content`` 字典指定 ``value``。
+如果数据项 ``item`` 是一个固定的值，您可以直接在 ``_content`` 字典指定 ``value``。
 
 .. code-block:: python
     
