@@ -1,6 +1,7 @@
 import math
-import numpy as np
 from math import pi
+
+import numpy as np
 
 def radian_from_atan(x, y):
     if x == 0:
@@ -32,3 +33,6 @@ def polar_position(r, theta, start_point):
     x = r * math.cos(theta)
     y = r * math.sin(theta)
     return np.array([x, y]) + start_point
+
+def rad_2_deg(rad):
+    return rad * 180 / pi

@@ -1,32 +1,29 @@
 from copy import deepcopy
-from typing import Union, Optional, List, Tuple
+from typing import Union, Optional, List
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-import dhg
+from dhg.structure.graphs import Graph, DiGraph, BiGraph
+from dhg.structure.hypergraphs import Hypergraph
 
+from .layout import force_layout, bipartite_force_layout
+from .utils import draw_vertex, draw_line_edge, draw_circle_edge
 
-from .layout2 import force_layout, bipartite_force_layout
-from .utils import (
+from .defaults import (
     default_style,
     default_size,
     default_strength,
     default_bipartite_style,
     default_bipartite_size,
     default_bipartite_strength,
-    draw_vertex,
-    draw_line_edge,
-    draw_circle_edge,
+    default_hypergraph_style,
+    default_hypergraph_strength,
 )
-
-# e_list -> [x, y] with layout2
-# draw line or draw circle
-#  draw circle order by the degree of the edge
 
 
 def draw_graph(
-    g: "dhg.Graph",
+    g: "Graph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
     v_size: Optional[Union[float, list]] = None,
@@ -75,8 +72,8 @@ def draw_graph(
     fig.tight_layout()
 
 
-def draw_directed_graph(
-    g: "dhg.DiGraph",
+def draw_digraph(
+    g: "DiGraph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
     v_size: Optional[Union[float, list]] = None,
@@ -103,7 +100,6 @@ def draw_directed_graph(
     # layout
     v_coor = force_layout(num_v, e_list, push_v_strength, None, pull_e_strength, pull_center_strength)
 
-
     if e_style == "line":
         draw_line_edge(
             ax, v_coor, v_size, e_list, True, e_color, e_line_width,
@@ -121,8 +117,8 @@ def draw_directed_graph(
     fig.tight_layout()
 
 
-def draw_bipartite_graph(
-    g: "dhg.BiGraph",
+def draw_bigraph(
+    g: "BiGraph",
     e_style: str = "line",
     u_label: Optional[List[str]] = None,
     u_size: Optional[Union[float, list]] = None,
@@ -211,7 +207,7 @@ def draw_bipartite_graph(
 
 
 def draw_hypergraph(
-    g: "dhg.Hypergraph",
+    g: "Hypergraph",
     e_style: str = "circle",
     v_label: Optional[List[str]] = None,
     v_size: Optional[Union[float, list]] = None,
@@ -232,9 +228,11 @@ def draw_hypergraph(
 
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
-    v_color, e_color, e_fill_color, font_family = default_style(g.num_v, g.num_e, v_color, e_color, e_fill_color, font_family)
+    v_color, e_color, e_fill_color, font_family = default_hypergraph_style(
+        g.num_v, g.num_e, v_color, e_color, e_fill_color, font_family
+    )
     v_size, v_line_width, e_line_width, font_size = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
-    (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_strength(
+    (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_hypergraph_strength(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
     )
     # layout

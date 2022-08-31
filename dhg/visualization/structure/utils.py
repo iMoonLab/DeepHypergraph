@@ -1,13 +1,14 @@
-import enum
-from typing import Optional, Union, List, Tuple, Any
 from itertools import chain
+from typing import Optional, List, Tuple
 
-import numpy as np
 import matplotlib
-from matplotlib.patches import Circle, FancyArrowPatch
+import numpy as np
+from matplotlib.path import Path
+from scipy.spatial import ConvexHull
+from matplotlib.patches import Circle, PathPatch
 from matplotlib.collections import PathCollection, PatchCollection
 
-from .layout2 import hull_layout
+from .geometry import radian_from_atan, vlen, common_tangent_radian, polar_position, rad_2_deg
 
 
 def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.000001):
@@ -22,262 +23,6 @@ def safe_div(a: np.ndarray, b: np.ndarray, jitter_scale: float = 0.000001):
 
 def init_pos(num_v: int, center: Tuple[float, float] = (0, 0), scale: float = 1.0):
     return (np.random.rand(num_v, 2) * 2 - 1) * scale + center
-
-
-def default_style(
-    num_v: int,
-    num_e: int,
-    v_color: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    font_family: Optional[str] = None,
-):
-    _v_color = "r"
-    v_color = fill_color(v_color, _v_color, num_v)
-
-    _e_color = (0.7, 0.7, 0.7)
-    e_color = fill_color(e_color, _e_color, num_e)
-
-    _e_fill_color = (0.2, 0.2, 0.6, 0.1)
-    e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
-
-    if font_family is None:
-        font_family = "sans-serif"
-
-    return v_color, e_color, e_fill_color, font_family
-
-
-def default_bipartite_style(
-    num_u: int,
-    num_v: int,
-    num_e: int,
-    u_color: Optional[Union[str, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    font_family: Optional[str] = None,
-):
-    _u_color = "m"
-    u_color = fill_color(u_color, _u_color, num_u)
-
-    _v_color = "r"
-    v_color = fill_color(v_color, _v_color, num_v)
-
-    _e_color = (0.7, 0.7, 0.7)
-    e_color = fill_color(e_color, _e_color, num_e)
-
-    _e_fill_color = (0.2, 0.2, 0.6, 0.1)
-    e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
-
-    if font_family is None:
-        font_family = "sans-serif"
-
-    return u_color, v_color, e_color, e_fill_color, font_family
-
-
-def default_size(
-    num_v: int,
-    e_list: List[tuple],
-    v_size: Optional[Union[float, list]] = None,
-    v_line_width: Optional[Union[float, list]] = None,
-    e_line_width: Optional[Union[float, list]] = None,
-    font_size: Optional[int] = None,
-):
-    # =============================================================
-    # compute default v_size
-    _v_size = 1 / np.sqrt(num_v + 12) * 0.08
-    # =============================================================
-    v_size = fill_sizes(v_size, _v_size, num_v)
-
-    # =============================================================
-    # compute default v_size
-    _v_line_width = 1
-    # =============================================================
-    v_line_width = fill_sizes(v_line_width, _v_line_width, num_v)
-
-    # =============================================================
-    # compute default e_line_width
-    _e_line_width = 1
-    # =============================================================
-    e_line_width = fill_sizes(e_line_width, _e_line_width, len(e_list))
-
-    font_size = 12 if font_size is None else font_size
-
-    return v_size, v_line_width, e_line_width, font_size
-
-
-def default_bipartite_size(
-    num_u: int,
-    num_v: int,
-    e_list: List[tuple],
-    u_size: Optional[Union[float, list]] = None,
-    u_line_width: Optional[Union[float, list]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_line_width: Optional[Union[float, list]] = None,
-    e_line_width: Optional[Union[float, list]] = None,
-    u_font_size: Optional[int] = None,
-    v_font_size: Optional[int] = None,
-):
-    # =============================================================
-    # compute default v_size
-    _u_size = 1 / np.sqrt(num_u + 12) * 0.08
-    # =============================================================
-    u_size = fill_sizes(u_size, _u_size, num_u)
-
-    # =============================================================
-    # compute default v_size
-    _u_line_width = 1
-    # =============================================================
-    u_line_width = fill_sizes(u_line_width, _u_line_width, num_u)
-
-    # =============================================================
-    # compute default v_size
-    _v_size = 1 / np.sqrt(num_v + 12) * 0.08
-    # =============================================================
-    v_size = fill_sizes(v_size, _v_size, num_v)
-
-    # =============================================================
-    # compute default v_size
-    _v_line_width = 1
-    # =============================================================
-    v_line_width = fill_sizes(v_line_width, _v_line_width, num_v)
-
-    # =============================================================
-    # compute default e_line_width
-    _e_line_width = 1
-    # =============================================================
-    e_line_width = fill_sizes(e_line_width, _e_line_width, len(e_list))
-
-    u_font_size = 12 if u_font_size is None else u_font_size
-    v_font_size = 12 if v_font_size is None else v_font_size
-
-    return u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size
-
-
-def default_strength(
-    num_v: int,
-    e_list: List[tuple],
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
-):
-    # =============================================================
-    # compute default push_v_strength
-    _push_v_strength = 0.006
-    # =============================================================
-    push_v_strength = fill_strength(push_v_strength, _push_v_strength)
-
-    # =============================================================
-    # compute default push_e_strength
-    _push_e_strength = 0.0
-    # =============================================================
-    push_e_strength = fill_strength(push_e_strength, _push_e_strength)
-
-    # =============================================================
-    # compute default pull_e_strength
-    _pull_e_strength = 0.045
-    # =============================================================
-    pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
-
-    # =============================================================
-    # compute default pull_center_strength
-    _pull_center_strength = 0.01
-    # =============================================================
-    pull_center_strength = fill_strength(pull_center_strength, _pull_center_strength)
-
-    return push_v_strength, push_e_strength, pull_e_strength, pull_center_strength
-
-
-def default_bipartite_strength(
-    num_u: int,
-    num_v: int,
-    e_list: List[tuple],
-    push_u_strength: Optional[float] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_u_center_strength: Optional[float] = None,
-    pull_v_center_strength: Optional[float] = None,
-):
-    # =============================================================
-    # compute default push_u_strength
-    _push_u_strength = 0.005
-    # =============================================================
-    push_u_strength = fill_strength(push_u_strength, _push_u_strength)
-
-    # =============================================================
-    # compute default push_v_strength
-    _push_v_strength = 0.005
-    # =============================================================
-    push_v_strength = fill_strength(push_v_strength, _push_v_strength)
-
-    # =============================================================
-    # compute default push_e_strength
-    _push_e_strength = 0.0
-    # =============================================================
-    push_e_strength = fill_strength(push_e_strength, _push_e_strength)
-
-    # =============================================================
-    # compute default pull_e_strength
-    _pull_e_strength = 0.03
-    # =============================================================
-    pull_e_strength = fill_strength(pull_e_strength, _pull_e_strength)
-
-    # =============================================================
-    # compute default pull_center_strength
-    _pull_u_center_strength = 0.04
-    # =============================================================
-    pull_u_center_strength = fill_strength(pull_u_center_strength, _pull_u_center_strength)
-
-    # =============================================================
-    # compute default pull_center_strength
-    _pull_v_center_strength = 0.04
-    # =============================================================
-    pull_v_center_strength = fill_strength(pull_v_center_strength, _pull_v_center_strength)
-
-    return (
-        push_u_strength,
-        push_v_strength,
-        push_e_strength,
-        pull_e_strength,
-        pull_u_center_strength,
-        pull_v_center_strength,
-    )
-
-
-def fill_color(custom_color: Optional[Union[str, list]], default_color: Any, length: int):
-    if custom_color is None:
-        return [default_color] * length
-    elif isinstance(custom_color, list):
-        if isinstance(custom_color[0], str) or isinstance(custom_color[0], tuple) or isinstance(custom_color[0], list):
-            return custom_color
-        else:
-            return [custom_color] * length
-    elif isinstance(custom_color, str):
-        return [custom_color] * length
-    else:
-        raise ValueError("The specified value is not a valid type.")
-
-
-def fill_sizes(custom_scales: Optional[Union[float, list]], default_value: Any, length: int):
-    if custom_scales is None:
-        return [default_value] * length
-    elif isinstance(custom_scales, list):
-        assert len(custom_scales) == length, "The specified value list has the wrong length."
-        return [default_value * scale for scale in custom_scales]
-    elif isinstance(custom_scales, float):
-        return [default_value * custom_scales] * length
-    elif isinstance(custom_scales, int):
-        return [default_value * float(custom_scales)] * length
-    else:
-        raise ValueError("The specified value is not a valid type.")
-
-
-def fill_strength(custom_scale: Optional[float], default_value: float):
-    if custom_scale is None:
-        return default_value
-    return custom_scale * default_value
 
 
 def draw_line_edge(
@@ -314,7 +59,7 @@ def draw_line_edge(
             head_length=arrow_head_lenght[eidx],
             color=e_color[eidx],
             linewidth=e_line_width[eidx],
-            length_includes_head=True
+            length_includes_head=True,
         )
 
 
@@ -328,32 +73,39 @@ def draw_circle_edge(
     e_line_width: list,
 ):
     n_v = len(v_coor)
-    radius_increment = 0.5 * max(e_line_width)
-    init_radius = max(v_size) + radius_increment
-    line_paths, arc_paths, vertices = hull_layout(n_v, e_list, v_coor, init_radius, radius_increment)
+    line_paths, arc_paths, vertices = hull_layout(n_v, e_list, v_coor, v_size)
 
-    for eidx, line in enumerate(line_paths):
-        start_pos, end_pos = line
-        x, y = start_pos[0], start_pos[1]
-        dx, dy = end_pos[0] - x, end_pos[1] - y
-        ax.arrow(x, y, dx, dy, head_width=0, head_length=0, color=e_color[eidx], linewidth=e_line_width[eidx])
+    for eidx, lines in enumerate(line_paths):
+        pathdata = []
+        for line in lines:
+            start_pos, end_pos = line
+            pathdata.append((Path.MOVETO, start_pos.tolist()))
+            pathdata.append((Path.LINETO, end_pos.tolist()))
 
-    for eidx, arc in enumerate(arc_paths):
-        center, theta1, theta2, radius = arc
-        x, y = center[0], center[1]
+        codes, verts = zip(*pathdata)
+        path = Path(verts, codes)
         ax.add_patch(
-            matplotlib.patches.Arc(
-                (x, y),
-                2 * radius,
-                2 * radius,
-                theta1=theta1,
-                theta2=theta2,
-                color=e_color[eidx],
-                linewidth=e_line_width[eidx],
-                fill=True,
-                edgecolor=e_fill_color[eidx],
-            )
+            PathPatch(path, linewidth=e_line_width[eidx], facecolor=e_fill_color[eidx], edgecolor=e_color[eidx])
         )
+
+    for eidx, arcs in enumerate(arc_paths):
+        for arc in arcs:
+            center, theta1, theta2, radius = arc
+            x, y = center[0], center[1]
+
+            ax.add_patch(
+                matplotlib.patches.Arc(
+                    (x, y),
+                    2 * radius,
+                    2 * radius,
+                    theta1=theta1,
+                    theta2=theta2,
+                    # color=e_color[eidx],
+                    linewidth=e_line_width[eidx],
+                    edgecolor=e_color[eidx],
+                    facecolor=e_fill_color[eidx],
+                )
+            )
 
 
 def edge_list_to_incidence_matrix(num_v: int, e_list: List[tuple]) -> np.ndarray:
@@ -386,3 +138,78 @@ def draw_vertex(
         patches.append(circle)
     p = PatchCollection(patches, facecolors=v_color, edgecolors="black")
     ax.add_collection(p)
+
+
+def hull_layout(n_v, e_list, pos, v_size, radius_increment=0.3):
+
+    line_paths = []
+    arc_paths = []
+
+    polygons_vertices_index = []
+    vertices_radius = np.array(v_size)
+    vertices_increased_radius = vertices_radius * radius_increment
+    vertices_radius += vertices_increased_radius
+
+    for edge in e_list:
+
+        edge = list(edge)
+
+        line_path_for_e = []
+        arc_path_for_e = []
+
+        pos_in_edge = pos[edge]
+        if len(edge) == 2:
+            vertices_index = np.array((0, 1), dtype=np.int64)
+        else:
+            hull = ConvexHull(pos_in_edge)
+            vertices_index = hull.vertices
+
+        n_vertices = vertices_index.shape[0]
+
+        vertices_index = np.append(vertices_index, vertices_index[0])  # close the loop
+
+        thetas = []
+
+        for i in range(n_vertices):
+            # line
+            i1 = edge[vertices_index[i]]
+            i2 = edge[vertices_index[i + 1]]
+
+            r1 = vertices_radius[i1]
+            r2 = vertices_radius[i2]
+
+            p1 = pos[i1]
+            p2 = pos[i2]
+
+            dp = p2 - p1
+            dp_len = vlen(dp)
+
+            beta = radian_from_atan(dp[0], dp[1])
+            alpha = common_tangent_radian(r1, r2, dp_len)
+
+            theta = beta - alpha
+            start_point = polar_position(r1, theta, p1)
+            end_point = polar_position(r2, theta, p2)
+
+            line_path_for_e.append((start_point, end_point))
+            thetas.append(theta)
+
+        for i in range(n_vertices):
+            # arcs
+            theta_1 = thetas[i - 1]
+            theta_2 = thetas[i]
+
+            arc_center = pos[edge[vertices_index[i]]]
+            radius = vertices_radius[edge[vertices_index[i]]]
+
+            theta_1, theta_2 = rad_2_deg(theta_1), rad_2_deg(theta_2)
+            arc_path_for_e.append((arc_center, theta_1, theta_2, radius))
+
+        vertices_radius[edge] += vertices_increased_radius[edge]
+
+        polygons_vertices_index.append(vertices_index.copy())
+
+        line_paths.append(line_path_for_e)
+        arc_paths.append(arc_path_for_e)
+
+    return line_paths, arc_paths, polygons_vertices_index
