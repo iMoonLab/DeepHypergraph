@@ -4,3 +4,8 @@ Building Evaluator
 ===================
 
 Generally speaking, the evalution strategy can be divided into two categories:
+
+- Epoch Evaluation
+- Add batch then epoch evalution
+
+Comming soon...
