@@ -3,13 +3,4 @@
 Building Evaluator
 ===================
 
-Comming soon...
-
-.. The Supported Tasks
-.. ----------------------
-.. Vertex Classification
-
-
-
-.. Examples
-.. --------------
+Generally speaking, the evalution strategy can be divided into two categories:
