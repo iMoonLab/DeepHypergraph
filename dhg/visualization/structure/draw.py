@@ -40,6 +40,7 @@ def draw_graph(
     pull_center_strength: Optional[float] = None,
 ):
     assert e_style in ["line", "circle"], "e_style must be 'line' or 'circle'"
+    assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
@@ -89,6 +90,7 @@ def draw_digraph(
     pull_center_strength: Optional[float] = None,
 ):
     assert e_style in ["line"], "e_style must be 'line'"
+    assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
@@ -141,6 +143,7 @@ def draw_bigraph(
     pull_v_center_strength: Optional[float] = None,
 ):
     assert e_style in ["line"], "e_style must be 'line'"
+    assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_u, num_v, e_list = g.num_u, g.num_v, deepcopy(g.e[0])
     # default configures
@@ -224,6 +227,7 @@ def draw_hypergraph(
     pull_center_strength: Optional[float] = None,
 ):
     assert e_style in ["circle"], "e_style must be 'circle'"
+    assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
 
     num_v, e_list = g.num_v, deepcopy(g.e[0])

@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 
 def test_vis_graph():
-    g = graph_Gnp_fast(100, 0.015)
-    draw_graph(g, e_style="line")
-    # plt.show()
+    g = graph_Gnp_fast(20, 0.015)
+    draw_graph(g, e_style="line", v_label=list(map(str, range(g.num_v))))
+    plt.show()
 
 
 def test_vis_bipartite_graph():

@@ -40,8 +40,8 @@ class Simulator:
         damping = 1.0
         for it in range(max_iter):
             position, velocity, stop = self._step(position, velocity, H, epsilon, damping, dt)
-            np.save("./tmp/position_{}.npy".format(it), position)
-            np.save("./tmp/velocity_{}.npy".format(it), velocity)
+            # np.save("./tmp/position_{}.npy".format(it), position)
+            # np.save("./tmp/velocity_{}.npy".format(it), velocity)
             if stop:
                 break
             damping *= self.damping_factor

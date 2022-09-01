@@ -134,7 +134,13 @@ def draw_vertex(
     for coor, label, size, width in zip(v_coor.tolist(), v_label, v_size, v_line_width):
         circle = Circle(coor, size)
         circle.lineWidth = width
-        circle.label = label
+        # circle.label = label
+        if label != '':
+            x, y = coor[0], coor[1]
+            offset = 0, -1.3 * size
+            x += offset[0]
+            y += offset[1]
+            ax.text(x, y, label, fontsize=font_size, fontfamily=font_family, ha='center', va='top')
         patches.append(circle)
     p = PatchCollection(patches, facecolors=v_color, edgecolors="black")
     ax.add_collection(p)
