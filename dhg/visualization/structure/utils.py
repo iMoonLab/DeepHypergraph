@@ -148,17 +148,21 @@ def draw_vertex(
 
 def hull_layout(n_v, e_list, pos, v_size, radius_increment=0.3):
 
-    line_paths = []
-    arc_paths = []
+    line_paths = [None] * len(e_list)
+    arc_paths = [None] * len(e_list)
 
     polygons_vertices_index = []
     vertices_radius = np.array(v_size)
     vertices_increased_radius = vertices_radius * radius_increment
     vertices_radius += vertices_increased_radius
 
-    for edge in e_list:
+    e_degree = [len(e) for e in e_list]
+    e_idxs = np.argsort(np.array(e_degree))
 
-        edge = list(edge)
+    # for edge in e_list:
+    for e_idx in e_idxs:
+
+        edge = list(e_list[e_idx])
 
         line_path_for_e = []
         arc_path_for_e = []
@@ -215,7 +219,9 @@ def hull_layout(n_v, e_list, pos, v_size, radius_increment=0.3):
 
         polygons_vertices_index.append(vertices_index.copy())
 
-        line_paths.append(line_path_for_e)
-        arc_paths.append(arc_path_for_e)
+        # line_paths.append(line_path_for_e)
+        # arc_paths.append(arc_path_for_e)
+        line_paths[e_idx] = line_path_for_e
+        arc_paths[e_idx] = arc_path_for_e
 
     return line_paths, arc_paths, polygons_vertices_index

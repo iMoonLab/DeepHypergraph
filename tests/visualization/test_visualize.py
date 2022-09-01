@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 
 
 def test_vis_graph():
-    g = graph_Gnp_fast(20, 0.015)
-    draw_graph(g, e_style="line", v_label=list(map(str, range(g.num_v))))
+    g = graph_Gnp_fast(100, 0.015)
+    # draw_graph(g, e_style="circle", v_label=list(map(str, range(g.num_v))))
+    draw_graph(g, e_style='circle')
     plt.show()
 
 
@@ -52,4 +53,4 @@ def test_vis_hypergraph():
 
     g = hypergraph_Gnm(40, 10)
     draw_hypergraph(g, e_style="circle")
-    # plt.show()
+    plt.show()
