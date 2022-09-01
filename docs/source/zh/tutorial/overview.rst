@@ -10,10 +10,10 @@
 4. :doc:`针对你的任务构建指标度量器 </zh/tutorial/metric>`.
 
 
-训练和评估
+训练和评测
 ------------------------------
 
-1. :doc:`构建你的训练和评估代码 </zh/tutorial/train>`.
+1. :doc:`构建你的训练和评测代码 </zh/tutorial/train>`.
 2. :doc:`自动超参调优 </zh/tutorial/auto_ml>`.
 
 

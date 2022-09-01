@@ -24,7 +24,7 @@ and `HGNN <https://arxiv.org/pdf/1809.09401>`_ ) on simple graph and simple hype
 **Building GCN Model**
 
 The GCN model first computes the Laplacian matrix with expanded adjacency matrix, then performs feature smoothing on vertices for each GCN convolution layer.
-For a given :py:class:`simple graph structure <dhg.Graph>`, the GCN's Laplacian matrix have been pre-computed and stored in :py:attr:`L_GCN <dhg.Graph.L_GCN>` attribute, which can be formed as:
+For a given :py:class:`simple graph structure <dhg.Graph>`, the GCN's Laplacian matrix has been pre-computed and stored in :py:attr:`L_GCN <dhg.Graph.L_GCN>` attribute, which can be formed as:
 
 .. math::
 
@@ -39,8 +39,8 @@ and :math:`\mathbf{A}` is the adjacency matrix of the simple graph. Then, the co
 
 where :math:`\mathbf{X}` is the input vertex feature matrix, :math:`\mathbf{\Theta}` is the learnable parameters of the GCN convolution layer.
 
-DHG also provide function :py:func:`smoothing_with_GCN <dhg.Graph.smoothing_with_GCN>` that applies GCN's Laplacian matrix to smooth vertex features.
-Then, the convolution layer of GCN can be implamented as:
+DHG also provides function :py:func:`smoothing_with_GCN <dhg.Graph.smoothing_with_GCN>` that applies GCN's Laplacian matrix to smooth vertex features.
+Then, the convolution layer of GCN can be implemented as:
 
 .. code-block:: python
 
@@ -67,7 +67,7 @@ Then, the convolution layer of GCN can be implamented as:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the GCN model can be implemented with stacking multiple GCNConv layers.
+Finally, the GCN model can be implemented by stacking multiple GCNConv layers.
 
 **Building HGNN model**
 
@@ -82,7 +82,7 @@ and stored in :py:attr:`L_HGNN <dhg.Hypergraph.L_HGNN>` attribute, which can be 
 
 where :math:`\mathbf{H}` is the hypergraph incidence matrix, :math:`\mathbf{W}_e` is a diagonal hyperedge weight matrix, 
 :math:`\mathbf{D}_v` is a diagonal vertex degree matrix, :math:`\mathbf{D}_e` is a diagonal hyperedge degree matrix.
-Then, the convolution layer of HGNN can be implamented as:
+Then, the convolution layer of HGNN can be implemented as:
 
 
 .. math::
@@ -93,8 +93,8 @@ Then, the convolution layer of HGNN can be implamented as:
 
 where :math:`\mathbf{X}` is the input vertex feature matrix, :math:`\mathbf{\Theta}` is the learnable parameters of the HGNN convolution layer.
 
-DHG also provide function :py:func:`smoothing_with_HGNN <dhg.Hypergraph.smoothing_with_HGNN>` that applies HGNN's Laplacian matrix to smooth vertex features.
-Then, the convolution layer of HGNN can be implamented as:
+DHG also provides function :py:func:`smoothing_with_HGNN <dhg.Hypergraph.smoothing_with_HGNN>` that applies HGNN's Laplacian matrix to smooth vertex features.
+Then, the convolution layer of HGNN can be implemented as:
 
 .. code-block:: python
 
@@ -121,7 +121,7 @@ Then, the convolution layer of HGNN can be implamented as:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the HGNN model can be implemented with stacking multiple HGNNConv layers.
+Finally, the HGNN model can be implemented by stacking multiple HGNNConv layers.
 
 
 .. _build_spatial_based_model:
@@ -135,13 +135,13 @@ In the following examples, we will build four different spatial-based models.
   and `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_, which perform general message passing 
   from vertex to vertex via edges or from vertex set to vertex set via hyperedges.
 - The last two models are `GAT <https://arxiv.org/pdf/1710.10903>`_ and a hypergraph convolution with different hyperedge weights model, 
-  which show you how to use **different edge/hyperedge weights** on message aggretaion from vertex to vertex or from vertex set to vertex set.
+  which show you how to use **different edge/hyperedge weights** on message aggregation from vertex to vertex or from vertex set to vertex set.
 
 
 **Building GraphSAGE model**
 
-The GraphSAGE is a general message passing model that conbines vertex feature and their neighbors' features to form a new vertex feature, 
-which can be implamented as follows:
+The GraphSAGE is a general message passing model that combines vertex features and their neighbors' features to form a new vertex feature, 
+which can be implemented as follows:
 
 .. code-block:: python
 
@@ -178,12 +178,12 @@ which can be implamented as follows:
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the GraphSAGE model can be implemented with stacking multiple GraphSAGEConv layers.
+Finally, the GraphSAGE model can be implemented by stacking multiple GraphSAGEConv layers.
 
 
 **Building HGNN+ model**
 
-The HGNN+ is a general message passing model that passes messages from vertex to hyperedge to vertex, which can be implamented as following:
+The HGNN+ is a general message passing model that passes messages from vertex to hyperedge to vertex, which can be implemented as following:
 
 .. code-block:: python
 
@@ -211,12 +211,12 @@ The HGNN+ is a general message passing model that passes messages from vertex to
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the HGNN+ model can be implemented with stacking multiple HGNNPConv layers.
+Finally, the HGNN+ model can be implemented by stacking multiple HGNNPConv layers.
 
 **Building GAT model**
 
-DHG provide a special and convienent way to implement weighted neightborhood aggregation from vertex to vertex.
-In simple graph, each edge have its source and target index. 
+DHG provides a special and convenient way to implement weighted neighborhood aggregation from vertex to vertex.
+In simple graph, each edge has its source and target index. 
 Given vertex features ``X``, simple graph ``g``, and linear layers ``atten_src`` and ``atten_dst``, you can compute the edge weight by follows:
 
 .. code-block:: python
@@ -228,7 +228,7 @@ Given vertex features ``X``, simple graph ``g``, and linear layers ``atten_src``
 Besides, DHG provides ``softmax_then_sum`` aggregation function for neighbor messages aggregation. 
 It can normalize the messages from neighbors with ``softmax`` and then sum them to update the center vertex's message.
 
-Then, the GATConv model can be implamented as follows:
+Then, the GATConv model can be implemented as follows:
 
 .. code-block:: python
 
@@ -263,13 +263,13 @@ Then, the GATConv model can be implamented as follows:
             X_ = self.act(X_)
             return X_
 
-Finally, the GAT model can be implamented with stacking multiple GATConv layers.
+Finally, the GAT model can be implemented by stacking multiple GATConv layers.
 
 
 **Building hypergraph convolution with different hyperedge weights model**
 
 Like varying the edge weights in the simple graph, hyperedge weights can also be varied in the message passing from vertex to hyperedge to vertex.
-But the difference is that the hyperedge weights is more complex than the edge weights in the simple graph.
+But the difference is that the hyperedge weights are more complex than the edge weights in the simple graph.
 Due to the two stages (vertex to hyperedge and hyperedge to vertex) of message passing in the hypergraph,
 varying the hyperedge weights can also be split into two stages: vertex to hyperedge stage and hyperedge to vertex stage.
 
@@ -281,7 +281,7 @@ varying the hyperedge weights can also be split into two stages: vertex to hyper
 In simple hypergraph, the two message passing stages are symmetric. 
 Thus, the same vertex and hyperedge attention layer can be used in the two stages.
 Given the vertex features ``X``, hyperedge features ``Y``, simple hypergraph ``hg``, and linear layers ``atten_vertex`` and ``atten_hyperedge``, 
-you can compute the hyperedge weights for the two stages by follows: 
+you can compute the hyperedge weights for the two stages as follows: 
 
 .. code-block:: python
 
@@ -290,7 +290,7 @@ you can compute the hyperedge weights for the two stages by follows:
     >>> v2e_atten_weight = x_for_vertex[hg.v2e_src] + y_for_hyperedge[hg.v2e_dst]
     >>> e2v_atten_weight = y_for_hyperedge[hg.e2v_src] + x_for_vertex[hg.e2v_dst]
 
-Finally, a simple hypergraph convolution with different hyperedge weights model can be implamented as follows:
+Finally, a simple hypergraph convolution with different hyperedge weights model can be implemented as follows:
 
 .. code-block:: python
 
@@ -331,7 +331,7 @@ Finally, a simple hypergraph convolution with different hyperedge weights model 
             Y_ = self.act(Y_)
             return X_, Y_
 
-Finally, the simple hypergraph convolution with different hyperedge weights model can be implamented with stacking multiple HGATConv layers.
+Finally, the simple hypergraph convolution with different hyperedge weights model can be implemented by stacking multiple HGATConv layers.
 
 
 .. _build_hybrid_operation_model:
@@ -340,7 +340,7 @@ Building Hybrid Operation Model
 --------------------------------
 
 A hybrid operation model means that the spectral-based convolution or spatial-based convolution can simultaneously be used to embed the correlation into the vertex features.
-Given a correlation structure like simple graph ``g``, you can implament a hybrid operation model as follows:
+Given a correlation structure like simple graph ``g``, you can implement a hybrid operation model as follows:
 
 .. code-block:: python
 
@@ -369,7 +369,7 @@ Given a correlation structure like simple graph ``g``, you can implament a hybri
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the hybrid operation model can be implamented with stacking multiple HOMConv layers.
+Finally, the hybrid operation model can be implemented by stacking multiple HOMConv layers.
 
 .. _build_hybrid_structure_model:
 
@@ -378,7 +378,7 @@ Building Hybrid Structure Model
 
 The hybrid structure model is a model that supports multiple types of correlation structures as input.
 Given a set of vertices and vertex feature ``X``, assume that you have constructed low-order structure like simple graph ``g`` 
-and high-order like simple hypergraph ``hg``. A hybrid structure model can be implamented as follows:
+and high-order like simple hypergraph ``hg``. A hybrid structure model can be implemented as follows:
 
 .. code-block:: python
 
@@ -407,5 +407,5 @@ and high-order like simple hypergraph ``hg``. A hybrid structure model can be im
             X_ = self.drop(self.act(X_))
             return X_
 
-Finally, the hybrid structure model can be implamented with stacking multiple HSMConv layers.
+Finally, the hybrid structure model can be implemented by stacking multiple HSMConv layers.
 

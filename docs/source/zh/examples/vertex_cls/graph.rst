@@ -86,7 +86,7 @@ Cora上使用GCN
 
 .. note:: 
 
-    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
+    更多关于评测器 ``Evaluator`` 的细节可以参照 :doc:`构建指标评测器 </zh/tutorial/metric>` 章节。
 
 .. code-block:: python
 
@@ -446,7 +446,7 @@ Cora上使用GAT
 
 .. note:: 
 
-    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
+    更多关于评测器 ``Evaluator`` 的细节可以参照 :doc:`构建指标评测器 </zh/tutorial/metric>` 章节。
 
 .. code-block:: python
 
@@ -884,7 +884,7 @@ Cora上使用HGNN
 
 .. note:: 
 
-    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
+    更多关于评测器 ``Evaluator`` 的细节可以参照 :doc:`构建指标评测器 </zh/tutorial/metric>` 章节。
 
 .. code-block:: python
 
@@ -1245,7 +1245,7 @@ Cora上使用HGNN+
 
 .. note:: 
 
-    更多关于评价器 ``Evaluator`` 的细节可以参照 :ref:`构建 Evaluator <tutorial_build_evaluator>` 章节。
+    更多关于评测器 ``Evaluator`` 的细节可以参照 :doc:`构建指标评测器 </zh/tutorial/metric>` 章节。
 
 .. code-block:: python
 

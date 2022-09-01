@@ -132,7 +132,7 @@ Main
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 
 .. code-block:: python
 
@@ -490,7 +490,7 @@ Main
 
 .. note:: 
 
-    More details about the metric ``Evaluator`` can be found in the :ref:`Build Evaluator <tutorial_build_evaluator>` section.
+    More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </zh/tutorial/metric>` section.
 
 .. code-block:: python
 
