@@ -7,7 +7,7 @@ from dhg.structure import Hypergraph
 
 
 def uniform_hypergraph_Gnp(k: int, num_v: int, prob: float):
-    r"""Return a random ``k``-uniform hypergraph with ``num_v`` vertices and probability ``prob`` of choicing a hyperedge.
+    r"""Return a random ``k``-uniform hypergraph with ``num_v`` vertices and probability ``prob`` of choosing a hyperedge.
 
     Args:
         ``num_v`` (``int``): The Number of vertices.

@@ -26,10 +26,10 @@ Generally speaking, the evaluation strategy can be divided into two categories:
 
 - :ref:`Epoch Evaluation <tutorial_evaluation_ee>`
   
-  like vertex classification in graph neural networks, the evaluation is performed on the whole graph at each epoch.
+  like vertex classification in simple graph, the evaluation is performed on the whole graph at each epoch.
 
 
-- :ref:`Add Batches Then Do Epoch Evalution <tutorial_evaluation_abe>`
+- :ref:`Add Batches Then Do Epoch Evaluation <tutorial_evaluation_abe>`
   
   like recommender systems, one epoch consists of multiple batches, and the evaluation is performed on each batch, then those batch results are aggregated to get the epoch result.
 

@@ -6,7 +6,7 @@ from dhg.structure import Graph
 
 
 def graph_Gnp(num_v: int, prob: float):
-    r"""Return a random graph with ``num_v`` vertices and probability ``prob`` of choicing an edge. 
+    r"""Return a random graph with ``num_v`` vertices and probability ``prob`` of choosing an edge. 
 
     Args:
         ``num_v`` (``int``): The Number of vertices.
@@ -28,7 +28,7 @@ def graph_Gnp(num_v: int, prob: float):
 
 
 def graph_Gnp_fast(num_v: int, prob: float):
-    r"""Return a random graph with ``num_v`` vertices and probability ``prob`` of choicing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
+    r"""Return a random graph with ``num_v`` vertices and probability ``prob`` of choosing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
 
     Args:
         ``num_v`` (``int``): The Number of vertices.

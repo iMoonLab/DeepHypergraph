@@ -6,7 +6,7 @@ from dhg.structure import BiGraph
 
 
 def bigraph_Gnp(num_u: int, num_v: int, prob: float):
-    r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choicing an edge.
+    r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choosing an edge.
 
     Args:
         ``num_u`` (``int``): The Number of vertices in set :math:`\mathcal{U}`.
@@ -30,7 +30,7 @@ def bigraph_Gnp(num_u: int, num_v: int, prob: float):
 
 
 # def bigraph_Gnp_fast(num_v: int, prob: float):
-#     r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choicing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
+#     r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choosing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
 
 #     Args:
 #         ``num_v`` (``int``): The Number of vertices.
