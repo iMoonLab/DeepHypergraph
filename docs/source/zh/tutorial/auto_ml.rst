@@ -1,12 +1,13 @@
 自动化超参调优
 ========================
 
-Auto-ML是构建关联结构、构建模型、训练模型中自动搜素/选择超参数的技术。
-DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
+Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模型潜力并跑出最高性能。在DHG中我们基于 `Optuna <https://optuna.org/>`_ 库实现
+**自动化搜索最优高阶结构** 、 **自动化搜索最优模型架构** 、 **自动化搜索最优训练超参**。
 
 .. important::
 
-    您可以查看 `Get Started with Optuna <https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/001_first.html>`_ 来了解Auto-ML的基本概念。
+    您可以查看 `Optuna上手指南 <https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/001_first.html>`_ 来了解Auto-ML的基本概念。
+
 
 自动调优的构造函数
 ------------------------------
@@ -14,15 +15,16 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 在Auto-ML中， `trial <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial>`_ 是代表实验单次运行的重要概念。
 ``trial`` 参数应作为第一个参数传递给每一个 ``builder`` 函数。
 
-- :ref:`定义结构构造函数 <zh_tutorial_structure_builder>`
-- :ref:`定义模型构造函数 <zh_tutorial_model_builder>`
-- :ref:`定义训练构造函数 <zh_tutorial_train_builder>`
+- :ref:`定义结构调优构造函数 <zh_tutorial_structure_builder>`
+- :ref:`定义模型调优构造函数 <zh_tutorial_model_builder>`
+- :ref:`定义训练调优构造函数 <zh_tutorial_train_builder>`
 
-在每一个构造函数中，``trial`` 可以在每次实验运行中被调用来获取超参数调优。
-可以使用以下调优函数：
+在每一个构造函数中， ``trial`` 可以在每次实验运行中被调用来 **建议** 当前参数。例如， ``trial.suggest_int`` 可以建议一个整数参数， ``trial.suggest_categorical`` 可以建议一个离散参数， ``trial.suggest_float`` 可以建议一个浮点数参数。
 
-- `trial.suggest_categorical(name, choices) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_categorical>`_ : 从给定列表中采样出某一项。
-- `trial.suggest_discrete_uniform(name, low, high, q) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_discrete_uniform>`_ : 从离散均匀分布中采样出参数值。
+所有可调用的 **建议** 函数如下：
+
+- `trial.suggest_categorical(name, choices) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_categorical>`_ : 从给定列表中建议出某一项。
+- `trial.suggest_discrete_uniform(name, low, high, q) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_discrete_uniform>`_ : 从离散均匀分布中采样出一个值。
 - `trial.suggest_float(name, low, high, step=None, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_float>`_ : 采样出一个浮点数。
 - `trial.suggest_int(name, low, high, step=1, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_int>`_ : 采样出一个整数。
 - `trial.suggest_loguniform(name, low, high) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_loguniform>`_ : 从对数均匀分布中采样出参数值。
@@ -31,15 +33,15 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 .. _zh_tutorial_structure_builder:
 
-定义结构构造函数
+定义结构调优构造函数
 ++++++++++++++++++++++++++++++++++++
 
-结构构造器是为对于像简单超图之类的高阶关联结构定义输入关联结构的函数。
+结构调优构造函数一般来说是针对简单超图之类的高阶关联结构自动搜索出最有效的高阶关联结构。
 低阶关联结构在模型使用时一般来说是固定的。
 但高阶关联结构的构造是灵活多变的。
-不同的高阶关联结构可能会影响性能改变，详情可参考自论文 `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ 。
+不同的高阶关联结构可能会影响最终模型的性能，详情可参考自论文 `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ 。
 
-在如下的例子中，我们将展示如何定义结构构造器，每次实验运行从低阶关联结构构建高阶关联结构。
+在如下的例子中，我们将展示如何定义结构调优构造函数，每次实验运行从低阶关联结构构建可能的高阶关联结构。
 
 .. code-block:: python
 
@@ -60,13 +62,13 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 .. _zh_tutorial_model_builder:
 
-定义模型构造函数
+定义模型调优构造函数
 ++++++++++++++++++++++++++++++++++++
 
-模型构造器是定义层数、隐藏层维度、激活函数等模型架构的函数。
-模型构造器会返回值是一个模型对象，其为 ``torch.nn.Module`` 的一个实例。
+模型调优构造函数是定义层数、隐藏层维度、激活函数等模型架构的函数。
+模型调优构造函数的返回值是一个模型对象，其为 ``torch.nn.Module`` 的一个实例。
 
-在如下的例子中，我们将展示如何定义模型构造器，每次实验运行构建不同模型架构。
+在如下的例子中，我们将展示如何定义模型调优构造函数，每次实验运行构建不同模型架构。
 
 .. code-block:: python
 
@@ -83,13 +85,13 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 .. _zh_tutorial_train_builder:
 
-定义训练构造函数
+定义训练调优构造函数
 +++++++++++++++++++++++++++++++
 
-训练构造器是定义优化器、损失函数等训练过程的函数。
-训练构造器的输入参数为 ``trial`` 和 ``model`` 对象。
-训练构造器的返回值是一个至少班汉优化器和损失函数的字典。
-学习率 ``scheduler`` 是可选的。
+训练调优构造函数是定义优化器、损失函数等训练过程中所需的对象。
+训练调优构造函数的输入参数为 ``trial`` 和 ``model`` 对象。
+训练调优构造函数的返回值是一个至少包含优化器和损失函数的字典。
+学习率调整器 ``scheduler`` 是可选的。
 
 .. code-block:: python
 
@@ -127,8 +129,8 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 在如下的例子中，我们将分别在简单图和简单超图的顶点分类任务中介绍如何使用DHG的Auto-ML进行实验。
 
-简单图节点分类任务
-++++++++++++++++++++
+自动化简单图节点分类任务
+++++++++++++++++++++++++
 
 .. code-block:: python
     
@@ -176,8 +178,8 @@ DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
         task = Task(work_root, input_data, model_builder, train_builder, evaluator, device,)
         task.run(200, 50, "maximize")
 
-简单超图节点分类任务
-++++++++++++++++++++++++
+自动化简单超图节点分类任务
++++++++++++++++++++++++++++
 
 .. code-block:: python
 
