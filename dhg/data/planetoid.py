@@ -7,7 +7,7 @@ from .base import BaseData
 
 
 class Cora(BaseData):
-    r"""The Cora dataset is a citation network dataset for vertex classification task. More details can be found in this `websit <https://relational.fit.cvut.cz/dataset/CORA>`_.
+    r"""The Cora dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CORA>`_.
     
     The content of the Cora dataset includes the following:
 
@@ -65,7 +65,7 @@ class Cora(BaseData):
 
 
 class Citeseer(BaseData):
-    r"""The Citeseer dataset is a citation network dataset for vertex classification task. More details can be found in this `websit <https://relational.fit.cvut.cz/dataset/CiteSeer>`_.
+    r"""The Citeseer dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CiteSeer>`_.
 
     - ``num_classes``: The number of classes: :math:`6`.
     - ``num_vertices``: The number of vertices: :math:`3,327`.
@@ -121,7 +121,7 @@ class Citeseer(BaseData):
 
 
 class Pubmed(BaseData):
-    r"""The PubMed dataset is a citation network dataset for vertex classification task. More details can be found in this `websit <https://pubmed.ncbi.nlm.nih.gov/download/>`_.
+    r"""The PubMed dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://pubmed.ncbi.nlm.nih.gov/download/>`_.
 
     - ``num_classes``: The number of classes: :math:`3`.
     - ``num_vertices``: The number of vertices: :math:`19,717`.

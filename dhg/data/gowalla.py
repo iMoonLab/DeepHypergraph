@@ -7,7 +7,7 @@ from dhg.datapipe import load_from_txt
 
 class Gowalla(BaseData):
     r"""The Gowalla dataset is collected for user-item recommendation task. Locations are viewed as items.
-    The full dataset can be found in this `websit <https://snap.stanford.edu/data/loc-gowalla.html>`_.
+    The full dataset can be found in this `website <https://snap.stanford.edu/data/loc-gowalla.html>`_.
     
     The content of the Gowalla dataset includes the following:
 
