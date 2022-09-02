@@ -1,18 +1,18 @@
 随机结构生成
 =======================
 
-In this section, we provide examples of how to generate random correlation structures of DHG.
+在这一节里，我们提供在DHG中如何生成随机关联结构的模版。
 
-The name of DHG's structure generator can be divided into types:
+DHG的结构生成器名称可以分为以下两类：
 
-- ``Gnm``: Generate a random structure with ``n`` vertices and ``m`` edges/hyperedges.
-- ``Gnp``: Generate a random structure with ``n`` vertices and ``p`` probability of choosing an edge/hyperedge.
+- ``Gnm``: 生成包含 ``n`` 个顶点和 ``m`` 条边/超边的随机关联结构。
+- ``Gnp``: 生成包含 ``n`` 个顶点并且以概率 ``p`` 选择边/超边。
 
 
 随机简单图生成
 --------------------------------
 
-Generating a simple with ``n`` vertices and ``m`` edges:
+生成包含 ``n`` 个顶点和 ``m`` 条边的简单图：
 
 .. code-block:: python
 
@@ -21,7 +21,7 @@ Generating a simple with ``n`` vertices and ``m`` edges:
     >>> g
     Simple Graph(num_v=10, num_e=20)
 
-Generating a simple with ``n`` vertices and ``p`` probability of choosing an edge:
+生成包含 ``n`` 个顶点并且以概率 ``p`` 选择边的简单图：
 
 .. code-block:: python
 
@@ -37,7 +37,7 @@ Generating a simple with ``n`` vertices and ``p`` probability of choosing an edg
 随机有向图生成
 -------------------------------------
 
-Generating a directed graph with ``n`` vertices and ``m`` edges:
+生成包含 ``n`` 个顶点和 ``m`` 条边的有向图：
 
 .. code-block:: python
 
@@ -46,7 +46,7 @@ Generating a directed graph with ``n`` vertices and ``m`` edges:
     >>> g
     Directed Graph(num_v=10, num_e=20)
 
-Generating a directed graph with ``n`` vertices and ``p`` probability of choosing an edge:
+生成包含 ``n`` 个顶点并且以概率 ``p`` 选择边的有向图：
 
 .. code-block:: python
 
@@ -61,7 +61,7 @@ Generating a directed graph with ``n`` vertices and ``p`` probability of choosin
 随机二分图生成
 -------------------------------------
 
-Generating a bipartite graph with ``num_u`` vertices in set :math:`U`, ``num_v`` vertices in set :math:`V`, and ``m`` edges:
+生成顶点集 :math:`U` 包含 ``num_u`` 个顶点、顶点集 :math:`V` 包含 ``num_v`` 个顶点和 ``m`` 条边的二分图：
 
 .. code-block:: python
 
@@ -70,7 +70,7 @@ Generating a bipartite graph with ``num_u`` vertices in set :math:`U`, ``num_v``
     >>> g
     Bipartite Graph(num_u=5, num_v=6, num_e=8)
 
-Generating a bipartite graph with ``num_u`` vertices in set :math:`U`, ``num_v`` vertices in set :math:`V`, and ``p`` probability of choosing an edge:
+生成顶点集 :math:`U` 包含 ``num_u`` 个顶点、顶点集 :math:`V` 包含 ``num_v`` 个顶点并且以概率 ``p`` 选择边的二分图：
 
 .. code-block:: python
 
@@ -82,12 +82,12 @@ Generating a bipartite graph with ``num_u`` vertices in set :math:`U`, ``num_v``
 随机简单超图生成
 -------------------------------------
 
-The simple hypergraph generator can be divided into two types:
+简单超图生成器可以分为以下两类：
 
-- ``k``-均匀 hypergraph: Each hyperedge has the same number (k) of vertices.
-- General hypergraph: Each hyperedge has a random number of vertices.
+- ``k``-均匀超图：每条超边含有相同数量（k）的顶点。
+- 一般超图：每条超边含有的顶点数量随机。
 
-Generating a ``k``-均匀 hypergraph with ``n`` vertices and ``m`` hyperedges:
+生成包含 ``n`` 个顶点和 ``m`` 条超边的 ``k`` -均匀超图：
 
 .. code-block:: python
 
@@ -98,7 +98,7 @@ Generating a ``k``-均匀 hypergraph with ``n`` vertices and ``m`` hyperedges:
     >>> hg.e
     ([(2, 11, 12), (4, 14, 18), (0, 5, 16), (2, 6, 12), (1, 3, 6)], [1.0, 1.0, 1.0, 1.0, 1.0])
 
-Generating a ``k``-uniform hypergraph with ``n`` vertices and ``p`` probability of choosing a hyperedge:
+生成包含 ``n`` 个顶点并且以概率 ``p`` 选择超边的 ``k`` -均匀超图：
 
 .. code-block:: python
 
@@ -109,7 +109,7 @@ Generating a ``k``-uniform hypergraph with ``n`` vertices and ``p`` probability 
     >>> hg.e
     ([(1, 6, 16), (2, 17, 18), (3, 14, 16), (5, 9, 17), (7, 12, 14), (10, 18, 19), (12, 13, 19), (12, 18, 19)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 
-Generating a general hypergraph with ``n`` vertices and ``m`` hyperedges:
+生成包含 ``n`` 个顶点和 ``m`` 条超边的一般超图：
 
 .. code-block:: python
 

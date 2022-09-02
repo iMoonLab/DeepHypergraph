@@ -1,34 +1,32 @@
 自动化超参调优
 ========================
 
-
-Auto-ML is a technique that automates the process of searching/selecting the hyper-parameters 
-for building a structure, building a model, and training the model. 
-DHG's Auto-ML is based on the `Optuna <https://optuna.org/>`_ library.
+Auto-ML是构建关联结构、构建模型、训练模型中自动搜素/选择超参数的技术。
+DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 .. important::
 
-    As for the basic concepts of Auto-ML you should first have a look at the `Get Started with Optuna <https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/001_first.html>`_ .
-
+    您可以查看 `Get Started with Optuna <https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/001_first.html>`_ 来了解Auto-ML的基本概念。
 
 自动调优的构造函数
 ------------------------------
 
-In Auto-ML, `trial <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial>`_ is an important concept that represents a single run of the experiment.
-The ``trial`` parameter should be passed to every ``builder`` function as the first parameter.
+在Auto-ML中， `trial <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial>`_ 是代表实验单次运行的重要概念。
+``trial`` 参数应作为第一个参数传递给每一个 ``builder`` 函数。
 
-- :ref:`Structure Builder <zh_tutorial_structure_builder>`
-- :ref:`Model Builder <zh_tutorial_model_builder>`
-- :ref:`Train Builder <zh_tutorial_train_builder>`
+- :ref:`定义结构构造函数 <zh_tutorial_structure_builder>`
+- :ref:`定义模型构造函数 <zh_tutorial_model_builder>`
+- :ref:`定义训练构造函数 <zh_tutorial_train_builder>`
 
-In each builder function, the ``trial`` parameter can be called to suggest hyper-parameters in every single run of the experiment. The following suggestion functions are available:
+在每一个构造函数中，``trial`` 可以在每次实验运行中被调用来获取超参数调优。
+可以使用以下调优函数：
 
-- `trial.suggest_categorical(name, choices) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_categorical>`_ : Suggest a value for the categorical parameter.
-- `trial.suggest_discrete_uniform(name, low, high, q) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_discrete_uniform>`_ : Suggest a value for the discrete parameter.
-- `trial.suggest_float(name, low, high, step=None, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_float>`_ : Suggest a value for the floating point parameter.
-- `trial.suggest_int(name, low, high, step=1, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_int>`_ : Suggest a value for the integer parameter.
-- `trial.suggest_loguniform(name, low, high) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_loguniform>`_ : Suggest a value for the log-uniform parameter.
-- `trial.suggest_uniform(name, low, high) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_uniform>`_ : Suggest a value for the uniform parameter.
+- `trial.suggest_categorical(name, choices) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_categorical>`_ : 从给定列表中采样出某一项。
+- `trial.suggest_discrete_uniform(name, low, high, q) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_discrete_uniform>`_ : 从离散均匀分布中采样出参数值。
+- `trial.suggest_float(name, low, high, step=None, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_float>`_ : 采样出一个浮点数。
+- `trial.suggest_int(name, low, high, step=1, log=False) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_int>`_ : 采样出一个整数。
+- `trial.suggest_loguniform(name, low, high) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_loguniform>`_ : 从对数均匀分布中采样出参数值。
+- `trial.suggest_uniform(name, low, high) <https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial.suggest_uniform>`_ : 从均匀分布中采样的参数值。
 
 
 .. _zh_tutorial_structure_builder:
@@ -36,11 +34,12 @@ In each builder function, the ``trial`` parameter can be called to suggest hyper
 定义结构构造函数
 ++++++++++++++++++++++++++++++++++++
 
-The structure builder is a function that defines the input correlation structure, especially for high-order structures like simple hypergraphs. 
-Generally, the low-order structure is usually fixed when fed to the model. But the construction of high-order structures is flexible.
-Different high-order structures may lead to different performances refer to the `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ paper for more details.
+结构构造器是为对于像简单超图之类的高阶关联结构定义输入关联结构的函数。
+低阶关联结构在模型使用时一般来说是固定的。
+但高阶关联结构的构造是灵活多变的。
+不同的高阶关联结构可能会影响性能改变，详情可参考自论文 `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ 。
 
-In the following examples, we show how to define the structure builder to construct different high-order structures from low-order structures for every single run of the experiment.
+在如下的例子中，我们将展示如何定义结构构造器，每次实验运行从低阶关联结构构建高阶关联结构。
 
 .. code-block:: python
 
@@ -64,10 +63,10 @@ In the following examples, we show how to define the structure builder to constr
 定义模型构造函数
 ++++++++++++++++++++++++++++++++++++
 
-The model builder is a function that defines the model architecture like the number of layers, the number of hidden units, and the activation functions.
-The model builder should return a model object that is an instance of ``torch.nn.Module``.
+模型构造器是定义层数、隐藏层维度、激活函数等模型架构的函数。
+模型构造器会返回值是一个模型对象，其为 ``torch.nn.Module`` 的一个实例。
 
-In the following examples, we show how to define the model builder to construct different model architectures for every single run of the experiment.
+在如下的例子中，我们将展示如何定义模型构造器，每次实验运行构建不同模型架构。
 
 .. code-block:: python
 
@@ -87,10 +86,10 @@ In the following examples, we show how to define the model builder to construct 
 定义训练构造函数
 +++++++++++++++++++++++++++++++
 
-The train builder is a function that defines the training process like the optimizer, and the loss function.
-The input parameters of the train builder are the ``trial`` and the ``model`` object.
-The return value of the train builder is a dictionary that at least contains the optimizer and the loss function. 
-The learn rate ``scheduler`` is optional.
+训练构造器是定义优化器、损失函数等训练过程的函数。
+训练构造器的输入参数为 ``trial`` 和 ``model`` 对象。
+训练构造器的返回值是一个至少班汉优化器和损失函数的字典。
+学习率 ``scheduler`` 是可选的。
 
 .. code-block:: python
 
@@ -113,20 +112,20 @@ The learn rate ``scheduler`` is optional.
 自动化调优的任务类
 ------------------------
 
-To run experiments with Auto-ML, we need to define a task-specific class. 
-Currently, DHG supports the following tasks:
+我们需要定义一个任务特定的类，来使用Auto-ML实验。
+目前，DHG支持以下任务：
 
-- :py:class:`dhg.experiments.GraphVertexClassificationTask`: Vertex classification task on simple graphs.
-- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: Vertex classification task on simple hypergraphs.
-- :py:class:`dhg.experiments.UserItemRecommenderTask`: Item recommendation task on User-Item bipartite graphs.
+- :py:class:`dhg.experiments.GraphVertexClassificationTask`: 简单图上的顶点分类任务。
+- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: 简单超图上的顶点分类任务。
+- :py:class:`dhg.experiments.UserItemRecommenderTask`: <用户-物品>二分图上的物品推荐任务。
 
-More Auto-ML tasks will be added in the future. Welcome to contribute and propose issues on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_.
+更多的Auto-ML任务将会在以后添加。期待您的贡献以及在 `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_ 上提出问题。
 
 
 自动化节点分类任务
 ---------------------------------------
 
-In the following examples, we show how to use DHG to run Auto-ML experiments for vertex classification tasks on simple graphs and hypergraphs, respectively.
+在如下的例子中，我们将分别在简单图和简单超图的顶点分类任务中介绍如何使用DHG的Auto-ML进行实验。
 
 简单图节点分类任务
 ++++++++++++++++++++
@@ -241,7 +240,7 @@ In the following examples, we show how to use DHG to run Auto-ML experiments for
 自动化物品推荐任务
 ---------------------------------------
 
-In the following example, we show how to use DHG to run Auto-ML experiments for item recommendation tasks on User-Item bipartite graphs.
+在如下的例子中，我们将在<用户-物品>二分图的物品推荐任务中介绍如何使用DHG的Auto-ML进行实验。
 
 .. code-block:: python
 

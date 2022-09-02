@@ -1,7 +1,7 @@
 训练模型
 ========================
 
-Here, we provide two templates for training models.
+在这里，我们提供两个训练模型的模版。
 
 - :ref:`没有批数据的模型的训练 <zh_turorial_training_without_batch_data>`
 - :ref:`有批数据的模型的训练 <zh_tutorial_training_with_batch_data>`
@@ -11,7 +11,7 @@ Here, we provide two templates for training models.
 没有批数据的模型的训练
 -----------------------------
 
-This template is suitable for models that do not require batch iteration like vertex classification on simple graph and hypergraph structures.
+这个模版适用于没有批数据的模型（如简单图和超图关联结构上的顶点分类）。
 
 .. code-block:: python
 
@@ -108,7 +108,7 @@ This template is suitable for models that do not require batch iteration like ve
 有批数据的模型的训练
 ----------------------------
 
-This template is suitable for models that require batch iteration like item recommender on User-Item bipartite graph structure.
+这个模版适用于有批数据的模型（如<用户-商品>二分图关联结构上的推荐）。
 
 .. code-block:: python
 
