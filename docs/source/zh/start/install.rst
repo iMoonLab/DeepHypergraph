@@ -11,11 +11,3 @@
 .. code-block:: bash
 
     pip install dhg
-
-或者
-
-.. code-block:: bash
-
-    pip install git+https://github.com/iMoonLab/DeepHypergraph.git
-
-
