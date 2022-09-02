@@ -13,7 +13,7 @@ Dataset
 ---------------------------
 
 The Gowalla dataset (:py:class:`dhg.data.Gowalla`) is collected for user-item recommendation task. Locations are viewed as items.
-The full dataset can be found in this `websit <https://snap.stanford.edu/data/loc-gowalla.html>`_.
+The full dataset can be found in this `website <https://snap.stanford.edu/data/loc-gowalla.html>`_.
 
 Results
 ----------------
@@ -21,8 +21,8 @@ Results
 ========    ======================  ==========================
 Model       `NDCG@20` on Testing    `Recall@20` on Testing
 ========    ======================  ==========================
-NGCF        0.1307                  0.1547               
-LightGCN    0.1550                  0.1830              
+NGCF        0.1307                  0.1547
+LightGCN    0.1550                  0.1830
 ========    ======================  ==========================
 
 
@@ -130,7 +130,7 @@ Define Functions
 Main
 ^^^^^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 
@@ -189,7 +189,7 @@ Outputs
 ^^^^^^^^^^^
 
 .. code-block:: text
-    
+
     Epoch: 0, Time: 17.58267s, Loss: 0.57975
     Validation: NDCG@20 -> 0.059597898178090525
     Epoch: 1, Time: 17.35420s, Loss: 0.53948
@@ -488,7 +488,7 @@ Define Functions
 Main
 ^^^^^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </zh/tutorial/metric>` section.
 

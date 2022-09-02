@@ -14,8 +14,8 @@ Models
 Dataset
 ---------------------------
 
-The Cora dataset (:py:class:`dhg.data.Cora`) is a citation network dataset for vertex classification task. 
-More details can be found in this `websit <https://relational.fit.cvut.cz/dataset/CORA>`_.
+The Cora dataset (:py:class:`dhg.data.Cora`) is a citation network dataset for vertex classification task.
+More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CORA>`_.
 
 Results
 ----------------
@@ -84,7 +84,7 @@ Define Functions
 Main
 ^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 
@@ -444,7 +444,7 @@ Define Functions
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 
@@ -882,7 +882,7 @@ Define Functions
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 
@@ -1186,7 +1186,7 @@ Outputs
     best val: 0.80400
     test...
     final result: epoch: 175
-    {'accuracy': 0.8209999799728394, 'f1_score': 0.8113491851888245, 'f1_score -> average@micro': 0.821}    
+    {'accuracy': 0.8209999799728394, 'f1_score': 0.8113491851888245, 'f1_score -> average@micro': 0.821}
 
 HGNN+ on Cora
 ----------------
@@ -1243,7 +1243,7 @@ Define Functions
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note:: 
+.. note::
 
     More details about the metric ``Evaluator`` can be found in the :doc:`Building Evaluator </tutorial/metric>` section.
 

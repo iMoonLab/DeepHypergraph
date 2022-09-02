@@ -1,8 +1,8 @@
 Contribute to DHG
 ======================
 
-DHG is a free software; you can redistribute it and/or modify it under the terms 
-of the Apache License 2.0. We welcome contributions. 
+DHG is a free software; you can redistribute it and/or modify it under the terms
+of the Apache License 2.0. We welcome contributions.
 
 To contribute the DHG you can select
 
@@ -20,21 +20,21 @@ To contribute the DHG you can select
 12. Auto-ML enhancements.
 
 Once you have selected an option, we recommend first raise an issue or discussion on the Github.
-Before development, please first read the following sections about coding style and testing. 
-Our committors (who have write permission on the repository) will review the codes and suggest the necessary changes. 
+Please read the following sections about coding style and testing first before development.
+Our committors (who have write permission on the repository) will review the codes and suggest the necessary changes.
 The PR could be merged once the reviewers approve the changes.
 
 Coding Style
 ----------------
-For python codes, we generally follow the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ style guide. 
+For python codes, we generally follow the `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ style guide.
 The doc-string follows the `Google <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html#example-google>`_ style.
 
-DHG use the `black <https://black.readthedocs.io/en/stable/>`_ library to format the code. 
-The configure of the black formatter is in the ``pyproject.toml`` file.
+DHG use the `black <https://black.readthedocs.io/en/stable/>`_ library to format the code.
+The configuration of the black formatter is in the ``pyproject.toml`` file.
 
-Testing 
+Testing
 -------------
-The DHG's testing is located under ``tests/``. 
+The DHG's testing is located under ``tests/``.
 You can add a new test file in the ``tests/``'s sub-directory for your implemented functions.
 Run all tests with
 
@@ -64,16 +64,14 @@ Building Documentation
 2. Install the ``requirements.txt`` below the ``docs/`` directory.
 
     .. code-block:: bash
-    
+
         pip install -r docs/requirements.txt
 
 3. Build the documentation with
 
     .. code-block:: bash
-    
+
         cd docs
         make clean && make html
 
 4. Open the html file (``docs/build/html/index.html``) with the browser.
-
-

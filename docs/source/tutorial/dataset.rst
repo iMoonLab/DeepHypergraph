@@ -1,16 +1,16 @@
 Building Dataset
 ==================
 
-DHG includes a number of datasets that can be used to train and test your models. 
-In this section, we will introduce how to use DHG's :doc:`data </api/data>` module, 
+DHG includes a number of datasets that can be used to train and test your models.
+In this section, we will introduce how to use DHG's :doc:`data </api/data>` module,
 the architecture of creating a data object, and how to build your own dataset and specified pre-processing steps.
-We welcome to contribute to the dataset by submitting a pull request on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_, 
+We welcome to contribute to the dataset by submitting a pull request on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_,
 please following the :doc:`instruction </start/contribution>` guide.
 
 Usage
 -----------------------
 
-If your network is OK, you can directly use any of the datasets in :doc:`/api/data` as follows:
+You can directly use any of the datasets in :doc:`/api/data` as follows after your network is ready:
 
 .. code-block:: python
 
@@ -117,7 +117,7 @@ As soon as you load the dataset and fetch the data object ``d``, you can use the
     >>> d['test_adj_list']
     [[0, 2968, 228, 38, 422, 2769], [1, 621, 900, ...], ..., [..., 1579, 3039, 1699, 1195]]
 
-If you want to get the **un-preprocessed** items you can call the :py:meth:`raw() <dhg.data.BaseData.raw>` method:
+Call the :py:meth:`raw() <dhg.data.BaseData.raw>` method if you want to get the **un-preprocessed** items:
 
 .. code-block:: python
 
@@ -135,7 +135,7 @@ If you want to get the **un-preprocessed** items you can call the :py:meth:`raw(
             [14.],
             [13.]], dtype=float32)
 
-Defaultly, the vertex featue is pre-processed with L1 normalization in Cora dataset. 
+The vertex featue is pre-processed with L1 normalization in Cora dataset in default.
 To build a simple graph structucture for training in Cora dataset, you can refer to the :ref:`construct a simple graph from edge list <build_graph>` tutorial.
 
 Architechture
@@ -167,9 +167,9 @@ The supported loader functions can be found in :ref:`here <api_datapipe_loader>`
 The supported preprocess functions can be found in :ref:`here <api_datapipe_preprocess>`.
 
 If the ``item`` should be downloaded from a remote server, you should specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
-The ``upon`` key is a list of dictionaries, each dictionary at lease contains the ``filename`` and ``md5`` keys. 
+The ``upon`` key is a list of dictionaries, each dictionary at lease contains the ``filename`` and ``md5`` keys.
 The ``filename`` is the name of the file to be downloaded, and the ``md5`` is the md5 checksum of the file.
-Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT \ data_root \ name \ filename`` directory.
+Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT / data_root / name / filename`` directory.
 
 .. code-block:: python
 
@@ -187,11 +187,11 @@ Defaultly, remote file is stored in the ``REMOTE_DATASETS_ROOT \ data_root \ nam
 
 
 If the ``item`` relay on a local file, you should also specify the ``upon``, ``loader``, and ``preprocess`` keys in the ``_content`` dictionary.
-But the file should be put into the ``data_root \ name \ filename`` directory. 
+But the file should be put into the ``data_root / name / filename`` directory.
 Then, the :py:class:`BaseData <dhg.data.BaseData>` class will automatically check the file's md5 checksum.
 
 .. code-block:: python
-    
+
     self._content = {
         'item': {
             'upon': [
@@ -207,7 +207,7 @@ Then, the :py:class:`BaseData <dhg.data.BaseData>` class will automatically chec
 If the ``item`` is a fixed value, you can directly specify the ``value`` in the ``_content`` dictionary.
 
 .. code-block:: python
-    
+
     self._content = {
         'item': 666666,
         ...
@@ -353,4 +353,3 @@ Example of User-Item Bipartite Dataset
                     "loader": partial(load_from_txt, dtype="int", sep=" "),
                 },
             }
-

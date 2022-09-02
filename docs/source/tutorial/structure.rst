@@ -1,15 +1,15 @@
 Building Structure
 ===================================
-Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures 
-and some structure transformation functions of them like: 
+Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures
+and some structure transformation functions of them, including:
 
-- Reducing the high-order structrue to the low-order structure 
+- Reducing the high-order structrue to the low-order structure
 - Promoting the low-order structure to the high-order structure
 
 Low-Order Structures
 -----------------------
 
-Currently, DHG's low-order structures include simple graph, directed graph, and bipartite graph. 
+Currently, DHG's low-order structures include simple graph, directed graph, and bipartite graph.
 In the future, we will add more low-order structures.
 
 .. _build_graph:
@@ -17,13 +17,13 @@ In the future, we will add more low-order structures.
 Building Simple Graph
 +++++++++++++++++++++++
 
-A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edge ``(x, y)`` and ``(y, x)`` are the same edge. 
+A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edges ``(x, y)`` and ``(y, x)`` are the same edge.
 It can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`
 - Reduced from the simple hypergraph structure
-  
+
   - Star expansion :py:meth:`dhg.Graph.from_hypergraph_star`
   - Clique expansion :py:meth:`dhg.Graph.from_hypergraph_clique`
   - `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_-based expansion :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
@@ -62,7 +62,7 @@ You can find that the adjacency matrix of the simple graph is a symmetric matrix
 The :py:attr:`g.e <dhg.Graph.e>` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
 The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the both side of edges in the simple graph.
 
-.. important:: 
+.. important::
 
     In simple graph the edge is unordered pair, which means ``(0, 1)`` and ``(1, 0)`` are the same edge. Adding edges ``(0, 1)`` and ``(1, 0)`` is equivalent to adding edge ``(0, 1)`` twice.
 
@@ -77,7 +77,7 @@ The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the b
     ([(0, 1), (0, 2), (3, 4)], [1.0, 1.0, 1.0])
 
 
-.. note:: 
+.. note::
 
     If the added edges have duplicate edges, those duplicate edges will be automatically merged with specified ``merge_op``.
 
@@ -102,7 +102,7 @@ You can find the weight of the last edge is ``1.0`` and ``2.0``, if you set the 
 
 **Construct a simple graph from adjacency list with** :py:meth:`dhg.Graph.from_adj_list`
 
-The adjacency list is a list of lists, each list contains two parts. The first part is the **first element** of the list, which is the vertex index of the source vertex. 
+The adjacency list is a list of lists, each list contains two parts. The first part is the **first element** of the list, which is the vertex index of the source vertex.
 The second part is the **remaining elements** of the list, which are the vertex indices of the destination vertices.
 For example, assuming we have a graph with 5 vertices and a adjacency list as:
 
@@ -151,8 +151,8 @@ We first define a simple hypergraph as:
 
 **Star Expansion** :py:meth:`dhg.Graph.from_hypergraph_star`
 
-The star expansion will treat the hyperedges in the hypergraph as virtual vertices in the simple graph. 
-Each virtual vertex will connect to all the vertices in the hyperedge. 
+The star expansion will treat the hyperedges in the hypergraph as virtual vertices in the simple graph.
+Each virtual vertex will connect to all the vertices in the hyperedge.
 The :py:meth:`dhg.Graph.from_hypergraph_star` function will return two values.
 The first value is the reduced simple graph and the second value is a ``vertex mask`` that indicates whether the vertex is a actual vertex.
 The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and the ``False`` indicates the vertex is a virtual vertex that is transformed from a hyperedge.
@@ -179,7 +179,7 @@ The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and 
 
 **Clique Expansion** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
-Unlike the star expansion, the clique expansion will not add any virtual vertex to the simple graph. 
+Unlike the star expansion, the clique expansion will not add any virtual vertex to the simple graph.
 It is designed to reduce the hyperedges in the simple hypergraph to the edges in the simple graph.
 For each hyperedge, the clique expansion will add edges to any two vertices in the hyperedge.
 
@@ -200,7 +200,7 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
 
 **HyperGCN-based Expansion** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-In the `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ paper, the authors also describe 
+In the `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ paper, the authors also describe
 a method to reduce the hyperedges in the hypergraph to the edges in the simple graph as the following figure.
 
 .. image:: ../_static/img/hypergcn.png
@@ -254,7 +254,7 @@ It can be constructed by the following methods:
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
-.. note:: 
+.. note::
 
     The directed graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
 
@@ -329,8 +329,8 @@ Welcome to contribute!
 Building Bipartite Graph
 +++++++++++++++++++++++++++
 
-A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ is a graph that contains two types of vertices and edges between them, 
-whose partition has the parts vertex set :math:`\mathcal{U}` and vertex set :math:`\mathcal{V}`. 
+A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ is a graph that contains two types of vertices and edges between them,
+whose partition has the parts vertex set :math:`\mathcal{U}` and vertex set :math:`\mathcal{V}`.
 It can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.BiGraph`
@@ -339,7 +339,7 @@ It can be constructed by the following methods:
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
-.. note:: 
+.. note::
 
     The bipartite graph also support merging duplicated edges with ``merge_op`` parameter in construction or adding edges.
 
@@ -446,14 +446,14 @@ We first define a simple hypergraph as:
 High-Order Structures
 -----------------------
 
-Currently, DHG's high-order structures include simple hypergraph. 
-In the future, we will add more high-order structures like directed hypergraph.
+Currently, DHG's high-order structures include simple hypergraph.
+In the future, we will add more high-order structures, such as directed hypergraph.
 
 .. _build_hypergraph:
 
 Building Simple Hypergraph
 ++++++++++++++++++++++++++++
-A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge. 
+A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge.
 Each hyperedge in a hypergraph can connect more than two vertices, which can be indicated with a sub-set of total vertices.
 Simple hypergraph can be constructed by the following methods:
 
@@ -486,7 +486,7 @@ Common Methods
             [0., 1., 0.],
             [0., 0., 1.]])
 
-.. important:: 
+.. important::
 
     Each hyperedge in the hypergraph is an unordered set of vertices, which means that ``(0, 1, 2)``, ``(0, 2, 1)``, and ``(2, 1, 0)`` are all the same hyperedge.
 
@@ -511,7 +511,7 @@ Common Methods
             [0., 1., 0.],
             [0., 0., 1.]])
 
-.. note:: 
+.. note::
 
     If the added hyperedges have duplicate hyperedges, those duplicate hyperedges will be automatically merged with specified ``merge_op``.
 
@@ -564,7 +564,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 0., 0., 0., 1., 0., 0., 1., 0.],
             [0., 0., 1., 0., 0., 1., 0., 0., 1.]])
 
-.. note:: 
+.. note::
 
     Those duplicated hyperedges are merged with ``mean`` operation.
 
@@ -663,4 +663,3 @@ Prometed from Low-Order Structures
         tensor([[0., 0., 1.],
                 [1., 1., 0.],
                 [0., 1., 0.]])
-        
