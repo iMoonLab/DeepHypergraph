@@ -14,7 +14,7 @@ def test_vis_graph():
     g = graph_Gnp_fast(100, 0.015)
     # draw_graph(g, e_style="circle", v_label=list(map(str, range(g.num_v))))
     draw_graph(g, e_style='circle')
-    plt.show()
+    # plt.show()
 
 
 def test_vis_bipartite_graph():
@@ -53,4 +53,4 @@ def test_vis_hypergraph():
 
     g = hypergraph_Gnm(40, 10)
     draw_hypergraph(g, e_style="circle")
-    plt.show()
+    # plt.show()

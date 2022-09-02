@@ -26,27 +26,25 @@ def draw_graph(
     g: "Graph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    v_line_width: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    e_line_width: Optional[Union[str, list]] = None,
-    font_size: Optional[int] = None,
-    font_family: Optional[str] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
+    v_size: Union[float, list] = 1.0,
+    v_color: Union[str, list] = "r",
+    v_line_width: Union[str, list] = 1.0,
+    e_color: Union[str, list] = "gray",
+    e_fill_color: Union[str, list] = "whitesmoke",
+    e_line_width: Union[str, list] = 1.0,
+    font_size: int = 1.0,
+    font_family: str = "sans-serif",
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_center_strength: float = 1.0,
 ):
     assert e_style in ["line", "circle"], "e_style must be 'line' or 'circle'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
-    v_color, e_color, e_fill_color, font_family = default_style(
-        g.num_v, g.num_e, v_color, e_color, e_fill_color, font_family
-    )
+    v_color, e_color, e_fill_color = default_style(g.num_v, g.num_e, v_color, e_color, e_fill_color)
     v_size, v_line_width, e_line_width, font_size = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
     (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_strength(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
@@ -69,6 +67,7 @@ def draw_graph(
 
     plt.xlim((0, 1.0))
     plt.ylim((0, 1.0))
+    plt.axis("off")
 
     fig.tight_layout()
 
@@ -77,24 +76,24 @@ def draw_digraph(
     g: "DiGraph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    v_line_width: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_line_width: Optional[Union[str, list]] = None,
-    font_size: Optional[int] = None,
-    font_family: Optional[str] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
+    v_size: Union[float, list] = 1.0,
+    v_color: Union[str, list] = "r",
+    v_line_width: Union[str, list] = 1.0,
+    e_color: Union[str, list] = "gray",
+    e_line_width: Union[str, list] = 1.0,
+    font_size: int = 1.0,
+    font_family: str = "sans-serif",
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_center_strength: float = 1.0,
 ):
     assert e_style in ["line"], "e_style must be 'line'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
-    v_color, e_color, _, font_family = default_style(g.num_v, g.num_e, v_color, e_color, None, font_family)
+    v_color, e_color, _ = default_style(g.num_v, g.num_e, v_color, e_color, None)
     v_size, v_line_width, e_line_width, font_size = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
     (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_strength(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
@@ -115,6 +114,7 @@ def draw_digraph(
 
     plt.xlim((0, 1.0))
     plt.ylim((0, 1.0))
+    plt.axis("off")
 
     fig.tight_layout()
 
@@ -123,33 +123,31 @@ def draw_bigraph(
     g: "BiGraph",
     e_style: str = "line",
     u_label: Optional[List[str]] = None,
-    u_size: Optional[Union[float, list]] = None,
-    u_color: Optional[Union[str, list]] = None,
-    u_line_width: Optional[Union[str, list]] = None,
+    u_size: Union[float, list] = 1.0,
+    u_color: Union[str, list] = "m",
+    u_line_width: Union[str, list] = 1.0,
     v_label: Optional[List[str]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    v_line_width: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_line_width: Optional[Union[str, list]] = None,
-    u_font_size: Optional[int] = None,
-    v_font_size: Optional[int] = None,
-    font_family: Optional[str] = None,
-    push_u_strength: Optional[float] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_u_center_strength: Optional[float] = None,
-    pull_v_center_strength: Optional[float] = None,
+    v_size: Union[float, list] = 1.0,
+    v_color: Union[str, list] = "r",
+    v_line_width: Union[str, list] = 1.0,
+    e_color: Union[str, list] = "gray",
+    e_line_width: Union[str, list] = 1.0,
+    u_font_size: float = 1.0,
+    v_font_size: float = 1.0,
+    font_family: str = "sans-serif",
+    push_u_strength: float = 1.0,
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_u_center_strength: float = 1.0,
+    pull_v_center_strength: float = 1.0,
 ):
     assert e_style in ["line"], "e_style must be 'line'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
     num_u, num_v, e_list = g.num_u, g.num_v, deepcopy(g.e[0])
     # default configures
-    u_color, v_color, e_color, _, font_family = default_bipartite_style(
-        num_u, num_v, g.num_e, u_color, v_color, e_color, None, font_family
-    )
+    u_color, v_color, e_color, _ = default_bipartite_style(num_u, num_v, g.num_e, u_color, v_color, e_color, None)
     (u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size,) = default_bipartite_size(
         num_u, num_v, e_list, u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size,
     )
@@ -206,6 +204,8 @@ def draw_bigraph(
 
     plt.xlim((0, 1.0))
     plt.ylim((0, 1.0))
+    plt.axis("off")
+
     fig.tight_layout()
 
 
@@ -213,18 +213,18 @@ def draw_hypergraph(
     g: "Hypergraph",
     e_style: str = "circle",
     v_label: Optional[List[str]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    v_line_width: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    e_line_width: Optional[Union[str, list]] = None,
-    font_size: Optional[int] = None,
-    font_family: Optional[str] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
+    v_size: Union[float, list] = 1.0,
+    v_color: Union[str, list] = "r",
+    v_line_width: Union[str, list] = 1.0,
+    e_color: Union[str, list] = "gray",
+    e_fill_color: Union[str, list] = "whitesmoke",
+    e_line_width: Union[str, list] = 1.0,
+    font_size: float = 1.0,
+    font_family: str = "sans-serif",
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_center_strength: float = 1.0,
 ):
     assert e_style in ["circle"], "e_style must be 'circle'"
     assert g.num_e > 0, "g must be a non-empty structure"
@@ -232,9 +232,7 @@ def draw_hypergraph(
 
     num_v, e_list = g.num_v, deepcopy(g.e[0])
     # default configures
-    v_color, e_color, e_fill_color, font_family = default_hypergraph_style(
-        g.num_v, g.num_e, v_color, e_color, e_fill_color, font_family
-    )
+    v_color, e_color, e_fill_color = default_hypergraph_style(g.num_v, g.num_e, v_color, e_color, e_fill_color)
     v_size, v_line_width, e_line_width, font_size = default_size(num_v, e_list, v_size, v_line_width, e_line_width)
     (push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,) = default_hypergraph_strength(
         num_v, e_list, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength,
@@ -254,5 +252,6 @@ def draw_hypergraph(
 
     plt.xlim((0, 1.0))
     plt.ylim((0, 1.0))
+    plt.axis("off")
 
     fig.tight_layout()

@@ -6,10 +6,9 @@ import numpy as np
 def default_style(
     num_v: int,
     num_e: int,
-    v_color: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    font_family: Optional[str] = None,
+    v_color: Union[str, list] = "r",
+    e_color: Union[str, list] = "gray",
+    e_fill_color: Union[str, list] = "whitesmoke",
 ):
     _v_color = "r"
     _e_color = "gray"
@@ -19,21 +18,17 @@ def default_style(
     e_color = fill_color(e_color, _e_color, num_e)
     e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
 
-    if font_family is None:
-        font_family = "sans-serif"
-
-    return v_color, e_color, e_fill_color, font_family
+    return v_color, e_color, e_fill_color
 
 
 def default_bipartite_style(
     num_u: int,
     num_v: int,
     num_e: int,
-    u_color: Optional[Union[str, list]] = None,
-    v_color: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    font_family: Optional[str] = None,
+    u_color: Union[str, list] = "m",
+    v_color: Union[str, list] = "r",
+    e_color: Union[str, list] = "gray",
+    e_fill_color: Union[str, list] = "whitesmoke",
 ):
     _u_color = "m"
     _v_color = "r"
@@ -45,19 +40,15 @@ def default_bipartite_style(
     e_color = fill_color(e_color, _e_color, num_e)
     e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
 
-    if font_family is None:
-        font_family = "sans-serif"
-
-    return u_color, v_color, e_color, e_fill_color, font_family
+    return u_color, v_color, e_color, e_fill_color
 
 
 def default_hypergraph_style(
     num_v: int,
     num_e: int,
-    v_color: Optional[Union[str, list]] = None,
-    e_color: Optional[Union[str, list]] = None,
-    e_fill_color: Optional[Union[str, list]] = None,
-    font_family: Optional[str] = None,
+    v_color: Union[str, list] = "r",
+    e_color: Union[str, list] = "gray",
+    e_fill_color: Union[str, list] = "whitesmoke",
 ):
     _v_color = "r"
     _e_color = "gray"
@@ -67,27 +58,26 @@ def default_hypergraph_style(
     e_color = fill_color(e_color, _e_color, num_e)
     e_fill_color = fill_color(e_fill_color, _e_fill_color, num_e)
 
-    font_family = "sans-serif" if font_family is None else font_family
-
-    return v_color, e_color, e_fill_color, font_family
+    return v_color, e_color, e_fill_color
 
 
 def default_size(
     num_v: int,
     e_list: List[tuple],
-    v_size: Optional[Union[float, list]] = None,
-    v_line_width: Optional[Union[float, list]] = None,
-    e_line_width: Optional[Union[float, list]] = None,
-    font_size: Optional[int] = None,
+    v_size: Union[float, list] = 1.0,
+    v_line_width: Union[float, list] = 1.0,
+    e_line_width: Union[float, list] = 1.0,
+    font_size: int = 1.0,
 ):
     _v_size = 1 / np.sqrt(num_v + 10) * 0.1
     _v_line_width = 1 * np.exp(-num_v / 50)
-    _e_line_width = 1 * np.exp(-len(e_list) / 100)
+    _e_line_width = 1 * np.exp(-len(e_list) / 120)
+    _font_size = 20 * np.exp(-num_v / 100)
 
     v_size = fill_sizes(v_size, _v_size, num_v)
     v_line_width = fill_sizes(v_line_width, _v_line_width, num_v)
     e_line_width = fill_sizes(e_line_width, _e_line_width, len(e_list))
-    font_size = 12 if font_size is None else font_size
+    font_size = _font_size if font_size is None else font_size * _font_size
 
     return v_size, v_line_width, e_line_width, font_size
 
@@ -96,19 +86,21 @@ def default_bipartite_size(
     num_u: int,
     num_v: int,
     e_list: List[tuple],
-    u_size: Optional[Union[float, list]] = None,
-    u_line_width: Optional[Union[float, list]] = None,
-    v_size: Optional[Union[float, list]] = None,
-    v_line_width: Optional[Union[float, list]] = None,
-    e_line_width: Optional[Union[float, list]] = None,
-    u_font_size: Optional[int] = None,
-    v_font_size: Optional[int] = None,
+    u_size: Union[float, list] = 1.0,
+    u_line_width: Union[float, list] = 1.0,
+    v_size: Union[float, list] = 1.0,
+    v_line_width: Union[float, list] = 1.0,
+    e_line_width: Union[float, list] = 1.0,
+    u_font_size: int = 1.0,
+    v_font_size: int = 1.0,
 ):
     _u_size = 1 / np.sqrt(num_u + 12) * 0.08
     _u_line_width = 1 * np.exp(-num_u / 50)
     _v_size = 1 / np.sqrt(num_v + 12) * 0.08
     _v_line_width = 1 * np.exp(-num_v / 50)
-    _e_line_width = 1 * np.exp(-len(e_list) / 100)
+    _e_line_width = 1 * np.exp(-len(e_list) / 50)
+    _u_font_size = 12 * np.exp(-((num_u / num_v) ** 0.3) * (num_u + num_v) / 100)
+    _v_font_size = 12 * np.exp(-((num_v / num_u) ** 0.3) * (num_u + num_v) / 100)
 
     u_size = fill_sizes(u_size, _u_size, num_u)
     u_line_width = fill_sizes(u_line_width, _u_line_width, num_u)
@@ -116,8 +108,8 @@ def default_bipartite_size(
     v_line_width = fill_sizes(v_line_width, _v_line_width, num_v)
     e_line_width = fill_sizes(e_line_width, _e_line_width, len(e_list))
 
-    u_font_size = 12 if u_font_size is None else u_font_size
-    v_font_size = 12 if v_font_size is None else v_font_size
+    u_font_size = _u_font_size if u_font_size is None else u_font_size * _u_font_size
+    v_font_size = _v_font_size if v_font_size is None else v_font_size * _v_font_size
 
     return u_size, u_line_width, v_size, v_line_width, e_line_width, u_font_size, v_font_size
 
@@ -125,10 +117,10 @@ def default_bipartite_size(
 def default_strength(
     num_v: int,
     e_list: List[tuple],
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_center_strength: float = 1.0,
 ):
     _push_v_strength = 0.006
     _push_e_strength = 0.0
@@ -147,12 +139,12 @@ def default_bipartite_strength(
     num_u: int,
     num_v: int,
     e_list: List[tuple],
-    push_u_strength: Optional[float] = None,
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_u_center_strength: Optional[float] = None,
-    pull_v_center_strength: Optional[float] = None,
+    push_u_strength: float = 1.0,
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_u_center_strength: float = 1.0,
+    pull_v_center_strength: float = 1.0,
 ):
     _push_u_strength = 0.005
     _push_v_strength = 0.005
@@ -181,10 +173,10 @@ def default_bipartite_strength(
 def default_hypergraph_strength(
     num_v: int,
     e_list: List[tuple],
-    push_v_strength: Optional[float] = None,
-    push_e_strength: Optional[float] = None,
-    pull_e_strength: Optional[float] = None,
-    pull_center_strength: Optional[float] = None,
+    push_v_strength: float = 1.0,
+    push_e_strength: float = 1.0,
+    pull_e_strength: float = 1.0,
+    pull_center_strength: float = 1.0,
 ):
     _push_v_strength = 0.006
     _push_e_strength = 0.008
