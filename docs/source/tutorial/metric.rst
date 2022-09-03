@@ -1,6 +1,11 @@
 Building Evaluator
 ===================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Currently, DHG supports classification, recommender, and retrieval tasks. The detailed metrics are:
 
 - **Classification** ->

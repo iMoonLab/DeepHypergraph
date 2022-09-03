@@ -4,6 +4,12 @@
 二分图上的表示学习
 ==============================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 定义
 -------------------------
 `有向图 <https://en.wikipedia.org/wiki/Bipartite_graph>`_ 可以表示为 :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})`，

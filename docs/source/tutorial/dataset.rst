@@ -1,6 +1,11 @@
 Building Dataset
 ==================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 DHG includes a number of datasets that can be used to train and test your models.
 In this section, we will introduce how to use DHG's :doc:`data </api/data>` module,
 the architecture of creating a data object, and how to build your own dataset and specified pre-processing steps.

@@ -1,6 +1,11 @@
 Training Model
 ========================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Here, we provide two templates for training models.
 
 - :ref:`Training without Batch Data <turorial_training_without_batch_data>`

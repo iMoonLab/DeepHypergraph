@@ -1,6 +1,11 @@
 Building Model
 ======================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 DHG provides various spectral-based and spatial-based operations and correlation structures for building your models. 
 Here, we divide the model into four categories:
 

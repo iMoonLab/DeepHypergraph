@@ -1,6 +1,11 @@
 On Simple Graph
 ==========================================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 In the following examples, four typical graph/hypergraph neural networks are used to perform vertex classification task on the simple graph structure.
 
 Models

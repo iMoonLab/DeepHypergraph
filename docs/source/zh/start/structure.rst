@@ -1,11 +1,17 @@
 DHG内的关联结构
 ===================================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 简介
 ----------------
 **DHG** 的核心动机是将基于谱域和基于空域的操作加到每种特定关联结构中。
 当关联结构构造后，相关的拉普拉斯矩阵和具有不同聚合函数的信息传递操作可以被调用和组合来操作任意输入特征。
-此时 **DHG** 已经完成以下关联结构和操作。
+目前， **DHG** 已经完成以下关联结构和操作。
 更多关联结构和操作将来会被加入。 **我们期待您的贡献!**
 
 
@@ -15,7 +21,7 @@ DHG内的关联结构
 
     "简单图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
-    "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
+    "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *未来工作*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`"
     "二分图", ":py:class:`dhg.BiGraph`", "低阶关联", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v`
     | :math:`v \rightarrow u`"
@@ -38,7 +44,7 @@ DHG内的关联结构
     "二分图", "| 基于<用户-物品>二分图的物品推荐、
     | 基于<蛋白质-药品>二分图的关联预测等", ":doc:`样例 </zh/examples/recommender>`"
     "简单超图", "| 基于社交网络的顶点分类,
-    | 基于多模态视觉对象图的视觉对象分类等", ":doc:`样例 </examples/vertex_cls/hypergraph>`"
+    | 基于多模态视觉对象图的视觉对象分类等", ":doc:`样例 </zh/examples/vertex_cls/hypergraph>`"
     
 
 两个核心操作

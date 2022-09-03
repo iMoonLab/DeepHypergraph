@@ -1,6 +1,11 @@
 User-Item Recommender
 ====================================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 In the following examples, two typical collaborative filtering neural networks are used to perform item recommender on the User-Item bipartite graph.
 
 Models

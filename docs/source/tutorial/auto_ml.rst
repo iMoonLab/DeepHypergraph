@@ -1,6 +1,11 @@
 Training with Auto ML 
 ========================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Auto-ML is a technique that automates the process of searching/selecting the hyper-parameters 
 for building a structure, building a model, and training the model. 
 DHG's Auto-ML is based on the `Optuna <https://optuna.org/>`_ library.

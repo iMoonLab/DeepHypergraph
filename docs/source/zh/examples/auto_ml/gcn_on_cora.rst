@@ -1,6 +1,12 @@
 在Cora上使用GCN
 =================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 在如下的例子中，我们介绍在简单图节点分类任务中使用Auto-ML。
 关于如何使用 :doc:`/api/experiments` 进行自动模型调优的细节可以参考自 <:doc:`/tutorial/auto_ml`>。
 

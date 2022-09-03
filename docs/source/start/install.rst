@@ -1,13 +1,16 @@
-Install
-===========
+Installation
+===============
+
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
 
 - Python >= 3.8
 - Pytorch >=1.11
 
 
-You can follow `this <https://github.com/pytorch/pytorch#installation>`_ to install pytorch.
-
-Then, **DHG** library could be installed using ``pip`` as follows:
+You can install **DHG** library with ``pip`` as follows:
 
 .. code-block:: bash
 

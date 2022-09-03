@@ -1,6 +1,12 @@
 如何加入DHG贡献团队
 ======================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 DHG是免费软件，您可以基于Apache License 2.0协议自由分发或修改。我们期待您的贡献。
 
 您可以选择以下方式贡献DHG
@@ -40,7 +46,7 @@ DHG的测试位于 ``tests/`` 文件夹下，您可以在 ``tests/`` 内的子�
     pytest .
 
 
-使用如下命令运行单个测试
+使用如下命令运行单个文件的测试
 
 .. code-block:: bash
 

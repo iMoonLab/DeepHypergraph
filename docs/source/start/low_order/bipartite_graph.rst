@@ -4,6 +4,11 @@
 Learning on Bipartite Graph
 ==============================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Definition
 -------------------------
 A `bipartite graph <https://en.wikipedia.org/wiki/Bipartite_graph>`_ can be indicated with :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})` 

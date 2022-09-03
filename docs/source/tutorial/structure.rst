@@ -1,5 +1,11 @@
 Building Structure
 ===================================
+
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Correlation structures are the core of **DHG**. In this section, we introduce the basic construction methods of different structures
 and some structure transformation functions of them, including:
 

@@ -1,6 +1,11 @@
 Structure Generation
 =======================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 In this section, we provide examples of how to generate random correlation structures of DHG.
 
 The name of DHG's structure generator can be divided into types:

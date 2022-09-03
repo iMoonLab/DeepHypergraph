@@ -2,6 +2,11 @@
 Learning on Directed Graph
 =============================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Definition
 -----------------------
 

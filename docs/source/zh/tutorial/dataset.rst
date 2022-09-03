@@ -1,6 +1,12 @@
 构建输入数据
 ================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 DHG包含许多可用于训练模型和测试模型的数据集。
 在这一节中，将会介绍如何使用DHG的 :doc:`data </api/data>` 模块、构建数据对象的结构和构建自定义数据集的方法及指定预处理步骤。
 我们期待您在 `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_ 提交pull request贡献数据集，

@@ -2,6 +2,12 @@
 有向图上的表示学习
 =============================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 定义
 -----------------------
 `有向图 <https://en.wikipedia.org/wiki/Directed_graph>`_ 可以定义为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
@@ -14,8 +20,8 @@
 :math:`x` 为边的 **源** (也被称作 **尾**)， :math:`y` 为边的 **汇** (也被称为 **头** )。
 称这条边 **连接** :math:`x` 和 :math:`y` 并且 **关联** :math:`x` 和  :math:`y`。
 可能存在孤立顶点。
-边 :math:`(y, x)` 称为边 :math:`(x, y)` 的反向遍。
-两条或更多的边连接同样的源和汇称为 `重边 <https://en.wikipedia.org/wiki/Multiple_edges>`_ ，根据以上定义未被允许。
+边 :math:`(y, x)` 称为边 :math:`(x, y)` 的反向边。
+两条或更多的边连接同样的源和汇称为 `重边 <https://en.wikipedia.org/wiki/Multiple_edges>`_ 。有向图上不允许出现重边。
 
 
 结构构建

@@ -3,6 +3,11 @@
 Learning on Simple Hypergraph
 =================================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Definition
 -----------------
 A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.

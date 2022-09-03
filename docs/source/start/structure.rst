@@ -1,6 +1,11 @@
 Structures in DHG
 ===================================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Introduction
 ----------------
 The core motivation of **DHG** is to attach those spectral-based and spatial-based operations to each specified structure.

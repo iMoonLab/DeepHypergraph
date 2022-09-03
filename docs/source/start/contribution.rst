@@ -1,6 +1,11 @@
 Contribute to DHG
 ======================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 DHG is a free software; you can redistribute it and/or modify it under the terms
 of the Apache License 2.0. We welcome contributions.
 

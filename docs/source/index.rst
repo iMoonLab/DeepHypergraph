@@ -6,7 +6,7 @@
 DHG Documentation
 =======================
 
-.. caution:: 
+.. attention:: 
 
    We are rushing the documentation and tutorials, which will be updated twice a day!
 

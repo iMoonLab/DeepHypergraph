@@ -1,7 +1,13 @@
 自动化超参调优
 ========================
 
-Auto-ML是构建关联结构、构建模型、训练模型中自动搜素/选择超参数的技术。
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
+Auto-ML是一种自动调整/搜索最优的关联结构、模型、训练模型的超参数等、实现自动化超参调优的技术。
 DHG的Auto-ML基于 `Optuna <https://optuna.org/>`_ 库实现。
 
 .. important::

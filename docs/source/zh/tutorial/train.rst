@@ -1,6 +1,12 @@
 训练模型
 ========================
 
+.. hint:: 
+
+    - 作者:  `丰一帆 <https://fengyifan.site/>`_
+    - 翻译:  颜杰龙
+    - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
+
 在这里，我们提供两个训练模型的模版。
 
 - :ref:`没有批数据的模型的训练 <zh_turorial_training_without_batch_data>`
