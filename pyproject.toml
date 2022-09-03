@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dhg"
-version = "0.9.1"
+version = "0.9.2"
 description = "DHG is a Deep Learning Framework for Graph Neural Network and Hypergraph Neural Networks."
 authors = ["yifanfeng97 <evanfeng97@qq.com>"]
 license = "Apache-2.0"

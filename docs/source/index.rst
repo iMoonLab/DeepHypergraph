@@ -3,8 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+=======================
 DHG Documentation
 =======================
+
+.. raw:: latex
+
+   \part{English}
+   \chapter{DHG Overview}
 
 .. attention:: 
 
@@ -61,6 +67,7 @@ If you find our library useful for your research, please cite our papers:
 .. toctree::
    :maxdepth: 2
    :caption: Get Started
+   :hidden:
 
    start/install
    start/structure
@@ -72,6 +79,7 @@ If you find our library useful for your research, please cite our papers:
 .. toctree:: 
    :maxdepth: 2
    :caption: Examples
+   :hidden:
    
    examples/vertex_cls/index
    examples/recommender
@@ -80,6 +88,7 @@ If you find our library useful for your research, please cite our papers:
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
+   :hidden:
 
    tutorial/overview
    tutorial/structure
@@ -90,18 +99,32 @@ If you find our library useful for your research, please cite our papers:
    tutorial/auto_ml
    tutorial/random
 
+
+.. raw:: latex
+
+   \part{中文}
+
+
 .. toctree:: 
    :maxdepth: 3
    :caption: 中文文档
+   :hidden:
 
    zh/overview
    zh/start/index
    zh/examples/index
    zh/tutorial/index
 
+
+.. raw:: latex
+
+   \part{API Reference}
+
+
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
+   :hidden:
 
    dhg <api/dhg>
    dhg.nn <api/nn>

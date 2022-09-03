@@ -3,7 +3,7 @@ import numpy as np
 from dhg.random.graphs.graph import graph_Gnp
 
 
-from dhg.visualization.structure.draw import draw_graph, draw_bigraph, draw_digraph, draw_hypergraph
+from dhg.visualization import draw_graph, draw_bigraph, draw_digraph, draw_hypergraph
 from dhg.random import graph_Gnm, graph_Gnp, graph_Gnp_fast, bigraph_Gnm, digraph_Gnm, digraph_Gnp_fast, hypergraph_Gnm
 
 
