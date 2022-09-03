@@ -168,9 +168,9 @@ Cora数据集内的顶点特征默认使用L1归一化预处理。
 - 从本地文件加载 -> 预处理并返回
 - 直接返回
 
-可以在 :ref:`此 <api_datapipe_loader>` 找到支持的加载函数。
+可以在 :ref:`这里 <api_datapipe_loader>` 找到DHG支持的加载函数。
 
-可以在 :ref:`这里 <api_datapipe_preprocess>` 找到支持的预处理函数。
+可以在 :ref:`这里 <api_datapipe_preprocess>` 找到DHG支持的预处理函数。
 
 如果数据项 ``item`` 需要从远程服务器下载，您需要在 ``_content`` 字典中指定键 ``upon`` 、 ``loader`` 和 ``preprocess`` 。
 键 ``upon`` 为字典列表，每一个字典至少包含 键 ``filename`` 和 ``md5`` 。
