@@ -117,9 +117,7 @@ class BaseGraph:
 
     # utils
     def _format_edges(
-        self,
-        e_list: Union[List[int], List[List[int]]],
-        e_weight: Optional[Union[float, List[float]]] = None,
+        self, e_list: Union[List[int], List[List[int]]], e_weight: Optional[Union[float, List[float]]] = None,
     ) -> Tuple[List[List[int]], List[float]]:
         r"""Check the format of input e_list, and convert raw edge list into edge tensor.
 
@@ -147,9 +145,7 @@ class BaseGraph:
     # some construction functions
     @staticmethod
     @abc.abstractmethod
-    def from_adj_list(
-        num_v: int, adj_list: List[List[int]], extra_selfloop: bool = False,
-    ) -> "BaseGraph":
+    def from_adj_list(num_v: int, adj_list: List[List[int]], extra_selfloop: bool = False,) -> "BaseGraph":
         r"""Construct a graph from the adjacency list. Each line in the adjacency list has two components. The first element in each line is the source vertex index, and the rest elements are the target vertex indices that connected to the source vertex.
 
         .. note::
@@ -204,16 +200,12 @@ class BaseGraph:
         # self loop
         if src == dst:
             if src in self._raw_selfloop_dict:
-                self._raw_selfloop_dict[src] = merge_func(
-                    self._raw_selfloop_dict[src], w
-                )
+                self._raw_selfloop_dict[src] = merge_func(self._raw_selfloop_dict[src], w)
             else:
                 self._raw_selfloop_dict[src] = w
         else:
             if (src, dst) in self._raw_e_dict:
-                self._raw_e_dict[(src, dst)] = merge_func(
-                    self._raw_e_dict[(src, dst)], w
-                )
+                self._raw_e_dict[(src, dst)] = merge_func(self._raw_e_dict[(src, dst)], w)
             else:
                 self._raw_e_dict[(src, dst)] = w
         self._clear_cache()
@@ -274,9 +266,7 @@ class BaseGraph:
         The lenght of the two lists are both :math:`|\mathcal{E}|`.
         """
         if self.cache.get("e", None) is None:
-            e_list = [
-                (src_idx, dst_idx) for src_idx, dst_idx in self._raw_e_dict.keys()
-            ]
+            e_list = [(src_idx, dst_idx) for src_idx, dst_idx in self._raw_e_dict.keys()]
             w_list = list(self._raw_e_dict.values())
             e_list.extend([(v_idx, v_idx) for v_idx in self._raw_selfloop_dict.keys()])
             w_list.extend(list(self._raw_selfloop_dict.values()))
@@ -316,13 +306,24 @@ class BaseGraph:
         r"""Return the sparsed adjacency matrix of the graph. Format ``torch.sparse_coo``.
         """
 
+    # spectral-based smoothing
+    def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:
+        r"""Spectral-based smoothing.
+
+        .. math::
+            X_{smoothed} = X + \lambda \mathcal{L} X
+
+        Args:
+            ``X`` (``torch.Tensor``): The vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
+            ``L`` (``torch.Tensor``): The Laplacian matrix with ``torch.sparse_coo_tensor`` format. Size :math:`(|\mathcal{V}|, |\mathcal{V}|)`.
+            ``lamb`` (``float``): :math:`\lambda`, the strength of smoothing.
+        """
+        return X + lamb * torch.sparse.mm(L, X)
+
     # message passing functions
     @abc.abstractmethod
     def v2v(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,
     ):
         r"""Message passing from vertex to vertex on the graph structure.
 
@@ -432,10 +433,7 @@ class BaseHypergraph:
             if v in self.cache and self.cache[v] is not None:
                 self.cache[v] = self.cache[v].to(device)
             for name in self.group_names:
-                if (
-                    v in self.group_cache[name]
-                    and self.group_cache[name][v] is not None
-                ):
+                if v in self.group_cache[name] and self.group_cache[name][v] is not None:
                     self.group_cache[name][v] = self.group_cache[name][v].to(device)
         return self
 
@@ -450,11 +448,7 @@ class BaseHypergraph:
         return tuple([src_v_set, dst_v_set])
 
     def _merge_hyperedges(self, e1: dict, e2: dict, op: str = "mean"):
-        assert op in [
-            "mean",
-            "sum",
-            "max",
-        ], "Hyperedge merge operation must be one of ['mean', 'sum', 'max']"
+        assert op in ["mean", "sum", "max",], "Hyperedge merge operation must be one of ['mean', 'sum', 'max']"
         _func = {
             "mean": lambda x, y: (x + y) / 2,
             "sum": lambda x, y: x + y,
@@ -491,8 +485,7 @@ class BaseHypergraph:
 
     @staticmethod
     def _format_e_list_and_w_on_them(
-        e_list: Union[List[int], List[List[int]]],
-        w_list: Optional[Union[List[int], List[List[int]]]] = None,
+        e_list: Union[List[int], List[List[int]]], w_list: Optional[Union[List[int], List[List[int]]]] = None,
     ):
         r"""Format ``e_list`` and ``w_list``.
 
@@ -500,7 +493,9 @@ class BaseHypergraph:
             ``e_list`` (Union[List[int], List[List[int]]]): Hyperedge list.
             ``w_list`` (Optional[Union[List[int], List[List[int]]]]): Weights on connections. Defaults to ``None``.
         """
-        bad_connection_msg = "The weight on connections between vertices and hyperedges must have the same size as the hyperedges."
+        bad_connection_msg = (
+            "The weight on connections between vertices and hyperedges must have the same size as the hyperedges."
+        )
         if isinstance(e_list, tuple):
             e_list = list(e_list)
         if w_list is not None and isinstance(w_list, tuple):
@@ -530,9 +525,7 @@ class BaseHypergraph:
             ``direction`` (``str``): The direction of hyperedges can be either ``'v2e'`` or ``'e2v'``.
             ``group_name`` (``str``): The name of the group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         assert direction in ["v2e", "e2v"], "direction must be one of ['v2e', 'e2v']"
         if direction == "v2e":
             select_idx = 0
@@ -559,9 +552,7 @@ class BaseHypergraph:
             ``direction`` (``str``): The direction of hyperedges can be either ``'v2e'`` or ``'e2v'``.
             ``group_name`` (``str``): The name of the group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         assert direction in ["v2e", "e2v"], "direction must be one of ['v2e', 'e2v']"
         if direction == "v2e":
             select_idx = 0
@@ -575,10 +566,7 @@ class BaseHypergraph:
             e_idx.extend([_e_idx] * len(sub_e))
             w_list.extend(self._raw_groups[group_name][e][f"w_{direction}"])
         R = torch.sparse_coo_tensor(
-            torch.vstack([v_idx, e_idx]),
-            torch.tensor(w_list),
-            torch.Size([self.num_v, num_e]),
-            device=self.device,
+            torch.vstack([v_idx, e_idx]), torch.tensor(w_list), torch.Size([self.num_v, num_e]), device=self.device,
         ).coalesce()
         return R
 
@@ -588,9 +576,7 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         w_list = [content["w_e"] for content in self._raw_groups[group_name].values()]
         W = torch.tensor(w_list, device=self.device).view((-1, 1))
         return W
@@ -616,9 +602,7 @@ class BaseHypergraph:
     def v_weight(self, v_weight: List[float]):
         r"""Set the vertex weights of the hypergraph.
         """
-        assert (
-            len(v_weight) == self.num_v
-        ), "The length of vertex weights must be equal to the number of vertices."
+        assert len(v_weight) == self.num_v, "The length of vertex weights must be equal to the number of vertices."
         self._v_weight = v_weight
         self._clear_cache()
 
@@ -657,9 +641,7 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         return len(self._raw_groups[group_name])
 
     @property
@@ -686,9 +668,7 @@ class BaseHypergraph:
         r"""Return the vertex weight matrix of the hypergraph.
         """
         if self.cache["W_v"] is None:
-            self.cache["W_v"] = torch.tensor(
-                self.v_weight, dtype=torch.float, device=self.device
-            ).view(-1, 1)
+            self.cache["W_v"] = torch.tensor(self.v_weight, dtype=torch.float, device=self.device).view(-1, 1)
         return self.cache["W_v"]
 
     @property
@@ -706,9 +686,7 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name]["W_e"] is None:
             self.group_cache[group_name]["W_e"] = self._fetch_W_of_group(group_name)
         return self.group_cache[group_name]["W_e"]
@@ -743,13 +721,9 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("H_v2e") is None:
-            self.group_cache[group_name]["H_v2e"] = self._fetch_H_of_group(
-                "v2e", group_name
-            )
+            self.group_cache[group_name]["H_v2e"] = self._fetch_H_of_group("v2e", group_name)
         return self.group_cache[group_name]["H_v2e"]
 
     @property
@@ -767,13 +741,9 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("H_e2v") is None:
-            self.group_cache[group_name]["H_e2v"] = self._fetch_H_of_group(
-                "e2v", group_name
-            )
+            self.group_cache[group_name]["H_e2v"] = self._fetch_H_of_group("e2v", group_name)
         return self.group_cache[group_name]["H_e2v"]
 
     @property
@@ -791,13 +761,9 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("R_v2e") is None:
-            self.group_cache[group_name]["R_v2e"] = self._fetch_R_of_group(
-                "v2e", group_name
-            )
+            self.group_cache[group_name]["R_v2e"] = self._fetch_R_of_group("v2e", group_name)
         return self.group_cache[group_name]["R_v2e"]
 
     @property
@@ -815,13 +781,9 @@ class BaseHypergraph:
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("R_e2v") is None:
-            self.group_cache[group_name]["R_e2v"] = self._fetch_R_of_group(
-                "e2v", group_name
-            )
+            self.group_cache[group_name]["R_e2v"] = self._fetch_R_of_group("e2v", group_name)
         return self.group_cache[group_name]["R_e2v"]
 
     # some structure modification functions
@@ -849,39 +811,23 @@ class BaseHypergraph:
             ``merge_op`` (``str``): The merge operation for the conflicting hyperedges. The possible values are ``mean``, ``sum``, ``max``, and ``min``. Defaults to ``mean``.
             ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
         """
-        e_list_v2e, w_list_v2e = self._format_e_list_and_w_on_them(
-            e_list_v2e, w_list_v2e
-        )
-        e_list_e2v, w_list_e2v = self._format_e_list_and_w_on_them(
-            e_list_e2v, w_list_e2v
-        )
+        e_list_v2e, w_list_v2e = self._format_e_list_and_w_on_them(e_list_v2e, w_list_v2e)
+        e_list_e2v, w_list_e2v = self._format_e_list_and_w_on_them(e_list_e2v, w_list_e2v)
         if e_weight is None:
             e_weight = [1.0] * len(e_list_v2e)
-        assert len(e_list_v2e) == len(
-            e_weight
-        ), "The number of hyperedges and the number of weights are not equal."
-        assert len(e_list_v2e) == len(
-            e_list_e2v
-        ), "Hyperedges of 'v2e' and 'e2v' must have the same size."
+        assert len(e_list_v2e) == len(e_weight), "The number of hyperedges and the number of weights are not equal."
+        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
         for _idx in range(len(e_list_v2e)):
             self._add_hyperedge(
                 self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx]),
-                {
-                    "w_v2e": w_list_v2e[_idx],
-                    "w_e2v": w_list_e2v[_idx],
-                    "w_e": e_weight[_idx],
-                },
+                {"w_v2e": w_list_v2e[_idx], "w_e2v": w_list_e2v[_idx], "w_e": e_weight[_idx],},
                 merge_op,
                 group_name,
             )
         self._clear_cache(group_name)
 
     def _add_hyperedge(
-        self,
-        hyperedge_code: Tuple[List[int], List[int]],
-        content: Dict[str, Any],
-        merge_op: str,
-        group_name: str,
+        self, hyperedge_code: Tuple[List[int], List[int]], content: Dict[str, Any], merge_op: str, group_name: str,
     ):
         r"""Add a hyperedge to the specified hyperedge group.
 
@@ -916,12 +862,8 @@ class BaseHypergraph:
             ``group_name`` (``str``, optional): Remove these hyperedges from the specified hyperedge group. If not specified, the function will
                 remove those hyperedges from all hyperedge groups. Defaults to the ``None``.
         """
-        assert (
-            group_name in self.group_names
-        ), f"The specified {group_name} is not in existing hyperedge groups."
-        assert len(e_list_v2e) == len(
-            e_list_e2v
-        ), "Hyperedges of 'v2e' and 'e2v' must have the same size."
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
+        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
         e_list_v2e = self._format_e_list(e_list_v2e)
         e_list_e2v = self._format_e_list(e_list_e2v)
         if group_name is None:
@@ -935,13 +877,24 @@ class BaseHypergraph:
                 self._raw_groups[group_name].pop(e_code, None)
         self._clear_cache(group_name)
 
+    # spectral-based smoothing
+    def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:
+        r"""Spectral-based smoothing.
+
+        .. math::
+            X_{smoothed} = X + \lambda \mathcal{L} X
+
+        Args:
+            ``X`` (``torch.Tensor``): The vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
+            ``L`` (``torch.Tensor``): The Laplacian matrix with ``torch.sparse_coo_tensor`` format. Size :math:`(|\mathcal{V}|, |\mathcal{V}|)`.
+            ``lamb`` (``float``): :math:`\lambda`, the strength of smoothing.
+        """
+        return X + lamb * torch.sparse.mm(L, X)
+
     # message passing functions
     @abc.abstractmethod
     def v2e_aggregation(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        v2e_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", v2e_weight: Optional[torch.Tensor] = None,
     ):
         r"""Message aggretation step of ``vertices to hyperedges``.
 
@@ -953,11 +906,7 @@ class BaseHypergraph:
 
     @abc.abstractmethod
     def v2e_aggregation_of_group(
-        self,
-        group_name: str,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        v2e_weight: Optional[torch.Tensor] = None,
+        self, group_name: str, X: torch.Tensor, aggr: str = "mean", v2e_weight: Optional[torch.Tensor] = None,
     ):
         r"""Message aggregation step of ``vertices to hyperedges`` in specified hyperedge group.
 
@@ -978,9 +927,7 @@ class BaseHypergraph:
         """
 
     @abc.abstractmethod
-    def v2e_update_of_group(
-        self, group_name: str, X: torch.Tensor, e_weight: Optional[torch.Tensor] = None
-    ):
+    def v2e_update_of_group(self, group_name: str, X: torch.Tensor, e_weight: Optional[torch.Tensor] = None):
         r"""Message update step of ``vertices to hyperedges`` in specified hyperedge group.
 
         Args:
@@ -1027,10 +974,7 @@ class BaseHypergraph:
 
     @abc.abstractmethod
     def e2v_aggregation(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e2v_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None,
     ):
         r"""Message aggregation step of ``hyperedges to vertices``.
 
@@ -1042,11 +986,7 @@ class BaseHypergraph:
 
     @abc.abstractmethod
     def e2v_aggregation_of_group(
-        self,
-        group_name: str,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e2v_weight: Optional[torch.Tensor] = None,
+        self, group_name: str, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None,
     ):
         r"""Message aggregation step of ``hyperedges to vertices`` in specified hyperedge group.
 
@@ -1067,9 +1007,7 @@ class BaseHypergraph:
         """
 
     @abc.abstractmethod
-    def e2v_update_of_group(
-        self, group_name: str, X: torch.Tensor, v_weight: Optional[torch.Tensor] = None
-    ):
+    def e2v_update_of_group(self, group_name: str, X: torch.Tensor, v_weight: Optional[torch.Tensor] = None):
         r"""Message update step of ``hyperedges to vertices`` in specified hyperedge group.
 
         Args:

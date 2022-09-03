@@ -3,7 +3,7 @@ import torch
 import pytest
 import numpy as np
 import scipy.spatial
-from dhg import Graph, Hypergraph
+from dhg import Graph, BiGraph, Hypergraph
 from dhg.random import graph_Gnm
 
 # from dhg.random.hypergraph import hypergraph_Gnm
@@ -66,6 +66,20 @@ def test_from_graph_kHop():
     hg = Hypergraph.from_graph_kHop(g, k=2, only_kHop=True)
     assert hg.num_e == 4
     assert (1, 3) in hg.e[0]
+
+
+def test_from_bigraph():
+    g = BiGraph(3, 4, [(0, 1), (0, 2), (1, 2), (2, 3)])
+    hg = Hypergraph.from_bigraph(g, U_as_vertex=True)
+    assert hg.num_v == 3 and hg.num_e == 3
+    assert (0,) in hg.e[0]
+    assert (0, 1) in hg.e[0]
+    assert (2,) in hg.e[0]
+    hg = Hypergraph.from_bigraph(g, U_as_vertex=False)
+    assert hg.num_v == 4 and hg.num_e == 3
+    assert (1, 2) in hg.e[0]
+    assert (2,) in hg.e[0]
+    assert (3,) in hg.e[0]
 
 
 # test representation
@@ -195,6 +209,11 @@ def test_add_hyperedges_from_graph_kHop(g1):
             assert e in origin_e
         for e in gg2.e_of_group("main")[0]:
             assert e in origin_e
+
+
+def test_add_hyperedges_from_bigraph():
+    # TODO
+    pass
 
 
 def test_remove_hyperedges(g1):
@@ -378,10 +397,7 @@ def test_e2v_index_group(g1):
 
 def test_H(g1):
     assert (
-        g1.H.to_dense().cpu()
-        == torch.tensor(
-            [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]
-        )
+        g1.H.to_dense().cpu() == torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]])
     ).all()
 
 
@@ -389,35 +405,18 @@ def test_H_group(g1):
     g1.add_hyperedges([0, 4, 5], group_name="knn")
     assert (
         g1.H.to_dense().cpu()
-        == torch.tensor(
-            [
-                [1, 1, 0, 1],
-                [1, 1, 0, 0],
-                [1, 0, 1, 0],
-                [0, 0, 1, 0],
-                [0, 0, 1, 1],
-                [1, 0, 0, 1],
-            ]
-        )
+        == torch.tensor([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1],])
     ).all()
     assert (
         g1.H_of_group("main").to_dense().cpu()
-        == torch.tensor(
-            [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]
-        )
+        == torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]])
     ).all()
-    assert (
-        g1.H_of_group("knn").to_dense().cpu()
-        == torch.tensor([[1], [0], [0], [0], [1], [1]])
-    ).all()
+    assert (g1.H_of_group("knn").to_dense().cpu() == torch.tensor([[1], [0], [0], [0], [1], [1]])).all()
 
 
 def test_H_T(g1):
     assert (
-        g1.H_T.to_dense().cpu()
-        == torch.tensor(
-            [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]
-        ).t()
+        g1.H_T.to_dense().cpu() == torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]).t()
     ).all()
 
 
@@ -425,26 +424,13 @@ def test_H_T_group(g1):
     g1.add_hyperedges([0, 4, 5], group_name="knn")
     assert (
         g1.H_T.to_dense().cpu()
-        == torch.tensor(
-            [
-                [1, 1, 0, 1],
-                [1, 1, 0, 0],
-                [1, 0, 1, 0],
-                [0, 0, 1, 0],
-                [0, 0, 1, 1],
-                [1, 0, 0, 1],
-            ]
-        ).t()
+        == torch.tensor([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1],]).t()
     ).all()
     assert (
         g1.H_T_of_group("main").to_dense().cpu()
-        == torch.tensor(
-            [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]
-        ).t()
+        == torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]]).t()
     ).all()
-    assert (
-        g1.H_T_of_group("knn").to_dense().cpu() == torch.tensor([[1, 0, 0, 0, 1, 1]])
-    ).all()
+    assert (g1.H_T_of_group("knn").to_dense().cpu() == torch.tensor([[1, 0, 0, 0, 1, 1]])).all()
 
 
 def test_W_e(g2):
@@ -454,9 +440,7 @@ def test_W_e(g2):
 def test_W_e_group(g2):
     g2.add_hyperedges([0, 4, 5], group_name="knn")
     assert (g2.W_e.cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5, 1])).all()
-    assert (
-        g2.W_e_of_group("main").cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5])
-    ).all()
+    assert (g2.W_e_of_group("main").cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5])).all()
     assert (g2.W_e_of_group("knn").cpu()._values() == torch.tensor([1])).all()
 
 
@@ -473,35 +457,21 @@ def test_D_group(g1):
     g1.add_hyperedges([[0, 2], [1, 2, 3]], group_name="knn")
     assert (g1.D_v.cpu()._values() == torch.tensor([3, 3, 4, 2, 1, 1])).all()
     assert (g1.D_e.cpu()._values() == torch.tensor([4, 2, 3, 2, 3])).all()
-    assert (
-        g1.D_v_of_group("main").cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1])
-    ).all()
+    assert (g1.D_v_of_group("main").cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1])).all()
     assert (g1.D_e_of_group("main").cpu()._values() == torch.tensor([4, 2, 3])).all()
-    assert (
-        g1.D_v_of_group("knn").cpu()._values() == torch.tensor([1, 1, 2, 1, 0, 0])
-    ).all()
+    assert (g1.D_v_of_group("knn").cpu()._values() == torch.tensor([1, 1, 2, 1, 0, 0])).all()
     assert (g1.D_e_of_group("knn").cpu()._values() == torch.tensor([2, 3])).all()
 
 
 def test_D_neg(g1, g2):
     # -1
-    assert (
-        g1.D_v_neg_1.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)
-    ).all()
+    assert (g1.D_v_neg_1.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)).all()
     assert (g1.D_e_neg_1.cpu()._values() == torch.tensor([4, 2, 3]) ** (-1.0)).all()
-    assert (
-        g2.D_v_neg_1.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-1.0)
-    ).all()
-    assert (
-        g2.D_e_neg_1.cpu()._values() == torch.tensor([3, 3, 2, 3, 2]) ** (-1.0)
-    ).all()
+    assert (g2.D_v_neg_1.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-1.0)).all()
+    assert (g2.D_e_neg_1.cpu()._values() == torch.tensor([3, 3, 2, 3, 2]) ** (-1.0)).all()
     # -1/2
-    assert (
-        g1.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-0.5)
-    ).all()
-    assert (
-        g2.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-0.5)
-    ).all()
+    assert (g1.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-0.5)).all()
+    assert (g2.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-0.5)).all()
     # isolated vertex
     g3 = Hypergraph(3, [0, 1])
     assert (g3.D_v_neg_1.cpu()._values() == torch.tensor([1, 1, 0])).all()
@@ -509,40 +479,18 @@ def test_D_neg(g1, g2):
 
 def test_D_neg_group(g1):
     # -1
-    assert (
-        g1.D_v_neg_1.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)
-    ).all()
+    assert (g1.D_v_neg_1.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)).all()
     assert (g1.D_e_neg_1.cpu()._values() == torch.tensor([4, 2, 3]) ** (-1.0)).all()
     g1.add_hyperedges([[0, 2], [1, 2, 3]], group_name="knn")
-    assert (
-        g1.D_v_neg_1.cpu()._values() == torch.tensor([3, 3, 4, 2, 1, 1]) ** (-1.0)
-    ).all()
-    assert (
-        g1.D_e_neg_1.cpu()._values() == torch.tensor([4, 2, 3, 2, 3]) ** (-1.0)
-    ).all()
-    assert (
-        g1.D_v_neg_1_of_group("main").cpu()._values()
-        == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)
-    ).all()
-    assert (
-        g1.D_e_neg_1_of_group("main").cpu()._values()
-        == torch.tensor([4, 2, 3]) ** (-1.0)
-    ).all()
-    assert (
-        g1.D_v_neg_1_of_group("knn").cpu()._values()
-        == torch.tensor([1 / 1, 1 / 1, 1 / 2, 1 / 1, 0, 0])
-    ).all()
-    assert (
-        g1.D_e_neg_1_of_group("knn").cpu()._values() == torch.tensor([2, 3]) ** (-1.0)
-    ).all()
+    assert (g1.D_v_neg_1.cpu()._values() == torch.tensor([3, 3, 4, 2, 1, 1]) ** (-1.0)).all()
+    assert (g1.D_e_neg_1.cpu()._values() == torch.tensor([4, 2, 3, 2, 3]) ** (-1.0)).all()
+    assert (g1.D_v_neg_1_of_group("main").cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)).all()
+    assert (g1.D_e_neg_1_of_group("main").cpu()._values() == torch.tensor([4, 2, 3]) ** (-1.0)).all()
+    assert (g1.D_v_neg_1_of_group("knn").cpu()._values() == torch.tensor([1 / 1, 1 / 1, 1 / 2, 1 / 1, 0, 0])).all()
+    assert (g1.D_e_neg_1_of_group("knn").cpu()._values() == torch.tensor([2, 3]) ** (-1.0)).all()
     # -1/2
-    assert (
-        g1.D_v_neg_1_2.cpu()._values() == torch.tensor([3, 3, 4, 2, 1, 1]) ** (-0.5)
-    ).all()
-    assert (
-        g1.D_v_neg_1_2_of_group("main").cpu()._values()
-        == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-0.5)
-    ).all()
+    assert (g1.D_v_neg_1_2.cpu()._values() == torch.tensor([3, 3, 4, 2, 1, 1]) ** (-0.5)).all()
+    assert (g1.D_v_neg_1_2_of_group("main").cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-0.5)).all()
     assert (
         g1.D_v_neg_1_2_of_group("knn").cpu()._values()
         == torch.tensor([1 ** (-0.5), 1 ** (-0.5), 2 ** (-0.5), 1 ** (-0.5), 0, 0])
@@ -604,6 +552,11 @@ def test_L_HGNN_group(g1):
     assert (L_HGNN == g1.L_HGNN_of_group("knn").to_dense().cpu()).all()
 
 
+def test_smoothing():
+    # TODO
+    pass
+
+
 def test_L_sym(g1):
     # TODO
     pass
@@ -625,10 +578,7 @@ def test_L_rw_group(g1):
 
 
 def test_smoothing_with_HGNN(g1):
-    H = torch.tensor(
-        [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]],
-        dtype=torch.float32,
-    )
+    H = torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]], dtype=torch.float32,)
     D_v_inv_1_2 = H.sum(1).view(-1) ** (-0.5)
     D_v_inv_1_2[torch.isinf(D_v_inv_1_2)] = 0
     D_v_inv_1_2 = torch.diag(D_v_inv_1_2)
@@ -647,10 +597,7 @@ def test_smoothing_with_HGNN(g1):
 
 
 def test_smoothing_with_HGNN_group(g1):
-    H = torch.tensor(
-        [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]],
-        dtype=torch.float32,
-    )
+    H = torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]], dtype=torch.float32,)
     D_v_inv_1_2 = H.sum(1).view(-1) ** (-0.5)
     D_v_inv_1_2[torch.isinf(D_v_inv_1_2)] = 0
     D_v_inv_1_2 = torch.diag(D_v_inv_1_2)
@@ -669,10 +616,7 @@ def test_smoothing_with_HGNN_group(g1):
 
 
 def test_v2e_message_passing(g1):
-    H = torch.tensor(
-        [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]],
-        dtype=torch.float32,
-    )
+    H = torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]], dtype=torch.float32,)
 
     x = torch.rand(H.shape[0], 8)
 
@@ -690,10 +634,7 @@ def test_v2e_message_passing(g1):
 
 
 def test_e2v_message_passing(g1):
-    H = torch.tensor(
-        [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]],
-        dtype=torch.float32,
-    )
+    H = torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]], dtype=torch.float32,)
 
     x = torch.rand(3, 8)
 
@@ -711,10 +652,7 @@ def test_e2v_message_passing(g1):
 
 
 def test_v2v_message_passing(g1):
-    H = torch.tensor(
-        [[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]],
-        dtype=torch.float32,
-    )
+    H = torch.tensor([[1, 1, 0], [1, 1, 0], [1, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0]], dtype=torch.float32,)
 
     x = torch.rand(6, 8)
 

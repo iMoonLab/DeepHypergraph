@@ -1,19 +1,15 @@
-import torch.nn.functional as F
-import torch.optim as optim
-import torch
+import time
+from copy import deepcopy
 
-# import sys
-# sys.path.append('.')
-import dhg
+import torch
+import torch.optim as optim
+import torch.nn.functional as F
+
 from dhg import Graph, Hypergraph
 from dhg.data import Cora, Pubmed, Citeseer
 from dhg.models import HGNN, HGNNP, HNHN
+from dhg.random import set_seed
 from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
-from copy import deepcopy
-import time
-import os
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def train(net, X, G, lbls, train_idx, optimizer, epoch):
@@ -43,40 +39,39 @@ def infer(net, X, G, lbls, idx, test=False):
 
 
 if __name__ == "__main__":
-    # dhg.random.set_seed(2022)
+    set_seed(2022)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
     data = Cora()
     # data = Pubmed()
     # data = Citeseer()
-    x = data["features"]
-    lbl = data["labels"]
-    num_v = data["num_vertices"]
-    G = Graph(num_v, data["edge_list"])
-    HG = Hypergraph.from_graph(G)
-    HG.add_hyperedges_from_graph_kHop(G, k=1)
+    X, lbl = data["features"], data["labels"]
+    G = Graph(data["num_vertices"], data["edge_list"])
+    HG = Hypergraph.from_graph_kHop(G, k=1)
+    # HG.add_hyperedges_from_graph_kHop(G, k=1)
     # HG = Hypergraph.from_graph_kHop(G, k=1)
     # HG.add_hyperedges_from_graph_kHop(G, k=2, only_kHop=True)
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
-    net = HGNNP(data["dim_features"], 16, data["num_classes"])
+    net = HGNN(data["dim_features"], 16, data["num_classes"])
     # net = HNHN(data["dim_features"], 16, data["num_classes"], use_bn=True)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
 
-    x, lbl = x.cuda(), lbl.cuda()
-    HG.to(x.device)
-    net = net.cuda()
+    X, lbl = X.to(device), lbl.to(device)
+    HG = HG.to(X.device)
+    net = net.to(device)
 
     best_state = None
     best_epoch, best_val = 0, 0
-    for epoch in range(300):
+    for epoch in range(200):
         # train
-        train(net, x, HG, lbl, train_mask, optimizer, epoch)
+        train(net, X, HG, lbl, train_mask, optimizer, epoch)
         # validation
         if epoch % 1 == 0:
             with torch.no_grad():
-                val_res = infer(net, x, HG, lbl, val_mask)
+                val_res = infer(net, X, HG, lbl, val_mask)
             if val_res > best_val:
                 print(f"update best: {val_res:.5f}")
                 best_epoch = epoch
@@ -87,6 +82,6 @@ if __name__ == "__main__":
     # test
     print("test...")
     net.load_state_dict(best_state)
-    res = infer(net, x, HG, lbl, test_mask, test=True)
+    res = infer(net, X, HG, lbl, test_mask, test=True)
     print(f"final result: epoch: {best_epoch}")
     print(res)

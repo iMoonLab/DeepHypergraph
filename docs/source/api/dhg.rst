@@ -13,7 +13,6 @@ Base Class
 +++++++++++++++++
 
 .. autoclass:: dhg.BaseGraph
-    :noindex:
     :members:
 
 .. _dhg_graph_class:
@@ -22,7 +21,6 @@ Simple Graph
 +++++++++++++++++
 
 .. autoclass:: dhg.Graph
-    :noindex:
     :show-inheritance:
     :members:
 
@@ -32,7 +30,6 @@ Directed Graph
 +++++++++++++++++
 
 .. autoclass:: dhg.DiGraph
-    :noindex:
     :show-inheritance:
     :members:
 
@@ -42,7 +39,6 @@ Bipartite Graph
 +++++++++++++++++
 
 .. autoclass:: dhg.BiGraph
-    :noindex:
     :show-inheritance:
     :members:
 
@@ -53,7 +49,6 @@ Base Class
 +++++++++++++++++
 
 .. autoclass:: dhg.BaseHypergraph
-    :noindex:
     :members:
 
 .. _dhg_hypergraph_class:
@@ -62,6 +57,5 @@ Simple Hypergraph
 +++++++++++++++++
 
 .. autoclass:: dhg.Hypergraph
-    :noindex:
     :show-inheritance:
     :members:

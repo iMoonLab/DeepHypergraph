@@ -52,7 +52,7 @@ def precision(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Precision score for the recommender task.
+    r"""Calculate the Precision score for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -84,7 +84,7 @@ def recall(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Recall score for the recommender task.
+    r"""Calculate the Recall score for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -112,7 +112,7 @@ def recall(
 
 
 def _dcg(matrix: torch.Tensor) -> torch.Tensor:
-    r"""Compute the Discounted Cumulative Gain (DCG).
+    r"""Calculate the Discounted Cumulative Gain (DCG).
     
     Args:
         ``sequence`` (``torch.Tensor``): A 2-D tensor. Size :math:`(N, K)`
@@ -131,7 +131,7 @@ def ndcg(
     k: Optional[int] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
-    r"""Compute the Normalized Discounted Cumulative Gain (NDCG) for the recommender task.
+    r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the recommender task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
@@ -171,6 +171,34 @@ class UserItemRecommenderEvaluator(BaseEvaluator):
     Args:
         ``metric_configs`` (``List[Union[str, Dict[str, dict]]]``): The metric configurations. The key is the metric name and the value is the metric parameters.
         ``validate_index`` (``int``): The specified metric index used for validation. Defaults to ``0``.
+
+    Examples:
+        >>> import torch
+        >>> import dhg.metrics as dm
+        >>> evaluator = dm.UserItemRecommenderEvaluator(
+                [
+                    "precision",
+                    "recall",
+                    "ndcg",
+                ],
+                0
+            )
+        >>> y_true = torch.tensor([0, 1, 0, 0, 1, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> evaluator.validate_epoch_res()
+        0.5
+        >>> y_true = torch.tensor([0, 1, 1, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([1, 1, 0, 0, 1, 0])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> evaluator.test_epoch_res()
+        {'precision': 0.5833333432674408, 'recall': 1.0, 'ndcg': 0.8878978490829468}
     """
 
     def __init__(

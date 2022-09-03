@@ -1,87 +1,79 @@
 Structures in DHG
 ===================================
 
+.. hint:: 
+
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
+
 Introduction
 ----------------
-The core motivation of **DHG** is to attach those spectral-based and spatial-based operations to each specified structure. 
-When a structure is created, those related Laplacian Matrices and message passing operations with different aggregation functions can be called and combined to manipulate any input features. 
+The core motivation of **DHG** is to attach those spectral-based and spatial-based operations to each specified structure.
+When a structure is created, those related Laplacian Matrices and message passing operations with different aggregation functions can be called and combined to manipulate any input features.
 Currently, the **DHG** has implemented the following structures and attached operations. More structures and operations will be added in the future. **Welcome to contribute!**
 
 
 .. csv-table:: Summary of Supported Structures and Attached Operations
-    :header: "Structure", "Class Name", "Type", "Spectral-Based Operations", "Spatial-Based Operations", "Aggregations"
-    :widths: 2 2 2 3 3 2
+    :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations"
+    :widths: 2 2 2 3 3
 
-    "| Simple
-    | Graphs", ":ref:`dhg.Graph <dhg_graph_class>`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
-    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
-    "| Directed
-    | Graphs", ":ref:`dhg.Digraph <dhg_digraph_class>`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
-    | :math:`v_{dst} \rightarrow v_{src}`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
-    "| Bipartite
-    | Graphs", ":ref:`dhg.Bigraph <dhg_bigraph_class>`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v` 
-    | :math:`v \rightarrow u`", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
-    "| Simple
-    | Hypergraphs", ":ref:`dhg.Hypergraph <dhg_hypergraph_class>`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}` 
+    "| Simple Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
+    | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
+    "| Directed Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
+    | :math:`v_{dst} \rightarrow v_{src}`"
+    "| Bipartite Graph", ":py:class:`dhg.BiGraph`", "Low-Order", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v`
+    | :math:`v \rightarrow u`"
+    "| Simple Hypergraph", ":py:class:`dhg.Hypergraph`", "High-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (specified group)
     | :math:`e \rightarrow v`
-    | :math:`e \rightarrow v` (specified group)", "| ``mean``,
-    | ``sum``,
-    | ``softmax_then_sum``"
+    | :math:`e \rightarrow v` (specified group)"
 
 
 Applications
 -----------------
 
-.. csv-table:: Summary of Applications of Differnet Structures
+.. csv-table:: Summary of Applications of Different Structures
     :header: Structure, "Applications", "Example Code"
-    :widths: 2, 6, 4
+    :widths: 2, 6, 3
 
-    "Simple Graphs", "Paper Classification of Citation Networks, *etc.*", "aaaaaaaaaa"
-    "Directed Graphs", "Point Clouds Classification, *etc.*", "aaaaaaaaa"
-    "Bipartite Graphs", "| Item Recommender of User-Item Graphs,
-    | Correlation Prediction of Potein-Drug Graphs, *etc.*", "aaaaaaaaaaa"
-    "Simple Hypergraphs", "| Vertex Classification of Social Networks, 
-    | Visual Object Classification on Multi-Modal Visual Object Graphs, *etc.*", "aaaaaaaaaa"
-    
+    "Simple Graph", "Paper Classification of Citation Networks, *etc.*", ":doc:`example </examples/vertex_cls/graph>`"
+    "Directed Graph", "Point Clouds Classification, *etc.*", "\-"
+    "Bipartite Graph", "| Item Recommender of User-Item Graph,
+    | Correlation Prediction of Potein-Drug Graph, *etc.*", ":doc:`example </examples/recommender>`"
+    "Simple Hypergraph", "| Vertex Classification of Social Networks,
+    | Visual Object Classification on Multi-Modal Visual Object Graph, *etc.*", ":doc:`example </examples/vertex_cls/hypergraph>`"
+
 
 Two Core Operations
 ----------------------------
 The most learning on structures (graphs, hypergraphs, etc.) can be divided into two categories: spectral-based convolution and spatial-based message passing.
-The spectral-based convolution methods, like typical GCN and HGNN, learn a Laplacian Matrix for a given structure, and perform ``vertex feature smoothing`` with the generated 
-Laplacian Matrix to embed to low-order and high-order structures to vertex features. The spatial-based message passing methods, like typical GraphSAGE, GAT, and HGNN :sup:`+`, perform ``vertex to vertex``, ``vertex to hyperedge``, ``hyperedge to vertex``, 
-and ``vertex set to vertex set`` message passing to embedd the low-order and high-order structures to vertex features. The learned vertex features can also be pooled to generate the unified structure feature.
-Finally, the learned vertex features or structure features can be fed into many down-stream tasks like classification, retrieval, regression, and link prediction, 
-and applications like paper classification, movie recommender, drug exploition, *etc.*
+The spectral-based convolution methods, like typical `GCN <http://arxiv.org/pdf/1609.02907>`_ and `HGNN <http://arxiv.org/pdf/1809.09401.pdf>`_ , learn a Laplacian Matrix for a given structure, and perform ``vertex feature smoothing`` with the generated
+Laplacian Matrix to embed low-order and high-order structures to vertex features. The spatial-based message passing methods, like typical `GraphSAGE <https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf>`_, `GAT <https://arxiv.org/pdf/1710.10903>`_, and `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_, perform ``vertex to vertex``, ``vertex to hyperedge``, ``hyperedge to vertex``,
+and ``vertex set to vertex set`` message passing to embed the low-order and high-order structures to vertex features. The learned vertex features can also be pooled to generate the unified structure feature.
+Finally, the learned vertex features or structure features can be fed into many down-stream tasks, such as classification, retrieval, regression, and link prediction,
+and applications including paper classification, movie recommender, drug exploition, *etc.*
 
 The Spectral-Based Operations
 +++++++++++++++++++++++++++++++
-The core of spectral-based convolution is the smoothing matrix like Laplacian Matrix. Some common smoothing matrices are provided in each structure. 
-For example, the Laplacian Matrix proposed in `GCN <_blank>`_ can be called in the simple graph structure and the bipartite graph structure, and the Laplacian Matrix proposed in 
-`HGNN <_blank>`_ can be called in the simple hypergraph structure.
+The core of the spectral-based convolution is the smoothing matrix, *i.e.*, Laplacian Matrix. Some common smoothing matrices are provided in each structure.
+For example, the Laplacian Matrix proposed in `GCN <http://arxiv.org/pdf/1609.02907>`_ can be called in the simple graph structure and the bipartite graph structure, and the Laplacian Matrix proposed in
+`HGNN <http://arxiv.org/pdf/1809.09401.pdf>`_ can be called in the simple hypergraph structure.
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
+In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges.
 We can fetch the Laplacian Matrix of the specified simple graph structure with the ``g.L_GCN`` inside attribute.
-The size of the generated Laplacian Matrix is :math:`5 \times 5`. 
+The size of the generated Laplacian Matrix is :math:`5 \times 5`.
 Then, for any input vertex features you can smoothing these with the specified simple graph ``g`` with function ``g.smoothing_with_GCN()``.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.graph_Gnm(5, 8)
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
-        >>> g 
+        >>> g
         Simple Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -110,22 +102,21 @@ Then, for any input vertex features you can smoothing these with the specified s
                 [0.3885, 0.6289]])
 
 In the following example, we randomly generate a **bipartite graph** structure with 3 vertices in set :math:`\mathcal{U}`, 5 vertices in set :math:`\mathcal{V}`, and 8 edges.
-We can fetch the Laplacian Matrix of the specified bipartite graph structure with ``g.L_GCN`` inside attribute. 
-The size of the generated Laplacian Matrix is :math:`8 \times 8`. 
+We can fetch the Laplacian Matrix of the specified bipartite graph structure with ``g.L_GCN`` inside attribute.
+The size of the generated Laplacian Matrix is :math:`8 \times 8`.
 Then, for any input vertex features you can smoothing these with the specified bipartite graph ``g`` with function ``g.smoothing_with_GCN()``. More details can refer to :ref:`here <start_learning_on_bipartite_graph>`.
 
-    .. note:: 
+    .. note::
 
-        The GCN's Laplacian Matrix of bipartite graphs is achieve by concate the bipartite adjacency matrix :math:`\mathbf{B}` with size :math:`|\mathcal{U}| \times |\mathcal{V}|` to 
+        The GCN's Laplacian Matrix of bipartite graph is achieve by concate the bipartite adjacency matrix :math:`\mathbf{B}` with size :math:`|\mathcal{U}| \times |\mathcal{V}|` to
         the big adjacency matrix :math:`\mathbf{A}` with size :math:`||\mathcal{U}| + |\mathcal{V}|| \times ||\mathcal{U}| + |\mathcal{V}||`.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.bigraph_Gnm(3, 5, 8)
-        >>> # Print edges in the bipartite graph structure 
+        >>> # Print edges in the bipartite graph structure
         >>> g.e[0]
         [(2, 4), (0, 4), (0, 3), (2, 0), (1, 4), (2, 3), (2, 2), (1, 3)]
         >>> # Print the inside Laplacian Matrix by GCN on the bipartite graph structure
@@ -139,8 +130,8 @@ Then, for any input vertex features you can smoothing these with the specified b
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.2500, 0.0000],
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.0000, 0.2500]])
 
-In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges. 
-We can fetch the Laplacian Matrix of the specified simple hypergraph structure with ``hg.L_HGNN`` inside attribute. 
+In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges.
+We can fetch the Laplacian Matrix of the specified simple hypergraph structure with ``hg.L_HGNN`` inside attribute.
 The size of the generated Laplacian Matrix is :math:`5 \times 5`.
 Then, for any input vertex features you can smoothing these with the specified simple hypergraph ``hg`` with function ``hg.smoothing_with_HGNN()``. More details can refer to :ref:`here <start_learning_on_simple_hypergraph>`.
 
@@ -148,9 +139,8 @@ Then, for any input vertex features you can smoothing these with the specified s
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> hg = dhg.random.hypergraph_Gnm(5, 4)
-        >>> # Print hyperedges in the simple hypergraph structure 
+        >>> # Print hyperedges in the simple hypergraph structure
         >>> hg.e[0]
         [(2, 3), (0, 2, 4), (2, 3, 4), (1, 2, 3, 4)]
         >>> # Print the inside Laplacian Matrix by HGNN on the simple hypergraph structure
@@ -162,27 +152,26 @@ Then, for any input vertex features you can smoothing these with the specified s
                 [0.1925, 0.1443, 0.2646, 0.1944, 0.3056]])
 
 
-The Spatial-Based Operations 
+The Spatial-Based Operations
 +++++++++++++++++++++++++++++++
-The core of the spatial-based operation is message passing from ``source domain`` to ``target domain`` and message aggregation with different aggregation function. 
-In **DHG**, the ``soure domain`` and ``target domain`` can be anyone of ``a vertex``, ``a vertex in specified vertex set``, ``a hyperedge``, and ``a vertex set``. 
-The message aggregation function can be ``mean``, ``softmax``, and ``softmax_then_sum``. 
-Thus, unlike `PyG <https://www.pyg.org/>`_ and `DGL <https://www.dgl.ai/>`_ that can only pass messages from ``a vertex`` to ``another vertex or edge``, 
-the **DHG** provides more types of message passing functions on both low-order structure and high-order structure. 
+The core of the spatial-based operation is message passing from ``source domain`` to ``target domain`` and message aggregation with different aggregation function.
+In **DHG**, the ``soure domain`` and ``target domain`` can be anyone of ``a vertex``, ``a vertex in specified vertex set``, ``a hyperedge``, and ``a vertex set``.
+The message aggregation function can be ``mean``, ``softmax``, and ``softmax_then_sum``.
+Thus, unlike `PyG <https://www.pyg.org/>`_ and `DGL <https://www.dgl.ai/>`_ that can only pass messages from ``a vertex`` to ``another vertex or edge``,
+the **DHG** provides more types of message passing functions on both low-order structure and high-order structure.
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
+In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges.
 The simple graph structure provides propagate message from ``a vertex`` to ``another vertex``, and the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.graph_Gnm(5, 8)
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
-        >>> g 
+        >>> g
         Simple Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -226,7 +215,7 @@ The simple graph structure provides propagate message from ``a vertex`` to ``ano
 
 
 In the following example, we randomly generate a **bipartite graph** structure with 3 vertices in set :math:`\mathcal{U}`, 5 vertices in set :math:`\mathcal{V}`, and 8 edges.
-The bipartite graph structure provides message passing from ``a vertex in a specified vertex set`` to ``another vertex in another specified vertex set``, and 
+The bipartite graph structure provides message passing from ``a vertex in a specified vertex set`` to ``another vertex in another specified vertex set``, and
 the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
 The detailed spatial-based operation on bipartite graph can refer to :ref:`here <start_learning_on_bipartite_graph>`.
 
@@ -239,7 +228,7 @@ The detailed spatial-based operation on bipartite graph can refer to :ref:`here 
         >>> g = dhg.random.bigraph_Gnm(3, 5, 8)
         >>> # Generate feature matrix for vertices in set U and set V, respectively.
         >>> X_u, X_v = torch.rand(3, 2), torch.rand(5, 2)
-        >>> g 
+        >>> g
         Bipartite Graph(num_u=3, num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -271,22 +260,21 @@ The detailed spatial-based operation on bipartite graph can refer to :ref:`here 
                 [0.3936, 0.5542]])
 
 
-In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges. 
-The simple hypergraph structure provides message passing from ``a vertex`` to ``another vertex``, from ``a vertex set`` to ``a hyperedge``, 
-from ``a hyperedge`` to ``a vertex set``, and from ``a vertex set`` to ``another vertex set``. 
+In the following example, we randomly generate a **simple hypergraph** structure with 5 vertices and 4 hyperedges.
+The simple hypergraph structure provides message passing from ``a vertex`` to ``another vertex``, from ``a vertex set`` to ``a hyperedge``,
+from ``a hyperedge`` to ``a vertex set``, and from ``a vertex set`` to ``another vertex set``.
 The supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
 The detailed spatial-based operation on simple hypergraph can refer to :ref:`here <start_learning_on_simple_hypergraph>`.
- 
+
     .. code:: python
-    
+
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.hypergraph_Gnm(5, 4)
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the hypergraph and feature
-        >>> g 
+        >>> g
         Simple Hypergraph(num_v=5, num_e=4)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -321,24 +309,23 @@ What Can be Done with the Two Operations?
 -------------------------------------------
 
 
-Add Eary Self-loop and Late Self-Loop
+Add Early Self-loop and Late Self-Loop
 ++++++++++++++++++++++++++++++++++++++++++
 
-Self-loop is a important structure for feature learning especially for the simple graph structure. 
+Self-loop is a important structure for feature learning especially for the simple graph structure.
 In the following examples, we introduce how to add early self-loop and late self-loop for spatial-based learning on the simple graph structure.
+We use :math:`\mathbf{A} \in \mathbb{R}^{N \times N}` to indicate the adjacency matrix of a given simple graph and :math:`\mathbf{X} \in \mathbb{R}^{N \times C}` to indicate the features of vertices in the given simple graph.
 
-Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.graph_Gnm(5, 8)
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
-        >>> g 
+        >>> g
         Simple Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -351,11 +338,21 @@ Add mathematical definition aaaaaaaaaaaaaaaaaaaaaaaaa
                 [0.7933, 0.7811],
                 [0.4643, 0.6329]])
 
-Message Passing with Early Self-Loop 
+Message Passing with Early Self-Loop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    
+
+    .. math::
+
+        \left\{
+        \begin{align}
+        \mathbf{X}^\prime &= \hat{\mathbf{A}} \mathbf{X}\\
+        \hat{\mathbf{A}} &= \mathbf{A} + \mathbf{I}
+        \end{align}
+        \right.
+
+
     .. code:: python
-        
+
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -382,8 +379,13 @@ Message Passing with Early Self-Loop
 Message Passing with Late Self-Loop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+    .. math::
+
+        \mathbf{X}^\prime = \mathbf{A} \mathbf{X} + \mathbf{X}
+
+
     .. code:: python
-        
+
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -407,19 +409,18 @@ Message Passing with Late Self-Loop
 Fuse Features Learned from the Spectral and Spatial Domain
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges. 
+In the following example, we randomly generate a **simple graph** structure with 5 vertices and 8 edges.
 Then, we attemp to fuse the features that learned from the different methods but the same structure ``g``.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> g = dhg.random.graph_Gnm(5, 8)
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
-        >>> g 
+        >>> g
         Simple Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
@@ -444,15 +445,14 @@ Then, we attemp to fuse the features that learned from the different methods but
 Fuse Features Learned from different Structures
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In the following example, we construct two different structures including simple graph structure and simple hypergraph structure on the same vertex set. 
-Then, two structures' message passing functions are adopted to generate vertex features learned from different structure, 
+In the following example, we construct two different structures including simple graph structure and simple hypergraph structure on the same vertex set.
+Then, two structures' message passing functions are adopted to generate vertex features learned from different structure,
 and the final hybrid vertex features can be generated by the combination of them.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> dhg.random.set_seed(2022)
         >>> # Generate the vertex features
         >>> X = torch.rand(5, 2)
         >>> # Generate the low-order structure on the vertex set

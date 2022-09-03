@@ -1,2 +1,0 @@
-Hypergraph Visualization
-=============================

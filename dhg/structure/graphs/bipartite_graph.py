@@ -118,9 +118,7 @@ class BiGraph(BaseGraph):
 
     # utils
     def _format_edges(
-        self,
-        e_list: Union[List[int], List[List[int]]],
-        e_weight: Optional[Union[float, List[float]]] = None,
+        self, e_list: Union[List[int], List[List[int]]], e_weight: Optional[Union[float, List[float]]] = None,
     ) -> Tuple[List[List[int]], List[float]]:
         r"""Check the format of input e_list, and convert raw edge list into edge list.
 
@@ -150,10 +148,7 @@ class BiGraph(BaseGraph):
     # some construction functions
     @staticmethod
     def from_adj_list(
-        num_u: int,
-        num_v: int,
-        adj_list: List[List[int]],
-        device: torch.device = torch.device("cpu"),
+        num_u: int, num_v: int, adj_list: List[List[int]], device: torch.device = torch.device("cpu"),
     ) -> "BiGraph":
         r"""Construct a bipartite graph from the adjacency list. Each line in the adjacency list has two components. The first element in each line is the ``u_idx``, and the rest elements are the ``v_idx`` that connected to the ``u_idx``.
 
@@ -190,36 +185,22 @@ class BiGraph(BaseGraph):
             ``weighted`` (``bool``): If set to ``True``, the bipartite graph will be constructed with weighted edges. The weight of each edge is assigned by the weight of the associated hyperedge in the original hypergraph. Defaults to ``False``.
             ``device`` (``torch.device``): The device to store the bipartite graph. Defaults to ``torch.device('cpu')``.
         """
-        assert isinstance(
-            hypergraph, Hypergraph
-        ), "The input `hypergraph` should be a instance of `Hypergraph` class."
+        assert isinstance(hypergraph, Hypergraph), "The input `hypergraph` should be a instance of `Hypergraph` class."
         raw_e_list, raw_e_weight = deepcopy(hypergraph.e)
         e_weight = None
         if vertex_as_U:
             num_u, num_v = hypergraph.num_v, hypergraph.num_e
-            e_list = [
-                (v_idx, e_idx)
-                for e_idx, v_list in enumerate(raw_e_list)
-                for v_idx in v_list
-            ]
+            e_list = [(v_idx, e_idx) for e_idx, v_list in enumerate(raw_e_list) for v_idx in v_list]
             if weighted:
                 e_weight = [
-                    e_weight
-                    for e_idx, e_weight in enumerate(raw_e_weight)
-                    for _ in range(len(raw_e_list[e_idx]))
+                    e_weight for e_idx, e_weight in enumerate(raw_e_weight) for _ in range(len(raw_e_list[e_idx]))
                 ]
         else:
             num_u, num_v = hypergraph.num_e, hypergraph.num_v
-            e_list = [
-                (e_idx, v_idx)
-                for e_idx, v_list in enumerate(raw_e_list)
-                for v_idx in v_list
-            ]
+            e_list = [(e_idx, v_idx) for e_idx, v_list in enumerate(raw_e_list) for v_idx in v_list]
             if weighted:
                 e_weight = [
-                    e_weight
-                    for e_idx, e_weight in enumerate(raw_e_weight)
-                    for _ in range(len(raw_e_list[e_idx]))
+                    e_weight for e_idx, e_weight in enumerate(raw_e_weight) for _ in range(len(raw_e_list[e_idx]))
                 ]
         _g = BiGraph(num_u, num_v, e_list, e_weight, device=device)
         return _g
@@ -519,14 +500,16 @@ class BiGraph(BaseGraph):
 
     # ==============================================================================
     # spectral-based convolution/smoothing
+
+    def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:
+        return super().smoothing(X, L, lamb)
+
     @property
     def L_GCN(self) -> torch.Tensor:
         r"""Return the GCN Laplacian matrix of the bipartite graph with ``torch.Tensor`` format. Size :math:`(|\mathcal{U}| + |\mathcal{V}|, |\mathcal{U}| + |\mathcal{V}|)`.
         """
         if self.cache.get("L_GCN", None) is None:
-            selfloop_indices = (
-                torch.arange(0, self.num_u + self.num_v).view(1, -1).repeat(2, 1)
-            )
+            selfloop_indices = torch.arange(0, self.num_u + self.num_v).view(1, -1).repeat(2, 1)
             selfloop_values = torch.ones(self.num_u + self.num_v).view(-1)
             A_ = torch.sparse_coo_tensor(
                 indices=torch.hstack([self.A._indices().cpu(), selfloop_indices]),
@@ -543,9 +526,7 @@ class BiGraph(BaseGraph):
                 device=self.device,
             ).coalesce()
             _mm = torch.sparse.mm
-            self.cache["L_GCN"] = (
-                _mm(D_v_neg_1_2, _mm(A_, D_v_neg_1_2)).clone().coalesce()
-            )
+            self.cache["L_GCN"] = _mm(D_v_neg_1_2, _mm(A_, D_v_neg_1_2)).clone().coalesce()
         return self.cache["L_GCN"]
 
     def smoothing_with_GCN(self, X: torch.Tensor):
@@ -561,12 +542,7 @@ class BiGraph(BaseGraph):
     # ==============================================================================
     # spatial-based convolution/message-passing functions
     # general message passing
-    def u2v(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e_weight: Optional[torch.Tensor] = None,
-    ) -> torch.Tensor:
+    def u2v(self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,) -> torch.Tensor:
         r"""Message passing from vertices in set :math:`\mathcal{U}` to vertices in set :math:`\mathcal{V}` on the bipartite graph structure.
 
         Args:
@@ -574,11 +550,7 @@ class BiGraph(BaseGraph):
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
         """
-        assert aggr in [
-            "mean",
-            "sum",
-            "softmax_then_sum",
-        ], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
+        assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         if self.device != X.device:
             self.to(X.device)
         if e_weight is None:
@@ -598,13 +570,7 @@ class BiGraph(BaseGraph):
             assert (
                 e_weight.shape[0] == self.e_weight.shape[0]
             ), "The size of e_weight must be equal to the size of self.e_weight."
-            P = (
-                torch.sparse_coo_tensor(
-                    self.B._indices(), e_weight, self.B.shape, device=self.device
-                )
-                .t()
-                .coalesce()
-            )
+            P = torch.sparse_coo_tensor(self.B._indices(), e_weight, self.B.shape, device=self.device).t().coalesce()
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -620,12 +586,7 @@ class BiGraph(BaseGraph):
                 pass
         return X
 
-    def v2u(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e_weight: Optional[torch.Tensor] = None,
-    ) -> torch.Tensor:
+    def v2u(self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,) -> torch.Tensor:
         r"""Message passing from vertices in set :math:`\mathcal{V}` to vertices in set :math:`\mathcal{U}` on the bipartite graph structure.
 
         Args:
@@ -633,11 +594,7 @@ class BiGraph(BaseGraph):
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
         """
-        assert aggr in [
-            "mean",
-            "sum",
-            "softmax_then_sum",
-        ], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
+        assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         if self.device != X.device:
             self.to(X.device)
         if e_weight is None:
@@ -657,9 +614,7 @@ class BiGraph(BaseGraph):
             assert (
                 e_weight.shape[0] == self.e_weight.shape[0]
             ), "The size of e_weight must be equal to the size of self.e_weight."
-            P = torch.sparse_coo_tensor(
-                self.B._indices(), e_weight, self.B.shape, device=self.device
-            ).coalesce()
+            P = torch.sparse_coo_tensor(self.B._indices(), e_weight, self.B.shape, device=self.device).coalesce()
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)

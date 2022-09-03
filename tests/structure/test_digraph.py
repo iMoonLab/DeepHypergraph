@@ -275,6 +275,11 @@ def test_N():
             assert gt_out == n_v_out
 
 
+def test_smoothing():
+    # TODO
+    pass
+
+
 # test message passing
 def test_v2v(g1):
     x = torch.rand(4, 8)

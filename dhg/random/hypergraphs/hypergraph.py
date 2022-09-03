@@ -7,12 +7,18 @@ from dhg.structure import Hypergraph
 
 
 def uniform_hypergraph_Gnp(k: int, num_v: int, prob: float):
-    r"""Return a random ``k``-uniform hypergraph with ``num_v`` vertices and probability ``prob`` of choicing a hyperedge.
+    r"""Return a random ``k``-uniform hypergraph with ``num_v`` vertices and probability ``prob`` of choosing a hyperedge.
 
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``k`` (``int``): The Number of vertices in each hyperedge.
         ``prob`` (``float``): Probability of choosing a hyperedge.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> hg = random.uniform_hypergraph_Gnp(3, 5, 0.5)
+        >>> hg.e
+        ([(0, 1, 3), (0, 1, 4), (0, 2, 4), (1, 3, 4), (2, 3, 4)], [1.0, 1.0, 1.0, 1.0, 1.0])
     """
     # similar to BinomialRandomUniform in sagemath, https://doc.sagemath.org/html/en/reference/graphs/sage/graphs/hypergraph_generators.html
 
@@ -33,6 +39,12 @@ def uniform_hypergraph_Gnm(k: int, num_v: int, num_e: int):
         ``k`` (``int``): The Number of vertices in each hyperedge.
         ``num_v`` (``int``): The Number of vertices.
         ``num_e`` (``int``): The Number of hyperedges.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> hg = random.uniform_hypergraph_Gnm(3, 5, 4)
+        >>> hg.e
+        ([(0, 1, 2), (0, 1, 3), (0, 3, 4), (2, 3, 4)], [1.0, 1.0, 1.0, 1.0])
     """
     # similar to UniformRandomUniform in sagemath, https://doc.sagemath.org/html/en/reference/graphs/sage/graphs/hypergraph_generators.html
 
@@ -56,6 +68,11 @@ def hypergraph_Gnm(num_v: int, num_e: int, prob_k_list: Optional[List[float]] = 
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``num_e`` (``int``): The Number of hyperedges.
+    Examples:
+        >>> import dhg.random as random
+        >>> hg = random.hypergraph_Gnm(5, 4)
+        >>> hg.e
+        ([(0, 1, 3, 4), (0, 2, 3, 4), (0, 2, 3), (0, 2, 4)], [1.0, 1.0, 1.0, 1.0])
     """
     # similar to nauty in sagemath, https://doc.sagemath.org/html/en/reference/graphs/sage/graphs/hypergraph_generators.html
 

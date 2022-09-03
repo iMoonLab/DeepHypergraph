@@ -7,6 +7,10 @@ from dhg.structure.graphs import Graph
 class GraphSAGEConv(nn.Module):
     r"""The GraphSAGE convolution layer proposed in `Inductive Representation Learning on Large Graphs <https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf>`_ paper (NeurIPS 2017).
 
+    .. math::
+        \mathbf{x}^{\prime}_i = \mathbf{W}_1 \mathbf{x}_i + \mathbf{W}_2 \cdot
+        \mathrm{mean}_{j \in \mathcal{N(i)}} \mathbf{x}_j
+        
     Args:
         ``in_channels`` (``int``): :math:`C_{in}` is the number of input channels.
         ``out_channels`` (``int``): :math:`C_{out}` is the number of output channels.

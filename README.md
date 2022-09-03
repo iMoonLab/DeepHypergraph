@@ -74,11 +74,6 @@ DHG is available for **Python 3.8** and **Pytorch 1.11.0** and above.
 ```bash
 pip install dhg
 ```
-### Install from Github Repository
-
-```bash
-pip install git+https://github.com/iMoonLab/DeepHypergraph.git
-```
 
 ## Quick Start
 

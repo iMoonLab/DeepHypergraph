@@ -1,8 +1,3 @@
-import os
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-import time
-
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -10,20 +5,11 @@ from torch.utils.data import DataLoader
 from dhg import BiGraph
 from dhg.data import MovieLens1M, Gowalla
 from dhg.models import LightGCN, NGCF
-from dhg.random import set_seed
 from dhg.nn import BPRLoss, EmbeddingRegularization
 from dhg.experiments import UserItemRecommenderTask as Task
 from dhg.metrics import UserItemRecommenderEvaluator as Evaluator
+from dhg.random import set_seed
 from dhg.utils import UserItemDataset, adj_list_to_edge_list
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-dim_emb = 64
-lr = 0.001
-num_workers = 0
-batch_sz = 2048
-val_freq = 20
-epoch_max = 500
-weight_decay = 1e-4
 
 
 class BPR_Reg(nn.Module):
@@ -60,6 +46,16 @@ def train_builder(trial, model):
 
 
 if __name__ == "__main__":
+    work_root = "/home/fengyifan/OS3D/toolbox/exp_cache/tmp"
+    dim_emb = 64
+    lr = 0.001
+    num_workers = 0
+    batch_sz = 2048
+    val_freq = 20
+    epoch_max = 500
+    weight_decay = 1e-4
+    set_seed(2022)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator([{"ndcg": {"k": 20}}, {"recall": {"k": 20}}])
     # data = MovieLens1M()
     data = Gowalla()
@@ -80,12 +76,5 @@ if __name__ == "__main__":
         "test_loader": test_loader,
         "structure": ui_bigraph,
     }
-    task = Task(
-        "/home/fengyifan/OS3D/toolbox/exp_cache/tmp",
-        input_data,
-        model_builder,
-        train_builder,
-        evaluator,
-        torch.device("cuda:0"),
-    )
-    task.run(200, 50, "maximize")
+    task = Task(work_root, input_data, model_builder, train_builder, evaluator, device)
+    task.run(10, 300, "maximize")

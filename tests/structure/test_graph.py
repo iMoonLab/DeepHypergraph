@@ -232,6 +232,11 @@ def test_N(g1):
     assert g1.N_v(2).tolist() == []
 
 
+def test_smoothing():
+    # TODO
+    pass
+
+
 def test_laplacian_GCN():
     num_v = 20
     num_e = 50

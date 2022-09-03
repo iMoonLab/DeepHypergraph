@@ -3,7 +3,6 @@
 
 .. toctree::
     :maxdepth: 2
-    :caption: 教程
 
     overview
     structure
@@ -12,5 +11,4 @@
     metric
     train
     auto_ml
-    visualization
     random

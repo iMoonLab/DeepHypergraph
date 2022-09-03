@@ -336,14 +336,13 @@ def test_N():
         g = BiGraph(num_u, num_v)
         g.add_edges(e_list)
 
-        assert all(
-            torch.all(B[u_idx].nonzero().view(-1) == g.N_v(u_idx))
-            for u_idx in range(num_u)
-        )
-        assert all(
-            torch.all(B[:, v_idx].nonzero().view(-1) == g.N_u(v_idx))
-            for v_idx in range(num_v)
-        )
+        assert all(torch.all(B[u_idx].nonzero().view(-1) == g.N_v(u_idx)) for u_idx in range(num_u))
+        assert all(torch.all(B[:, v_idx].nonzero().view(-1) == g.N_u(v_idx)) for v_idx in range(num_v))
+
+
+def test_smoothing():
+    # TODO
+    pass
 
 
 # test spactral-based smoothing matrix

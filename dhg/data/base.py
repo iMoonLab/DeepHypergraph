@@ -12,7 +12,7 @@ class BaseData:
     ::
 
         self._content = {
-            'feature': {
+            'item': {
                 'upon': [
                     {'filename': 'part1.pkl', 'md5': '', bk_url: None},
                     {'filename': 'part2.pkl', 'md5': '', bk_url: None},
@@ -38,7 +38,7 @@ class BaseData:
         self._raw = {}
 
     def __repr__(self) -> str:
-        return f"{self.name} Dataset:\n" + "\n".join(f"  ->  {k}" for k in self.content)
+        return f"{self.name} dataset:\n" + "\n".join(f"  ->  {k}" for k in self.content)
 
     @property
     def content(self):

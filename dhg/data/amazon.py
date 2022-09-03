@@ -6,9 +6,9 @@ from dhg.datapipe import load_from_txt
 
 
 class AmazonBook(BaseData):
-    r""" The AmazonBook dataset is collected for user-item recommendation task. This dataset is a subset of `Amazon-review <https://jmcauley.ucsd.edu/data/amazon/>`_. Wherein, books are viewed as the items.
+    r"""The AmazonBook dataset is collected for user-item recommendation task. This dataset is a subset of `Amazon-review <https://jmcauley.ucsd.edu/data/amazon/>`_. Wherein, books are viewed as the items.
     
-    The Content of the Amazon-Book dataset includes the following:
+    The content of the Amazon-Book dataset includes the following:
 
     - ``num_users``: The number of users: :math:`52,643`.
     - ``num_items``: The number of items: :math:`91,599`.

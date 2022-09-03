@@ -6,18 +6,35 @@
 DHG Documentation
 =======================
 
-**DHG** is short for **DeepHypergraph**, which is a pytorch-based toobox for learning on both graph structure and hypergraph structure. 
+.. attention:: 
 
-**News:**
-
-- The **v0.9.0 release** is now available!
-
-**Citation:**
-
-Please cite our `paper <https://ieeexplore.ieee.org/abstract/document/9795251/>`_, if you find our toolbox useful for your research. 
+   We are rushing the documentation and tutorials, which will be updated twice a day!
 
 
-::
+**DHG** (*DeepHypergraph*) is a deep learning library built upon `PyTorch <https://pytorch.org/>`_ for learning with both Graph Neural Networks and Hypergraph Neural Networks. 
+It is a general framework that supports both low-order and high-order message passing like 
+**from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
+
+It supports a wide variety of structures like low-order structures (simple graph, directed graph, bipartite graph, etc.), 
+high-order structures (simple hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) 
+and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. 
+It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are 
+implemented and can be easily used for research. We also provide various visualization tools for both low-order 
+structures and high-order structures. 
+
+In addition, DHG's :doc:`/api/experiments` module (that implements **Auto-ML** upon `Optuna <https://optuna.org/>`_) 
+can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
+
+**News**
+
+- *2022-08-25*  ->  The **v0.9.1 release** is now available!
+
+**Citing**
+
+If you find our library useful for your research, please cite our papers:
+
+
+.. code-block:: text
 
    @article{gao2022hgnn,
       title={HGNN $\^{}+ $: General Hypergraph Neural Networks},
@@ -28,41 +45,59 @@ Please cite our `paper <https://ieeexplore.ieee.org/abstract/document/9795251/>`
    }
 
 
+.. code-block:: text
+
+   @inproceedings{feng2019hypergraph,
+      title={Hypergraph neural networks},
+      author={Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
+      booktitle={Proceedings of the AAAI conference on artificial intelligence},
+      volume={33},
+      number={01},
+      pages={3558--3565},
+      year={2019}
+   }
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Get Started
 
    start/install
    start/structure
-   start/low_order
-   start/high_order
-   start/exp_cls
-   start/exp_recommender
-   start/exp_autoML
+   start/low_order/index
+   start/high_order/index
+   start/contribution
 
+
+.. toctree:: 
+   :maxdepth: 2
+   :caption: Examples
+   
+   examples/vertex_cls/index
+   examples/recommender
+   examples/auto_ml/index
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
 
-   Overview <tutorial/overview>
-   Build Structure <tutorial/structure>
-   Build Dataset <tutorial/dataset>
-   Build Model <tutorial/model>
-   Build Evaluator <tutorial/metric>
-   Model Training <tutorial/train>
-   Auto-ML <tutorial/auto_ml>
-   Visualization <tutorial/visualization>
-   Random Structure Generation <tutorial/random>
-   tutorial/structure/index
+   tutorial/overview
+   tutorial/structure
+   tutorial/dataset
+   tutorial/model
+   tutorial/metric
+   tutorial/train
+   tutorial/auto_ml
+   tutorial/random
 
 .. toctree:: 
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: 中文文档
 
+   zh/overview
    zh/start/index
+   zh/examples/index
    zh/tutorial/index
-
 
 .. toctree::
    :maxdepth: 2
@@ -75,7 +110,6 @@ Please cite our `paper <https://ieeexplore.ieee.org/abstract/document/9795251/>`
    dhg.datapipe <api/datapipe>
    dhg.metrics <api/metrics>
    dhg.experiments <api/experiments>
-   dhg.visualization <api/vis/index>
    dhg.random <api/random>
    dhg.utils <api/utils>
 

@@ -6,12 +6,18 @@ from dhg.structure import BiGraph
 
 
 def bigraph_Gnp(num_u: int, num_v: int, prob: float):
-    r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choicing an edge.
+    r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choosing an edge.
 
     Args:
         ``num_u`` (``int``): The Number of vertices in set :math:`\mathcal{U}`.
         ``num_v`` (``int``): The Number of vertices in set :math:`\mathcal{V}`.
         ``prob`` (``float``): Probability of choosing an edge.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> g = random.bigraph_Gnp(2, 3, 0.6)
+        >>> g.e
+        ([(0, 1), (1, 0), (1, 2)], [1.0, 1.0, 1.0])
     """
     assert num_v > 1, "num_v must be greater than 1"
     assert num_u > 1, "num_u must be greater than 1"
@@ -24,7 +30,7 @@ def bigraph_Gnp(num_u: int, num_v: int, prob: float):
 
 
 # def bigraph_Gnp_fast(num_v: int, prob: float):
-#     r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choicing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
+#     r"""Return a random bipartite graph with ``num_u`` vertices in set :math:`\mathcal{U}` and ``num_v`` vertices in set :math:`\mathcal{V}` and probability ``prob`` of choosing an edge. This function is an implementation of `Efficient generation of large random networks <http://vlado.fmf.uni-lj.si/pub/networks/doc/ms/rndgen.pdf>`_ paper.
 
 #     Args:
 #         ``num_v`` (``int``): The Number of vertices.
@@ -55,6 +61,12 @@ def bigraph_Gnm(num_u: int, num_v: int, num_e: int):
         ``num_u`` (``int``): The Number of vertices in set :math:`\mathcal{U}`.
         ``num_v`` (``int``): The Number of vertices in set :math:`\mathcal{V}`.
         ``num_e`` (``int``): The Number of edges.
+
+    Examples:
+        >>> import dhg.random as random
+        >>> g = random.bigraph_Gnm(3, 3, 5)
+        >>> g.e
+        ([(1, 2), (2, 1), (1, 1), (2, 0), (1, 0)], [1.0, 1.0, 1.0, 1.0, 1.0])
     """
     assert num_u > 1, "num_u must be greater than 1"
     assert num_v > 1, "num_v must be greater than 1"

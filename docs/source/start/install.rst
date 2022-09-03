@@ -1,29 +1,17 @@
-Install
-===========
+Installation
+===============
 
-- Python version >= 3.8
-- Pytorch version >=1.11
+.. hint:: 
 
-Install the pytorch can follow `this <https://github.com/pytorch/pytorch#installation>`_. 
+    - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
+    - Proof: Xinwei Zhang
 
-Then, you can install the **DHG** toolbox using ``pip`` as follows:
+- Python >= 3.8
+- Pytorch >=1.11
+
+
+You can install **DHG** library with ``pip`` as follows:
 
 .. code-block:: bash
 
     pip install dhg
-
-Install the **DHG** toolbox from source as follows:
-
-
-.. code:: bash
-
-    pip install **********
-
-Or download the source code and install it as follows:
-
-.. code:: bash
-
-    git clone **********
-    cd dhg-main
-    pip install -e .
-

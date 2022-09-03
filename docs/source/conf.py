@@ -12,8 +12,25 @@
 #
 import os
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.abspath("../.."))
+
+
+def find_version(filename):
+    """
+    Find package version in file.
+    """
+    import re
+
+    content = Path(filename).read_text()
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", content, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
+
+autodoc_mock_imports = ["torch", "numpy", "scipy", "optuna", "sklearn"]
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +39,7 @@ copyright = "2022, iMoonLab"
 author = "iMoonLab"
 
 # The full version, including alpha/beta/rc tags
-release = "0.9.0"
+release = find_version("../../dhg/__init__.py")
 
 # custom configuration
 # autodoc_member_order = 'bysource'
@@ -70,7 +87,7 @@ html_logo = "_static/logo_DHG_white.svg"
 html_theme_options = {
     # "style_nav_header_background": "#9C27B0",
     "logo_only": True,
-    'collapse_navigation': False,
+    "collapse_navigation": False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -78,7 +95,7 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-latex_engine = 'xelatex'
+latex_engine = "xelatex"
 latex_elements = {
     "papersize": "a4paper",
     "utf8extra": "",

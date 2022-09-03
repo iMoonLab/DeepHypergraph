@@ -30,6 +30,7 @@ def simple_stdout2file(file_path: Union[str, Path]) -> None:
         def write(self, message):
             self.terminal.write(message)
             self.file.write(message)
+            self.flush()
 
         def flush(self):
             self.terminal.flush()

@@ -6,10 +6,10 @@ from dhg.datapipe import load_from_txt
 
 
 class Gowalla(BaseData):
-    r"""Gowalla dataset is collected for user-item recommendation task. Locations are viewed as items.
-    The full dataset can be found in this `websit <https://snap.stanford.edu/data/loc-gowalla.html>`_.
+    r"""The Gowalla dataset is collected for user-item recommendation task. Locations are viewed as items.
+    The full dataset can be found in this `website <https://snap.stanford.edu/data/loc-gowalla.html>`_.
     
-    The Content of the Gowalla dataset includes the following:
+    The content of the Gowalla dataset includes the following:
 
     - ``num_users``: The number of users: :math:`29,858`.
     - ``num_items``: The number of items: :math:`40,981`.

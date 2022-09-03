@@ -1,15 +1,13 @@
-import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
 from dhg import Graph
 from dhg.data import Cora
 from dhg.models import GCN
 from dhg.random import set_seed
 from dhg.experiments import GraphVertexClassificationTask as Task
 from dhg.metrics import GraphVertexClassificationEvaluator as Evaluator
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def model_builder(trial):
@@ -26,7 +24,9 @@ def train_builder(trial, model):
 
 
 if __name__ == "__main__":
+    work_root = "/home/fengyifan/OS3D/toolbox/exp_cache/tmp"
     set_seed(2022)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     data = Cora()
     num_v, ft_dim = data["features"].shape
     num_classes = data["labels"].max().item() + 1
@@ -39,12 +39,5 @@ if __name__ == "__main__":
         "test_mask": data["test_mask"],
     }
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
-    task = Task(
-        "/home/fengyifan/OS3D/toolbox/exp_cache/tmp",
-        input_data,
-        model_builder,
-        train_builder,
-        evaluator,
-        torch.device("cuda:0"),
-    )
+    task = Task(work_root, input_data, model_builder, train_builder, evaluator, device,)
     task.run(200, 50, "maximize")
