@@ -95,6 +95,7 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+latex_use_xindy = False
 latex_engine = "xelatex"
 latex_elements = {
     "papersize": "a4paper",
@@ -103,7 +104,7 @@ latex_elements = {
     "babel": r"""\usepackage[english]{babel}""",
     "preamble": r"""\usepackage{ctex}""",
 }
-
+latex_show_urls = "footnote"
 
 def setup(app):
     app.add_css_file("css/dhg.css")

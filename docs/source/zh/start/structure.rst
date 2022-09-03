@@ -342,10 +342,10 @@ DHG内的关联结构
     .. math::
 
         \left\{  
-        \begin{align}
+        \begin{aligned}
         \mathbf{X}^\prime &= \hat{\mathbf{A}} \mathbf{X}\\
         \hat{\mathbf{A}} &= \mathbf{A} + \mathbf{I}   
-        \end{align}
+        \end{aligned}
         \right.  
 
 
