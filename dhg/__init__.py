@@ -6,6 +6,7 @@ from dhg import models
 from dhg import nn
 from dhg import random
 from dhg import utils
+from dhg import visualization
 
 from .structure import load_structure
 from .structure import BaseGraph, Graph, DiGraph, BiGraph

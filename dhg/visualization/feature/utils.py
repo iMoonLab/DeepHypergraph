@@ -11,65 +11,77 @@ eps = 1e-5
 min_norm = 1e-15
 
 
-def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str]):
+def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap="viridis"):
     r"""Make an animation of embeddings.
 
     Args:
         ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 3)`. 
         ``colors`` (``Union[np.ndarray, str]``): The color matrix. ``str`` or Size :math:`(N, )`. 
+        ``cmap`` (``str``, optional): The `color map <https://matplotlib.org/stable/tutorials/colors/colormaps.html>`_. Defaults to ``"viridis"``.
     """
+    embeddings = normalize(embeddings)
     x, y, z = embeddings[:, 0], embeddings[:, 1], embeddings[:, 2]
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8, 8))
     ax = fig.gca(projection="3d")
     plt.ion()
     for i in range(30000):
-        # Clear the previously drawn picture
         plt.clf()
-        # Get the current picture
         fig = plt.gcf()
-        # Get the current axis
         ax = fig.gca(projection="3d")
         if colors is not None:
-            ax.scatter(x, y, z, c=colors, cmap="viridis")
+            ax.scatter(x, y, z, c=colors, cmap=cmap)
         else:
-            ax.scatter(x, y, z, cmap="viridis")
-        # Elevation angle Azimuth angle
+            ax.scatter(x, y, z, cmap=cmap)
         ax.view_init(elev=20, azim=i % 360)
-        # Pause for a period of time
         plt.pause(0.001)
-        # Close the drawing window
 
 
-def plot_2d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None):
+def plot_2d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None, cmap="viridis"):
     r"""Plot the embedding in 2D.
     
     Args:
         ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 2)`.
         ``label`` (``np.ndarray``, optional): The label matrix.
+        ``cmap`` (``str``, optional): The `color map <https://matplotlib.org/stable/tutorials/colors/colormaps.html>`_. Defaults to ``"viridis"``.
     """
-    fig = plt.figure()
+    embeddings = normalize(embeddings)
+    fig = plt.figure(figsize=(8, 8))
     if label is not None:
-        plt.scatter(embeddings[:, 0], embeddings[:, 1], c=label, cmap="viridis")
+        plt.scatter(embeddings[:, 0], embeddings[:, 1], c=label, cmap=cmap)
     else:
-        plt.scatter(embeddings[:, 0], embeddings[:, 1], cmap="viridis")
-    return fig
+        plt.scatter(embeddings[:, 0], embeddings[:, 1], cmap=cmap)
+
+    plt.xlim((0, 1.0))
+    plt.ylim((0, 1.0))
+    fig.tight_layout()
 
 
-def plot_3d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None):
+def plot_3d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None, cmap="viridis"):
     r"""Plot the embedding in 3D.
     
     Args:
         ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 3)`.
         ``label`` (``np.ndarray``, optional): The label matrix.
+        ``cmap`` (``str``, optional): The `color map <https://matplotlib.org/stable/tutorials/colors/colormaps.html>`_. Defaults to ``"viridis"``.
     """
+    embeddings = normalize(embeddings)
     x, y, z = embeddings[:, 0], embeddings[:, 1], embeddings[:, 2]
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8, 8))
     ax = fig.gca(projection="3d")
     if label is not None:
-        ax.scatter(x, y, z, c=label, cmap="viridis")
+        ax.scatter(x, y, z, c=label, cmap=cmap)
     else:
-        ax.scatter(x, y, z, cmap="viridis")
-    return fig
+        ax.scatter(x, y, z, cmap=cmap)
+
+    ax.set_xlim3d(0, 1.0)
+    ax.set_ylim3d(0, 1.0)
+    ax.set_zlim3d(0, 1.0)
+    fig.tight_layout()
+
+
+# normalization
+def normalize(coor):
+    return (coor - coor.min(0)) / (coor.max(0) - coor.min(0)) * 0.8 + 0.1
 
 
 # for poincare_ball
@@ -130,9 +142,7 @@ def logmap0(p, c):
     return scale * p
 
 
-def project_to_poincare_ball(
-    embeddings: np.ndarray, dim: int = 2, reduce_method: str = "pca"
-) -> np.ndarray:
+def project_to_poincare_ball(embeddings: np.ndarray, dim: int = 2, reduce_method: str = "pca") -> np.ndarray:
     r"""Project embeddings from Euclidean space to Hyperbolic space.
 
     Args:

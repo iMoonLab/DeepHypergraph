@@ -133,6 +133,7 @@ If you find our library useful for your research, please cite our papers:
    dhg.datapipe <api/datapipe>
    dhg.metrics <api/metrics>
    dhg.experiments <api/experiments>
+   dhg.visualization <api/visualization>
    dhg.random <api/random>
    dhg.utils <api/utils>
 
