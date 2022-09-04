@@ -2,6 +2,7 @@
     <img src="https://deephypergraph.com/logo_DHG.png" height="200">
 </p>
 
+[![Website Build Status](https://github.com/yifanfeng97/dhg-page-source/actions/workflows/website.yml/badge.svg)](https://deephypergraph.com/)
 [![PyPI version](https://img.shields.io/pypi/v/dhg?color=purple)](https://pypi.org/project/dhg/)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/)
 [![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
@@ -14,7 +15,9 @@
 
 <p align="center">
 We are rushing the documentation and tutorials, which will be updated twice a day!<br>
-我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！
+The v0.9.2 will be released soon, which will include many structure visualizations!<br>
+我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！<br>
+我们很快将发布v0.9.2版本，其中包含了各种关联结构的可视化！
 </p>
 
 ## News
