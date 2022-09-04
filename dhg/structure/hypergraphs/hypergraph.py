@@ -7,6 +7,7 @@ import torch
 import scipy.spatial
 
 from dhg.structure import BaseHypergraph
+from dhg.visualization.structure.draw import draw_hypergraph
 
 if TYPE_CHECKING:
     from ..graphs import Graph, BiGraph
@@ -85,6 +86,43 @@ class Hypergraph(BaseHypergraph):
         _hg = Hypergraph(state_dict["num_v"])
         _hg._raw_groups = deepcopy(state_dict["raw_groups"])
         return _hg
+
+    def draw(
+        self,
+        e_style: str = "circle",
+        v_label: Optional[List[str]] = None,
+        v_size: Union[float, list] = 1.0,
+        v_color: Union[str, list] = "r",
+        v_line_width: Union[str, list] = 1.0,
+        e_color: Union[str, list] = "gray",
+        e_fill_color: Union[str, list] = "whitesmoke",
+        e_line_width: Union[str, list] = 1.0,
+        font_size: float = 1.0,
+        font_family: str = "sans-serif",
+        push_v_strength: float = 1.0,
+        push_e_strength: float = 1.0,
+        pull_e_strength: float = 1.0,
+        pull_center_strength: float = 1.0,
+    ):
+        r"""Draw the simple hypergraph structure.
+        
+        Args:
+            ``e_style`` (``str``): The style of hyperedges. The available styles are only ``'circle'``. Defaults to ``'circle'``.
+            ``v_label`` (``list``): The labels of vertices. Defaults to ``None``.
+            ``v_size`` (``float`` or ``list``): The size of vertices. Defaults to ``1.0``.
+            ``v_color`` (``str`` or ``list``): The `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of vertices. Defaults to ``'r'``.
+            ``v_line_width`` (``float`` or ``list``): The line width of vertices. Defaults to ``1.0``.
+            ``e_color`` (``str`` or ``list``): The `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of hyperedges. Defaults to ``'gray'``.
+            ``e_fill_color`` (``str`` or ``list``): The fill `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of hyperedges. Defaults to ``'whitesmoke'``.
+            ``e_line_width`` (``float`` or ``list``): The line width of hyperedges. Defaults to ``1.0``.
+            ``font_size`` (``float``): The font size of labels. Defaults to ``1.0``.
+            ``font_family`` (``str``): The font family of labels. Defaults to ``'sans-serif'``.
+            ``push_v_strength`` (``float``): The strength of pushing vertices. Defaults to ``1.0``.
+            ``push_e_strength`` (``float``): The strength of pushing hyperedges. Defaults to ``1.0``.
+            ``pull_e_strength`` (``float``): The strength of pulling hyperedges. Defaults to ``1.0``.
+            ``pull_center_strength`` (``float``): The strength of pulling vertices to the center. Defaults to ``1.0``.
+        """
+        draw_hypergraph(self, e_style, v_label, v_size, v_color, v_line_width, e_color, e_fill_color, e_line_width, font_size, font_family, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
 
     def clear(self):
         r"""Clear all hyperedges and caches from the hypergraph.

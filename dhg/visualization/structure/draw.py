@@ -4,9 +4,7 @@ from typing import Union, Optional, List
 import numpy as np
 import matplotlib.pyplot as plt
 
-from dhg.structure.graphs import Graph, DiGraph, BiGraph
-from dhg.structure.hypergraphs import Hypergraph
-
+import dhg
 from .layout import force_layout, bipartite_force_layout
 from .utils import draw_vertex, draw_line_edge, draw_circle_edge
 
@@ -23,7 +21,7 @@ from .defaults import (
 
 
 def draw_graph(
-    g: "Graph",
+    g: "dhg.Graph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
     v_size: Union[float, list] = 1.0,
@@ -58,7 +56,7 @@ def draw_graph(
         ``pull_e_strength`` (``float``): The edge pull strength. Defaults to ``1.0``.
         ``pull_center_strength`` (``float``): The center pull strength. Defaults to ``1.0``.
     """
-    assert isinstance(g, Graph), "The input object must be a DHG's graph object."
+    assert isinstance(g, dhg.Graph), "The input object must be a DHG's graph object."
     assert e_style in ["line", "circle"], "e_style must be 'line' or 'circle'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -92,7 +90,7 @@ def draw_graph(
 
 
 def draw_digraph(
-    g: "DiGraph",
+    g: "dhg.DiGraph",
     e_style: str = "line",
     v_label: Optional[List[str]] = None,
     v_size: Union[float, list] = 1.0,
@@ -125,7 +123,7 @@ def draw_digraph(
         ``pull_e_strength`` (``float``): The edge pull strength. Defaults to ``1.0``.
         ``pull_center_strength`` (``float``): The center pull strength. Defaults to ``1.0``.
     """
-    assert isinstance(g, DiGraph), "The input object must be a DHG's digraph object."
+    assert isinstance(g, dhg.DiGraph), "The input object must be a DHG's digraph object."
     assert e_style in ["line"], "e_style must be 'line'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -157,7 +155,7 @@ def draw_digraph(
 
 
 def draw_bigraph(
-    g: "BiGraph",
+    g: "dhg.BiGraph",
     e_style: str = "line",
     u_label: Optional[List[str]] = None,
     u_size: Union[float, list] = 1.0,
@@ -204,7 +202,7 @@ def draw_bigraph(
         ``pull_u_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{U}` to the center. Defaults to ``1.0``.
         ``pull_v_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{V}` to the center. Defaults to ``1.0``.
     """
-    assert isinstance(g, BiGraph), "The input object must be a DHG's bigraph object."
+    assert isinstance(g, dhg.BiGraph), "The input object must be a DHG's bigraph object."
     assert e_style in ["line"], "e_style must be 'line'"
     assert g.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -272,7 +270,7 @@ def draw_bigraph(
 
 
 def draw_hypergraph(
-    hg: "Hypergraph",
+    hg: "dhg.Hypergraph",
     e_style: str = "circle",
     v_label: Optional[List[str]] = None,
     v_size: Union[float, list] = 1.0,
@@ -307,7 +305,7 @@ def draw_hypergraph(
         ``pull_e_strength`` (``float``): The strength of pulling hyperedges. Defaults to ``1.0``.
         ``pull_center_strength`` (``float``): The strength of pulling vertices to the center. Defaults to ``1.0``.
     """
-    assert isinstance(hg, Hypergraph), "The input object must be a DHG's hypergraph object."
+    assert isinstance(hg, dhg.Hypergraph), "The input object must be a DHG's hypergraph object."
     assert e_style in ["circle"], "e_style must be 'circle'"
     assert hg.num_e > 0, "g must be a non-empty structure"
     fig, ax = plt.subplots(figsize=(6, 6))

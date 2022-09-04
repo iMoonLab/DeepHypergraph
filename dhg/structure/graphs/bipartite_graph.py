@@ -6,11 +6,9 @@ from typing import Union, Optional, List, Tuple, Any, Dict, TYPE_CHECKING
 import torch
 import numpy as np
 
-from ..base import BaseGraph
 from dhg.structure.hypergraphs import Hypergraph
-
-# if TYPE_CHECKING:
-#     from ..hypergraphs import Hypergraph
+from dhg.visualization.structure.draw import draw_bigraph
+from ..base import BaseGraph
 
 
 class BiGraph(BaseGraph):
@@ -93,6 +91,55 @@ class BiGraph(BaseGraph):
         _g = BiGraph(state_dict["num_u"], state_dict["num_v"])
         _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
         return _g
+    
+    def draw(
+        self,
+        e_style: str = "line",
+        u_label: Optional[List[str]] = None,
+        u_size: Union[float, list] = 1.0,
+        u_color: Union[str, list] = "m",
+        u_line_width: Union[str, list] = 1.0,
+        v_label: Optional[List[str]] = None,
+        v_size: Union[float, list] = 1.0,
+        v_color: Union[str, list] = "r",
+        v_line_width: Union[str, list] = 1.0,
+        e_color: Union[str, list] = "gray",
+        e_line_width: Union[str, list] = 1.0,
+        u_font_size: float = 1.0,
+        v_font_size: float = 1.0,
+        font_family: str = "sans-serif",
+        push_u_strength: float = 1.0,
+        push_v_strength: float = 1.0,
+        push_e_strength: float = 1.0,
+        pull_e_strength: float = 1.0,
+        pull_u_center_strength: float = 1.0,
+        pull_v_center_strength: float = 1.0,
+    ):
+        r"""Draw the bipartite graph structure.
+        
+        Args:
+            ``e_style`` (``str``): The edge style. The supported edge styles are only ``'line'``. Defaults to ``'line'``.
+            ``u_label`` (``list``): The label of vertices in set :math:`\mathcal{U}`. Defaults to ``None``.
+            ``u_size`` (``Union[str, list]``): The size of vertices in set :math:`\mathcal{U}`. If ``u_size`` is a ``float``, all vertices will have the same size. If ``u_size`` is a ``list``, the size of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``u_color`` (``Union[str, list]``): The `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of vertices in set :math:`\mathcal{U}`. If ``u_color`` is a ``str``, all vertices will have the same color. If ``u_color`` is a ``list``, the color of each vertex will be set according to the corresponding element in the list. Defaults to ``'m'``.
+            ``u_line_width`` (``Union[str, list]``): The line width of vertices in set :math:`\mathcal{U}`. If ``u_line_width`` is a ``float``, all vertices will have the same line width. If ``u_line_width`` is a ``list``, the line width of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``v_label`` (``list``): The label of vertices in set :math:`\mathcal{V}`. Defaults to ``None``.
+            ``v_size`` (``Union[str, list]``): The size of vertices in set :math:`\mathcal{V}`. If ``v_size`` is a ``float``, all vertices will have the same size. If ``v_size`` is a ``list``, the size of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``v_color`` (``Union[str, list]``): The `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of vertices in set :math:`\mathcal{V}`. If ``v_color`` is a ``str``, all vertices will have the same color. If ``v_color`` is a ``list``, the color of each vertex will be set according to the corresponding element in the list. Defaults to ``'r'``.
+            ``v_line_width`` (``Union[str, list]``): The line width of vertices in set :math:`\mathcal{V}`. If ``v_line_width`` is a ``float``, all vertices will have the same line width. If ``v_line_width`` is a ``list``, the line width of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``e_color`` (``Union[str, list]``): The `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_ of edges. If ``e_color`` is a ``str``, all edges will have the same color. If ``e_color`` is a ``list``, the color of each edge will be set according to the corresponding element in the list. Defaults to ``'gray'``.
+            ``e_line_width`` (``Union[str, list]``): The line width of edges. If ``e_line_width`` is a ``float``, all edges will have the same line width. If ``e_line_width`` is a ``list``, the line width of each edge will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``u_font_size`` (``float``): The font size of vertex labels in set :math:`\mathcal{U}`. Defaults to ``1.0``.
+            ``v_font_size`` (``float``): The font size of vertex labels in set :math:`\mathcal{V}`. Defaults to ``1.0``.
+            ``font_family`` (``str``): The font family of vertex labels. Defaults to ``'sans-serif'``.
+            ``push_u_strength`` (``float``): The strength of pushing vertices in set :math:`\mathcal{U}`. Defaults to ``1.0``.
+            ``push_v_strength`` (``float``): The strength of pushing vertices in set :math:`\mathcal{V}`. Defaults to ``1.0``.
+            ``push_e_strength`` (``float``): The strength of pushing edges. Defaults to ``1.0``.
+            ``pull_e_strength`` (``float``): The strength of pulling edges. Defaults to ``1.0``.
+            ``pull_u_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{U}` to the center. Defaults to ``1.0``.
+            ``pull_v_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{V}` to the center. Defaults to ``1.0``.
+        """
+        draw_bigraph(self, e_style, u_label, u_size, u_color, u_line_width, v_label, v_size, v_color, v_line_width, e_color, e_line_width, u_font_size, v_font_size, font_family, push_u_strength, push_v_strength, push_e_strength, pull_e_strength, pull_u_center_strength, pull_v_center_strength)
 
     def clear(self):
         r"""Remove all edges in the bipartite graph.

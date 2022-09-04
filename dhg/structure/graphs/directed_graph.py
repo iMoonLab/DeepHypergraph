@@ -7,6 +7,7 @@ import torch
 import numpy as np
 import scipy.spatial
 
+from dhg.visualization.structure.draw import draw_digraph
 from ..base import BaseGraph
 
 
@@ -88,6 +89,41 @@ class DiGraph(BaseGraph):
         _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
         _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
         return _g
+    
+    def draw(
+        self,
+        e_style: str = "line",
+        v_label: Optional[List[str]] = None,
+        v_size: Union[float, list] = 1.0,
+        v_color: Union[str, list] = "r",
+        v_line_width: Union[str, list] = 1.0,
+        e_color: Union[str, list] = "gray",
+        e_line_width: Union[str, list] = 1.0,
+        font_size: int = 1.0,
+        font_family: str = "sans-serif",
+        push_v_strength: float = 1.0,
+        push_e_strength: float = 1.0,
+        pull_e_strength: float = 1.0,
+        pull_center_strength: float = 1.0,
+    ):
+        r"""Draw the directed graph structure. 
+
+        Args:
+            ``e_style`` (``str``): The edge style. The supported styles are only ``'line'``. Defaults to ``'line'``.
+            ``v_label`` (``list``): The vertex label. Defaults to ``None``.
+            ``v_size`` (``Union[str, list]``): The vertex size. If ``v_size`` is a ``float``, all vertices will have the same size. If ``v_size`` is a ``list``, the size of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``v_color`` (``Union[str, list]``): The vertex `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_. If ``v_color`` is a ``str``, all vertices will have the same color. If ``v_color`` is a ``list``, the color of each vertex will be set according to the corresponding element in the list. Defaults to ``'r'``.
+            ``v_line_width`` (``Union[str, list]``): The vertex line width. If ``v_line_width`` is a ``float``, all vertices will have the same line width. If ``v_line_width`` is a ``list``, the line width of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``e_color`` (``Union[str, list]``): The edge `color <https://matplotlib.org/stable/gallery/color/named_colors.html>`_. If ``e_color`` is a ``str``, all edges will have the same color. If ``e_color`` is a ``list``, the color of each edge will be set according to the corresponding element in the list. Defaults to ``'gray'``.
+            ``e_line_width`` (``Union[str, list]``): The edge line width. If ``e_line_width`` is a ``float``, all edges will have the same line width. If ``e_line_width`` is a ``list``, the line width of each edge will be set according to the corresponding element in the list. Defaults to ``1.0``.
+            ``font_size`` (``int``): The font size. Defaults to ``1.0``.
+            ``font_family`` (``str``): The font family. Defaults to ``'sans-serif'``.
+            ``push_v_strength`` (``float``): The vertex push strength. Defaults to ``1.0``.
+            ``push_e_strength`` (``float``): The edge push strength. Defaults to ``1.0``.
+            ``pull_e_strength`` (``float``): The edge pull strength. Defaults to ``1.0``.
+            ``pull_center_strength`` (``float``): The center pull strength. Defaults to ``1.0``.
+        """
+        draw_digraph(self, e_style, v_label, v_size, v_color, v_line_width, e_color, e_line_width, font_size, font_family, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
 
     def clear(self):
         r"""Remove all edges in the directed graph.

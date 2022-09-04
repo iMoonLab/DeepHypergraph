@@ -84,6 +84,11 @@ class BaseGraph:
         Args:
             ``state_dict`` (``dict``): The state dict to load the DHG's graph.
         """
+    
+    @abc.abstractmethod
+    def draw(self, **kwargs):
+        r"""Draw the structure.
+        """
 
     def clear(self):
         r"""Remove all edges and caches from the graph.
@@ -398,6 +403,11 @@ class BaseHypergraph:
 
         Args:
             ``state_dict`` (``dict``): The state dict to load the DHG's hypergraph.
+        """
+
+    @abc.abstractmethod
+    def draw(self, **kwargs):
+        r"""Draw the structure.
         """
 
     def clear(self):
