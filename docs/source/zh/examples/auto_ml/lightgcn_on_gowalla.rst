@@ -118,13 +118,15 @@
 
 
 
-输出
--------------
+.. only:: not latex
 
-.. code-block:: text
+    输出
+    -------------
 
-    [I 2022-08-25 17:52:02,601] Logs will be saved to /home/fengyifan/OS3D/toolbox/exp_cache/tmp/2022-08-25--17-52-02/log.txt
-    [I 2022-08-25 17:52:02,601] Files in training will be saved in /home/fengyifan/OS3D/toolbox/exp_cache/tmp/2022-08-25--17-52-02
-    [I 2022-08-25 17:52:02,601] Random seed is 2022
-    [I 2022-08-25 17:52:02,601] A new study created in memory with name: no-name-a1095326-8011-47c1-8a71-1d8051016f21
+    .. code-block:: 
+
+        [I 2022-08-25 17:52:02,601] Logs will be saved to /home/fengyifan/OS3D/toolbox/exp_cache/tmp/2022-08-25--17-52-02/log.txt
+        [I 2022-08-25 17:52:02,601] Files in training will be saved in /home/fengyifan/OS3D/toolbox/exp_cache/tmp/2022-08-25--17-52-02
+        [I 2022-08-25 17:52:02,601] Random seed is 2022
+        [I 2022-08-25 17:52:02,601] A new study created in memory with name: no-name-a1095326-8011-47c1-8a71-1d8051016f21
 

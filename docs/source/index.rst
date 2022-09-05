@@ -12,9 +12,11 @@ DHG Documentation
    \part{English}
    \chapter{DHG Overview}
 
-.. attention:: 
+.. only:: not latex
 
-   We are rushing the documentation and tutorials, which will be updated twice a day!
+   .. attention:: 
+
+      We are rushing the documentation and tutorials, which will be updated twice a day!
 
 
 **DHG** (*DeepHypergraph*) is a deep learning library built upon `PyTorch <https://pytorch.org/>`_ for learning with both Graph Neural Networks and Hypergraph Neural Networks. 

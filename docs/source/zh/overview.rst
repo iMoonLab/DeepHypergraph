@@ -1,9 +1,11 @@
 DHG简介
 ==============
 
-.. attention:: 
-   
-    我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！
+.. only:: not latex
+
+   .. attention:: 
+      
+      我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！
 
 **DHG** (*DeepHypergraph*) 是基于 `PyTorch <https://pytorch.org/>`_ 的深度学习包，
 可用于图神经网络以及超图神经网络。

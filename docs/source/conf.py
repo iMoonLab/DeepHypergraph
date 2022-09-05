@@ -196,7 +196,7 @@ latex_elements = {
             \centering
 
             \vspace*{40mm} %%% * is used to give space from top
-            \textbf{\Huge {DeepHypergraph Manual}}
+            \textbf{\Huge {Manual of DeepHypergraph}}
 
             \vspace{0mm}
             \begin{figure}[!h]
@@ -236,7 +236,7 @@ latex_elements = {
     "tableofcontents": " ",
 }
 latex_logo = "_static/logo.png"
-latex_documents = [("index", "dhg_mannual.tex", "DeepHypergraph Manual", "iMoonLab", "manual")]
+latex_documents = [("index", "dhg_mannual.tex", "Manual of DeepHypergraph", "iMoonLab", "manual")]
 
 
 def setup(app):

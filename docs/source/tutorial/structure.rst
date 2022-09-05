@@ -112,13 +112,13 @@ The adjacency list is a list of lists, each list contains two parts. The first p
 The second part is the **remaining elements** of the list, which are the vertex indices of the destination vertices.
 For example, assuming we have a graph with 5 vertices and a adjacency list as:
 
-.. code-block:: text
+.. code-block:: 
 
     [[0, 1, 2], [0, 3], [1, 2], [3, 4]]
 
 Then, the transformed edge list is:
 
-.. code-block:: text
+.. code-block:: 
 
     [(0, 1), (0, 2), (0, 3), (1, 2), (3, 4)]
 
