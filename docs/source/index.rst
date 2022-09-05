@@ -63,6 +63,9 @@ If you find our library useful for your research, please cite our papers:
       year={2019}
    }
 
+.. ======================================================
+
+.. decomment for html
 
 .. toctree::
    :maxdepth: 2
@@ -99,6 +102,18 @@ If you find our library useful for your research, please cite our papers:
    tutorial/auto_ml
    tutorial/random
 
+.. decomment for latex
+
+   .. toctree:: 
+      :maxdepth: 3
+      :caption: English
+      :hidden:
+
+      start/index
+      examples/index
+      tutorial/index
+
+.. ======================================================
 
 .. raw:: latex
 
@@ -138,9 +153,9 @@ If you find our library useful for your research, please cite our papers:
    dhg.utils <api/utils>
 
 
-Indices and Tables
-===================
+.. Indices 
+.. ===================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
