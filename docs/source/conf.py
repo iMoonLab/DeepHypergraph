@@ -236,7 +236,7 @@ latex_elements = {
     "tableofcontents": " ",
 }
 latex_logo = "_static/logo.png"
-latex_documents = [("index", "dhg_mannual.tex", "Manual of DeepHypergraph", "iMoonLab", "manual")]
+latex_documents = [("index", "dhg_manual.tex", "Manual of DeepHypergraph", "iMoonLab", "manual")]
 
 
 def setup(app):
