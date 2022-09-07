@@ -21,4 +21,6 @@ Others
 -----------
 
 - :doc:`Random Correlation Structure Generation </tutorial/random>`.
+- :doc:`Structure Visualization </tutorial/vis_structure>`.
+- :doc:`Feature Visualization </tutorial/vis_feature>`.
 

@@ -12,3 +12,5 @@ Tutorials
    train
    auto_ml
    random
+   vis_structure
+   vis_feature

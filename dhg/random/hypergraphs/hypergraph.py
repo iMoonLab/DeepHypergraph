@@ -62,12 +62,19 @@ def uniform_hypergraph_Gnm(k: int, num_v: int, num_e: int):
     return Hypergraph(num_v, list(edges))
 
 
-def hypergraph_Gnm(num_v: int, num_e: int, prob_k_list: Optional[List[float]] = None):
-    r"""Return a random hypergraph with ``num_v`` vertices and ``num_e`` hyperedges.
+def hypergraph_Gnm(num_v: int, num_e: int, method:str="uniform", prob_k_list: Optional[List[float]] = None):
+    r"""Return a random hypergraph with ``num_v`` vertices and ``num_e`` hyperedges. The ``method`` argument determines the distribution of the hyperedge degree.
+    The ``method`` can be one of ``"uniform"``, ``"low_order_first"``, ``"high_order_first"``. 
+
+    - If set to ``"uniform"``, the number of hyperedges with the same degree will approximately to the capacity of each hyperedge degree. 
+      For example, the ``num_v`` is :math:`10`. The capacity of hyperedges with degree  :math:`2` is :math:`C^2_{10} = 45`.
+    - If set to ``"low_order_first"``, the generated hyperedges will tend to have low degrees.
+    - If set to ``"high_order_first"``, the generated hyperedges will tend to have high degrees.
 
     Args:
         ``num_v`` (``int``): The Number of vertices.
         ``num_e`` (``int``): The Number of hyperedges.
+        ``method`` (``str``): The method to generate hyperedges must be one of ``"uniform"``, ``"low_order_first"``, ``"high_order_first"``. Defaults to ``"uniform"``.
     Examples:
         >>> import dhg.random as random
         >>> hg = random.hypergraph_Gnm(5, 4)
@@ -78,14 +85,21 @@ def hypergraph_Gnm(num_v: int, num_e: int, prob_k_list: Optional[List[float]] = 
 
     assert num_v > 1, "num_v must be greater than 1"
     assert num_e > 0, "num_e must be greater than 0"
-
-    if prob_k_list is None:
-        # prob_k_list = [1 / (num_v - 1)] * (num_v - 1)
-        prob_k_list = [C(num_v, k) / (2 ** num_v - 1) for k in range(2, num_v + 1)]
+    assert method in ("uniform", "low_order_first", "high_order_first"), "method must be one of 'uniform', 'low_order_first', 'high_order_first'"
+    deg_e_list = list(range(2, num_v + 1))
+    if method == "uniform":
+        prob_k_list = [C(num_v, k) / (2 ** num_v - 1) for k in deg_e_list]
+    elif method == "low_order_first":
+        # TODO
+        raise NotImplementedError
+    elif method == "high_order_first":
+        raise NotImplementedError
+    else:
+        raise ValueError(f"Unknown method: {method}")
 
     edges = set()
     while len(edges) < num_e:
-        k = random.choices(range(2, num_v + 1), weights=prob_k_list)[0]
+        k = random.choices(deg_e_list, weights=prob_k_list)[0]
         e = random.sample(range(num_v), k)
         e = tuple(sorted(e))
         if e not in edges:

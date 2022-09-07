@@ -103,6 +103,8 @@ If you find our library useful for your research, please cite our papers:
    tutorial/train
    tutorial/auto_ml
    tutorial/random
+   tutorial/vis_structure
+   tutorial/vis_feature
 
 .. decomment for latex
 
