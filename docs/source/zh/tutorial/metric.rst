@@ -19,7 +19,7 @@ DHG当前支持分类、推荐以及回归任务。各任务支持的指标如�
   :py:meth:`Recall <dhg.metrics.recommender.recall>`
   :py:meth:`NDCG <dhg.metrics.recommender.ndcg>`
 
-- **回归** ->
+- **检索** ->
   :py:meth:`Precision <dhg.metrics.retrieval.precision>`
   :py:meth:`Recall <dhg.metrics.retrieval.recall>`
   :py:meth:`NDCG <dhg.metrics.retrieval.ndcg>`

@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 =======================
-DHG Documentation
+DHG Overview
 =======================
 
 .. raw:: latex
