@@ -64,9 +64,9 @@ def uniform_hypergraph_Gnm(k: int, num_v: int, num_e: int):
 
 def hypergraph_Gnm(num_v: int, num_e: int, method:str="uniform", prob_k_list: Optional[List[float]] = None):
     r"""Return a random hypergraph with ``num_v`` vertices and ``num_e`` hyperedges. The ``method`` argument determines the distribution of the hyperedge degree.
-    The ``method`` can be one of ``"uniform"``, ``"low_order_first"``, ``"high_order_first"``. 
+    The ``method`` can be one of ``"uniform"``, ``"low_order_first"``, ``"high_order_first"``.
 
-    - If set to ``"uniform"``, the number of hyperedges with the same degree will approximately to the capacity of each hyperedge degree. 
+    - If set to ``"uniform"``, the number of hyperedges with the same degree will approximately to the capacity of each hyperedge degree.
       For example, the ``num_v`` is :math:`10`. The capacity of hyperedges with degree  :math:`2` is :math:`C^2_{10} = 45`.
     - If set to ``"low_order_first"``, the generated hyperedges will tend to have low degrees.
     - If set to ``"high_order_first"``, the generated hyperedges will tend to have high degrees.
@@ -90,10 +90,13 @@ def hypergraph_Gnm(num_v: int, num_e: int, method:str="uniform", prob_k_list: Op
     if method == "uniform":
         prob_k_list = [C(num_v, k) / (2 ** num_v - 1) for k in deg_e_list]
     elif method == "low_order_first":
-        # TODO
-        raise NotImplementedError
+        prob_k_list = [1.8 ** (-k) for k in deg_e_list]
+        sum_of_prob_k_list = sum(prob_k_list)
+        prob_k_list = [prob_k / sum_of_prob_k_list for prob_k in prob_k_list]
     elif method == "high_order_first":
-        raise NotImplementedError
+        prob_k_list = [1.8 ** (-k) for k in deg_e_list].reverse()
+        sum_of_prob_k_list = sum(prob_k_list)
+        prob_k_list = [prob_k / sum_of_prob_k_list for prob_k in prob_k_list]
     else:
         raise ValueError(f"Unknown method: {method}")
 
