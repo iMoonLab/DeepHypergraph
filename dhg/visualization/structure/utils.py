@@ -34,7 +34,7 @@ def draw_line_edge(
     e_color: list,
     e_line_width: list,
 ):
-    arrow_head_width = [0.03 * w for w in e_line_width] if show_arrow else [0] * len(e_list)
+    arrow_head_width = [0.015 * w for w in e_line_width] if show_arrow else [0] * len(e_list)
 
     for eidx, e in enumerate(e_list):
         start_pos = v_coor[e[0]]
