@@ -24,12 +24,11 @@ Visualization of Undirected Graph
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    from dhg.random import graph_Gnm
-
-    g = graph_Gnm(10, 12)
-    g.draw()
-    plt.show()
+    >>> import matplotlib.pyplot as plt
+    >>> from dhg.random import graph_Gnm
+    >>> g = graph_Gnm(10, 12)
+    >>> g.draw()
+    >>> plt.show()
 
 
 Visualization of Directed Graph
@@ -42,12 +41,11 @@ Visualization of Directed Graph
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    from dhg.random import digraph_Gnm
-
-    g = digraph_Gnm(12, 18)
-    g.draw()
-    plt.show()
+    >>> import matplotlib.pyplot as plt
+    >>> from dhg.random import digraph_Gnm
+    >>> g = digraph_Gnm(12, 18)
+    >>> g.draw()
+    >>> plt.show()
 
 
 Visualization of Bipartite Graph
@@ -61,12 +59,11 @@ Visualization of Bipartite Graph
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    from dhg.random import bigraph_Gnm
-
-    g = bigraph_Gnm(30, 40, 20)
-    g.draw()
-    plt.show()
+    >>> import matplotlib.pyplot as plt
+    >>> from dhg.random import bigraph_Gnm
+    >>> g = bigraph_Gnm(30, 40, 20)
+    >>> g.draw()
+    >>> plt.show()
 
 
 Visualization of Undirected Hypergraph
@@ -79,12 +76,11 @@ Visualization of Undirected Hypergraph
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    from dhg.random import hypergraph_Gnm
-
-    h = hypergraph_Gnm(10, 8, method='low_order_first')
-    h.draw()
-    plt.show()
+    >>> import matplotlib.pyplot as plt
+    >>> from dhg.random import hypergraph_Gnm
+    >>> hg = hypergraph_Gnm(10, 8, method='low_order_first')
+    >>> hg.draw()
+    >>> plt.show()
 
 
 
