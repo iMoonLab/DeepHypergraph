@@ -90,5 +90,9 @@ On User-Item Bipartite Graphs
     :members:
     :show-inheritance:
 
-.. Retrieval
-.. +++++++++++++++++++
+Retrieval
++++++++++++++++++++
+
+.. autoclass:: dhg.metrics.RetrievalEvaluator
+    :members:
+    :show-inheritance:

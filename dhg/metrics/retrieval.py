@@ -1,7 +1,9 @@
-from typing import Optional, Union, Tuple
+from typing import Optional, Union, Tuple, List, Dict
 
 import torch
 import numpy as np
+
+from dhg.metrics.base import BaseEvaluator
 
 
 __all__ = [
@@ -34,9 +36,7 @@ def _format_inputs(
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
     """
-    assert (
-        y_true.shape == y_pred.shape
-    ), "The shape of y_true and y_pred must be the same."
+    assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() in (1, 2), "The input y_true must be 1-D or 2-D."
     assert y_pred.dim() in (1, 2), "The input y_pred must be 1-D or 2-D."
     if y_true.dim() == 1:
@@ -50,10 +50,7 @@ def _format_inputs(
 
 
 def precision(
-    y_true: torch.Tensor,
-    y_pred: torch.Tensor,
-    k: Optional[int] = None,
-    ret_batch: bool = False,
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Precision score for the retrieval task.
 
@@ -82,10 +79,7 @@ def precision(
 
 
 def recall(
-    y_true: torch.Tensor,
-    y_pred: torch.Tensor,
-    k: Optional[int] = None,
-    ret_batch: bool = False,
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Recall score for the retrieval task.
 
@@ -116,10 +110,7 @@ def recall(
 
 
 def ap(
-    y_true: torch.Tensor,
-    y_pred: torch.Tensor,
-    k: Optional[int] = None,
-    method: str = "pascal_voc",
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, method: str = "pascal_voc",
 ) -> Union[float, list]:
     r"""Calculate the Average Precision (AP) for the retrieval task.
 
@@ -137,13 +128,8 @@ def ap(
         >>> dm.retrieval.ap(y_true, y_pred, method="legacy")
         0.8333333730697632
     """
-    assert method in (
-        "legacy",
-        "pascal_voc",
-    ), "The method must be either legacy or pascal_voc."
-    assert (
-        y_true.shape == y_pred.shape
-    ), "The shape of y_true and y_pred must be the same."
+    assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
+    assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() == 1, "The input y_true must be 1-D."
     assert y_pred.dim() == 1, "The input y_pred must be 1-D."
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
@@ -192,10 +178,7 @@ def map(
         >>> dm.retrieval.map(y_true, y_pred, method="legacy")
         0.587037056684494
     """
-    assert method in (
-        "legacy",
-        "pascal_voc",
-    ), "The method must be either legacy or pascal_voc."
+    assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
     y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
     res_list = [ap(y_true[i, :], y_pred[i, :], k) for i in range(y_true.shape[0])]
     if ret_batch:
@@ -212,17 +195,12 @@ def _dcg(matrix: torch.Tensor) -> torch.Tensor:
     """
     assert matrix.dim() == 2, "The input must be a 2-D tensor."
     n, k = matrix.shape
-    denom = (
-        torch.log2(torch.arange(k, device=matrix.device) + 2.0).view(1, -1).repeat(n, 1)
-    )
+    denom = torch.log2(torch.arange(k, device=matrix.device) + 2.0).view(1, -1).repeat(n, 1)
     return (matrix / denom).sum(dim=-1)
 
 
 def ndcg(
-    y_true: torch.Tensor,
-    y_pred: torch.Tensor,
-    k: Optional[int] = None,
-    ret_batch: bool = False,
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the retrieval task.
 
@@ -290,10 +268,7 @@ def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None) -> f
 
 
 def mrr(
-    y_true: torch.Tensor,
-    y_pred: torch.Tensor,
-    k: Optional[int] = None,
-    ret_batch: bool = False,
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the mean Reciprocal Rank (MRR) for the retrieval task.
 
@@ -348,13 +323,8 @@ def _pr_curve(
         >>> recall_coor
         [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     """
-    assert method in (
-        "legacy",
-        "pascal_voc",
-    ), "The method must be either legacy or pascal_voc."
-    assert (
-        y_true.shape == y_pred.shape
-    ), "The shape of y_true and y_pred must be the same."
+    assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
+    assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() == 1, "The input y_true must be 1-D."
     assert y_pred.dim() == 1, "The input y_pred must be 1-D."
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
@@ -405,16 +375,11 @@ def pr_curve(
         >>> recall_coor
         [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     """
-    assert method in (
-        "legacy",
-        "pascal_voc",
-    ), "The method must be either legacy or pascal_voc."
+    assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
     y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
     precision_coor_list, recall_coor_list = [], []
     for i in range(y_true.shape[0]):
-        precision_coor, recall_coor = _pr_curve(
-            y_true[i, :], y_pred[i, :], k, method, n_points
-        )
+        precision_coor, recall_coor = _pr_curve(y_true[i, :], y_pred[i, :], k, method, n_points)
         precision_coor_list.append(precision_coor)
         recall_coor_list.append(recall_coor)
     if ret_batch:
@@ -423,3 +388,73 @@ def pr_curve(
         precision_coor = np.mean(precision_coor_list, axis=0)
         recall_coor = np.mean(recall_coor_list, axis=0)
         return precision_coor.tolist(), recall_coor.tolist()
+
+
+class RetrievalEvaluator(BaseEvaluator):
+    r"""Return the metric evaluator for retrieval task. The supported metrics includes: ``precision``, ``recall``, ``map``, ``ndcg``, ``mrr``, ``pr_curve``.
+    
+    Args:
+        ``metric_configs`` (``List[Union[str, Dict[str, dict]]]``): The metric configurations. The key is the metric name and the value is the metric parameters.
+        ``validate_index`` (``int``): The specified metric index used for validation. Defaults to ``0``.
+
+    Examples:
+        >>> import torch
+        >>> import dhg.metrics as dm
+        >>> evaluator = dm.RetrievalEvaluator(
+                [
+                    "precision",
+                    "recall",
+                    "ndcg",
+                ],
+                0
+            )
+        >>> y_true = torch.tensor([0, 1, 0, 0, 1, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.validate_add_batch(y_true, y_pred)
+        >>> evaluator.validate_epoch_res()
+        0.5
+        >>> y_true = torch.tensor([0, 1, 1, 1, 0, 1])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> y_true = torch.tensor([1, 1, 0, 0, 1, 0])
+        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> evaluator.test_add_batch(y_true, y_pred)
+        >>> evaluator.test_epoch_res()
+        {'precision': 0.5833333432674408, 'recall': 1.0, 'ndcg': 0.8878978490829468}
+    """
+
+    def __init__(
+        self, metric_configs: List[Union[str, Dict[str, dict]]], validate_index: int = 0,
+    ):
+        super().__init__("retrieval", metric_configs, validate_index)
+
+    def validate_add_batch(self, batch_y_true: torch.Tensor, batch_y_pred: torch.Tensor):
+        r"""Add batch data for validation.
+
+        Args:
+            ``batch_y_true`` (``torch.Tensor``): The ground truth data. Size :math:`(N_{batch}, -)`.
+            ``batch_y_pred`` (``torch.Tensor``): The predicted data. Size :math:`(N_{batch}, -)`.
+        """
+        return super().validate_add_batch(batch_y_true, batch_y_pred)
+
+    def validate_epoch_res(self):
+        r"""For all added batch data, return the result of the evaluation on the specified ``validate_index``-th metric.
+        """
+        return super().validate_epoch_res()
+
+    def test_add_batch(self, batch_y_true: torch.Tensor, batch_y_pred: torch.Tensor):
+        r"""Add batch data for testing.
+
+        Args:
+            ``batch_y_true`` (``torch.Tensor``): The ground truth data. Size :math:`(N_{batch}, -)`.
+            ``batch_y_pred`` (``torch.Tensor``): The predicted data. Size :math:`(N_{batch}, -)`.
+        """
+        return super().test_add_batch(batch_y_true, batch_y_pred)
+
+    def test_epoch_res(self):
+        r"""For all added batch data, return results of the evaluation on all the metrics in ``metric_configs``.
+        """
+        return super().test_epoch_res()

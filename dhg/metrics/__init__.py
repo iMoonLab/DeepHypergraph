@@ -3,7 +3,7 @@ from .classification import (
     available_classification_metrics,
     VertexClassificationEvaluator,
 )
-from .retrieval import available_retrieval_metrics
+from .retrieval import available_retrieval_metrics, RetrievalEvaluator
 from .recommender import available_recommender_metrics, UserItemRecommenderEvaluator
 from .graphs import GraphVertexClassificationEvaluator
 from .hypergraphs import HypergraphVertexClassificationEvaluator
@@ -46,4 +46,5 @@ __all__ = [
     "GraphVertexClassificationEvaluator",
     "HypergraphVertexClassificationEvaluator",
     "UserItemRecommenderEvaluator",
+    "RetrievalEvaluator",
 ]
