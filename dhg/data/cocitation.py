@@ -7,10 +7,10 @@ from .base import BaseData
 
 
 class CocitationCora(BaseData):
-    r"""The Cocitation Cora dataset is a citation network dataset for vertex classification task. 
-     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+    r"""The Co-citation Cora dataset is a citation network dataset for vertex classification task. 
+    More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
     
-    The content of the Cora dataset includes the following:
+    The content of the Co-citation Cora dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`7`.
     - ``num_vertices``: The number of vertices: :math:`2,708`.
@@ -68,7 +68,9 @@ class CocitationCora(BaseData):
 
 class CocitationCiteseer(BaseData):
     r"""The Co-citation Citeseer dataset is a citation network dataset for vertex classification task. 
-     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+    More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+
+    The content of the Co-citation Citaseer dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`6`.
     - ``num_vertices``: The number of vertices: :math:`3,327`.
@@ -126,7 +128,9 @@ class CocitationCiteseer(BaseData):
 
 class CocitationPubmed(BaseData):
     r"""The Co-citation PubMed dataset is a citation network dataset for vertex classification task. 
-     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+    More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+
+    The content of the Co-citation PubMed dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`3`.
     - ``num_vertices``: The number of vertices: :math:`19,717`.

@@ -10,7 +10,7 @@ class CoauthorshipCora(BaseData):
     r"""The Co-authorship Cora dataset is a citation network dataset for vertex classification task.
     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
     
-    The content of the Cora dataset includes the following:
+    The content of the Co-authorship Cora dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`7`.
     - ``num_vertices``: The number of vertices: :math:`2,708`.
@@ -69,7 +69,7 @@ class CoauthorshipDBLP(BaseData):
     r"""The Co-authorship DBLP dataset is a citation network dataset for vertex classification task.
     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
     
-    The content of the DBLP dataset includes the following:
+    The content of the Co-authorship DBLP dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`6`.
     - ``num_vertices``: The number of vertices: :math:`41,302`.

@@ -6,8 +6,8 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 from dhg import Hypergraph
-from dhg.data import Cooking200
-from dhg.models import HGNN, HGNNP
+from dhg.data import Cooking200, CoauthorshipCora, CoauthorshipDBLP
+from dhg.models import HGNN, HGNNP, HyperGCN
 from dhg.random import set_seed
 from dhg.metrics import HypergraphVertexClassificationEvaluator as Evaluator
 
@@ -43,14 +43,18 @@ if __name__ == "__main__":
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
     data = Cooking200()
+    # data = CoauthorshipCora()
+    # data = CoauthorshipDBLP()
 
     X, lbl = torch.eye(data["num_vertices"]), data["labels"]
+    # X, lbl = data['features'], data['labels']
     G = Hypergraph(data["num_vertices"], data["edge_list"])
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
     net = HGNN(X.shape[1], 32, data["num_classes"], use_bn=True)
+    # net = HyperGCN(X.shape[1], 32, data["num_classes"], use_bn=True)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)
 
     X, lbl = X.to(device), lbl.to(device)
