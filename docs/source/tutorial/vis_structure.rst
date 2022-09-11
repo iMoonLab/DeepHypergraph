@@ -2,7 +2,7 @@ Structure Visualization
 =============================
 
 
-Basic Usage
+Basic Usages
 --------------
 DHG provides a simple interface to visualize the correlation structures:
 
@@ -84,10 +84,25 @@ Visualization of Undirected Hypergraph
 
 
 
-Advanced Usage
+Advanced Usages
 ---------------------
 
+Customize Labels
+^^^^^^^^^^^^^^^^^^^^^^^^^
 Coming soon...
+
+Customize Colors
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Coming soon...
+
+Customize Sizes
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Coming soon...
+
+Customize Layout
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Coming soon...
+
 
 .. different style, change size, change color, change opacity
 
