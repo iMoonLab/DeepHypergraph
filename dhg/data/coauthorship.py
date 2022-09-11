@@ -7,16 +7,17 @@ from .base import BaseData
 
 
 class CoauthorshipCora(BaseData):
-    r"""The Cora dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CORA>`_.
+    r"""The Co-authorship Cora dataset is a citation network dataset for vertex classification task.
+    More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
     
     The content of the Cora dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`7`.
     - ``num_vertices``: The number of vertices: :math:`2,708`.
-    - ``num_edges``: The number of edges: :math:`10,858`.
+    - ``num_edges``: The number of edges: :math:`1,072`.
     - ``dim_features``: The dimension of features: :math:`1,433`.
     - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(2,708 \times 1,433)`.
-    - ``edge_list``: The edge list. ``List`` with length :math:`(10,858 \times 2)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`1,072`.
     - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(2,708, )`.
     - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(2,708, )`.
     - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(2,708, )`.
@@ -65,6 +66,25 @@ class CoauthorshipCora(BaseData):
 
 
 class CoauthorshipDBLP(BaseData):
+    r"""The Co-authorship DBLP dataset is a citation network dataset for vertex classification task.
+    More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
+    
+    The content of the DBLP dataset includes the following:
+
+    - ``num_classes``: The number of classes: :math:`6`.
+    - ``num_vertices``: The number of vertices: :math:`41,302`.
+    - ``num_edges``: The number of edges: :math:`22,363`.
+    - ``dim_features``: The dimension of features: :math:`1,425`.
+    - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(41,302 \times 1,425)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`22,363`.
+    - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(41,302, )`.
+    - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(41,302, )`.
+    - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(41,302, )`.
+    - ``test_mask``: The test mask. ``torch.BoolTensor`` with size :math:`(41,302, )`.
+
+    Args:
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
+    """
     def __init__(self, data_root: Optional[str] = None) -> None:
         super().__init__("coauthorship_dblp", data_root)
         self._content = {

@@ -5,7 +5,8 @@ from .movielens import MovieLens1M
 from .yelp import Yelp2018
 from .gowalla import Gowalla
 from .amazon import AmazonBook
-from .coauthorship import CoauthorshipCora
+from .coauthorship import CoauthorshipCora, CoauthorshipDBLP
+from .cocitation import CocitationCora, CocitationCiteseer, CocitationPubmed
 
 __all__ = [
     "BaseData",
@@ -17,4 +18,9 @@ __all__ = [
     "Yelp2018",
     "Gowalla",
     "AmazonBook",
+    "CoauthorshipCora",
+    "CoauthorshipDBLP",
+    "CocitationCora",
+    "CocitationCiteseer",
+    "CocitationPubmed",
 ]

@@ -8,7 +8,7 @@ Base Class
     :members:
 
 
-Vertex Classification Datasets
+Graph Datasets
 --------------------------------
 
 .. autosummary::
@@ -19,10 +19,25 @@ Vertex Classification Datasets
     dhg.data.Cora
     dhg.data.Pubmed
     dhg.data.Citeseer
+
+
+Hypergraph Datasets
+-----------------------
+
+.. autosummary::
+    :toctree: ../generated/
+    :nosignatures:
+    :template: dataset_template.rst
+
     dhg.data.Cooking200
+    dhg.data.CoauthorshipCora
+    dhg.data.CoauthorshipDBLP
+    dhg.data.CocitationCora
+    dhg.data.CocitationCiteseer
+    dhg.data.CocitationPubmed
 
 
-User-Item Recommender Datasets 
+Bipartite Graph Datasets 
 --------------------------------
 
 .. autosummary::

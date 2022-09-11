@@ -7,16 +7,17 @@ from .base import BaseData
 
 
 class CocitationCora(BaseData):
-    r"""The Cora dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CORA>`_.
+    r"""The Cocitation Cora dataset is a citation network dataset for vertex classification task. 
+     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
     
     The content of the Cora dataset includes the following:
 
     - ``num_classes``: The number of classes: :math:`7`.
     - ``num_vertices``: The number of vertices: :math:`2,708`.
-    - ``num_edges``: The number of edges: :math:`10,858`.
+    - ``num_edges``: The number of edges: :math:`1,579`.
     - ``dim_features``: The dimension of features: :math:`1,433`.
     - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(2,708 \times 1,433)`.
-    - ``edge_list``: The edge list. ``List`` with length :math:`(10,858 \times 2)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`1,579`.
     - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(2,708, )`.
     - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(2,708, )`.
     - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(2,708, )`.
@@ -66,14 +67,15 @@ class CocitationCora(BaseData):
 
 
 class CocitationCiteseer(BaseData):
-    r"""The Citeseer dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://relational.fit.cvut.cz/dataset/CiteSeer>`_.
+    r"""The Co-citation Citeseer dataset is a citation network dataset for vertex classification task. 
+     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
 
     - ``num_classes``: The number of classes: :math:`6`.
     - ``num_vertices``: The number of vertices: :math:`3,327`.
-    - ``num_edges``: The number of edges: :math:`9,464`.
+    - ``num_edges``: The number of edges: :math:`1,079`.
     - ``dim_features``: The dimension of features: :math:`3,703`.
     - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(3,327 \times 3,703)`.
-    - ``edge_list``: The edge list. ``List`` with length :math:`(9,464 \times 2)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`1,079`.
     - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(3,327, )`.
     - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(3,327, )`.
     - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(3,327, )`.
@@ -123,14 +125,15 @@ class CocitationCiteseer(BaseData):
 
 
 class CocitationPubmed(BaseData):
-    r"""The PubMed dataset is a citation network dataset for vertex classification task. More details can be found in this `website <https://pubmed.ncbi.nlm.nih.gov/download/>`_.
+    r"""The Co-citation PubMed dataset is a citation network dataset for vertex classification task. 
+     More details see the `HyperGCN <https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf>`_ paper.
 
     - ``num_classes``: The number of classes: :math:`3`.
     - ``num_vertices``: The number of vertices: :math:`19,717`.
-    - ``num_edges``: The number of edges: :math:`88,676`.
+    - ``num_edges``: The number of edges: :math:`7,963`.
     - ``dim_features``: The dimension of features: :math:`500`.
     - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(19,717 \times 500)`.
-    - ``edge_list``: The edge list. ``List`` with length :math:`(88,676 \times 2)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`7,963`.
     - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(19,717, )`.
     - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(19,717, )`.
     - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(19,717, )`.
