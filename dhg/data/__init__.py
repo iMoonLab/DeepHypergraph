@@ -5,6 +5,7 @@ from .movielens import MovieLens1M
 from .yelp import Yelp2018
 from .gowalla import Gowalla
 from .amazon import AmazonBook
+from .coauthorship import CoauthorshipCora
 
 __all__ = [
     "BaseData",
