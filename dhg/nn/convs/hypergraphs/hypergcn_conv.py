@@ -32,7 +32,7 @@ class HyperGCNConv(nn.Module):
     ):
         super().__init__()
         self.is_last = is_last
-        self.bn = nn.BatchNorm1d(in_channels) if use_bn else None
+        self.bn = nn.BatchNorm1d(out_channels) if use_bn else None
         self.use_mediator = use_mediator
         self.act = nn.ReLU(inplace=True)
         self.drop = nn.Dropout(drop_rate)

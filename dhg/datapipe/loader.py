@@ -6,9 +6,7 @@ import json
 import pickle as pkl
 
 
-def load_from_pickle(
-    file_path: Path, keys: Optional[Union[str, List[str]]] = None, **kwargs
-):
+def load_from_pickle(file_path: Path, keys: Optional[Union[str, List[str]]] = None, **kwargs):
     r""" Load data from a pickle file.
 
     Args:
@@ -39,10 +37,7 @@ def load_from_json(file_path: Path, **kwargs):
 
 
 def load_from_txt(
-    file_path: Path,
-    dtype: Union[str, Callable],
-    sep: str = ",| |\t",
-    ignore_header: int = 0,
+    file_path: Path, dtype: Union[str, Callable], sep: str = ",| |\t", ignore_header: int = 0,
 ):
     r""" Load data from a txt file.
 
@@ -62,9 +57,7 @@ def load_from_txt(
     with open(file_path, "r") as f:
         for _ in range(ignore_header):
             f.readline()
-        data = [
-            list(map(cast_fun, re.split(sep, line.strip()))) for line in f.readlines()
-        ]
+        data = [list(map(cast_fun, re.split(sep, line.strip()))) for line in f.readlines()]
     return data
 
 
