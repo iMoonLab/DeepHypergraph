@@ -43,20 +43,21 @@ if __name__ == "__main__":
     set_seed(2021)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     evaluator = Evaluator(["accuracy", "f1_score", {"f1_score": {"average": "micro"}}])
-    # data = Cooking200()
+    data = Cooking200()
     # data = CoauthorshipCora()
-    data = CoauthorshipDBLP()
+    # data = CoauthorshipDBLP()
     # data = dhg.data.CocitationCora()
 
-    # X, lbl = torch.eye(data["num_vertices"]), data["labels"]
-    X, lbl = data['features'], data['labels']
+    X, lbl = torch.eye(data["num_vertices"]), data["labels"]
+    # X, lbl = data['features'], data['labels']
     G = Hypergraph(data["num_vertices"], data["edge_list"])
     train_mask = data["train_mask"]
     val_mask = data["val_mask"]
     test_mask = data["test_mask"]
 
-    # net = HGNN(X.shape[1], 32, data["num_classes"], use_bn=True)
-    net = dhg.models.UniSAGE(X.shape[1], 32, data["num_classes"], use_bn=False)
+    net = HGNN(X.shape[1], 32, data["num_classes"], use_bn=True)
+    # net = dhg.models.UniGCN(X.shape[1], 32, data["num_classes"], use_bn=False)
+    # net = dhg.models.UniGAT(X.shape[1], 8, data["num_classes"], num_heads=8, use_bn=False)
     # net = dhg.models.HGNNP(X.shape[1], 32, data["num_classes"], use_bn=False)
     # net = HyperGCN(X.shape[1], 32, data["num_classes"], use_bn=False)
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=5e-4)

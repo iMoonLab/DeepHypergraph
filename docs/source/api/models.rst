@@ -1,8 +1,8 @@
 dhg.models
 ============
 
-Models on Low-Order Structures
--------------------------------
+Models on Graph
+-------------------------
 
 .. autosummary::
    :toctree: ../generated/
@@ -13,12 +13,21 @@ Models on Low-Order Structures
    dhg.models.GraphSAGE 
    dhg.models.GAT
    dhg.models.GIN
+
+
+Models on Bipartite Graph
+-----------------------------
+.. autosummary::
+   :toctree: ../generated/
+   :nosignatures:
+   :template: model_template.rst
+
    dhg.models.NGCF
    dhg.models.LightGCN
 
 
-Models on High-Order Structures
---------------------------------------
+Models on Hypergraph
+------------------------------
 
 .. autosummary::
    :toctree: ../generated/
@@ -28,5 +37,9 @@ Models on High-Order Structures
    dhg.models.HGNN
    dhg.models.HGNNP
    dhg.models.HyperGCN
-   dhg.models.HNHN
    dhg.models.DHCF
+   dhg.models.HNHN
+   dhg.models.UniGCN
+   dhg.models.UniGAT
+   dhg.models.UniSAGE
+   dhg.models.UniGIN

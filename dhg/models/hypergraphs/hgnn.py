@@ -34,7 +34,7 @@ class HGNN(nn.Module):
         )
 
     def forward(self, X: torch.Tensor, hg: "dhg.Hypergraph") -> torch.Tensor:
-        r"""Forward function.
+        r"""The forward function.
 
         Args:
             ``X`` (``torch.Tensor``): Input vertex feature matrix. Size :math:`(N, C_{in})`.

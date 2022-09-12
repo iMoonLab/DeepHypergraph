@@ -1,6 +1,16 @@
 from .convs.common import MLP
 from .convs.graphs import GCNConv, GATConv, GraphSAGEConv, GINConv
-from .convs.hypergraphs import HGNNConv, HGNNPConv, JHConv, HNHNConv, HyperGCNConv, UniSAGEConv
+from .convs.hypergraphs import (
+    HGNNConv,
+    HGNNPConv,
+    JHConv,
+    HNHNConv,
+    HyperGCNConv,
+    UniGCNConv,
+    UniGATConv,
+    UniSAGEConv,
+    UniGINConv,
+)
 from .loss import BPRLoss
 from .regularization import EmbeddingRegularization
 
@@ -15,7 +25,10 @@ __all__ = [
     "JHConv",
     "HNHNConv",
     "HyperGCNConv",
+    "UniGCNConv",
+    "UniGATConv",
     "UniSAGEConv",
+    "UniGINConv",
     "BPRLoss",
     "EmbeddingRegularization",
 ]

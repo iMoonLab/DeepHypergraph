@@ -14,7 +14,7 @@ Common Layers
    dhg.nn.MLP
 
 
-Layers on Low-Order Structures
+Layers on Graph
 -------------------------------------------
 
 .. autosummary::
@@ -28,7 +28,7 @@ Layers on Low-Order Structures
    dhg.nn.GINConv
 
 
-Layers on High-Order Structures
+Layers on Hypergraph
 ----------------------------------------------
 
 .. autosummary::
@@ -41,6 +41,10 @@ Layers on High-Order Structures
     dhg.nn.JHConv
     dhg.nn.HyperGCNConv
     dhg.nn.HNHNConv
+    dhg.nn.UniGCNConv
+    dhg.nn.UniGATConv
+    dhg.nn.UniSAGEConv
+    dhg.nn.UniGINConv
 
 
 Loss Functions

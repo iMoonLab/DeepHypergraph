@@ -34,11 +34,7 @@ class GAT(nn.Module):
         for _ in range(num_heads):
             self.layers.append(
                 GATConv(
-                    in_channels,
-                    hid_channels,
-                    use_bn=use_bn,
-                    drop_rate=drop_rate,
-                    atten_neg_slope=atten_neg_slope,
+                    in_channels, hid_channels, use_bn=use_bn, drop_rate=drop_rate, atten_neg_slope=atten_neg_slope,
                 )
             )
         # The original implementation has applied activation layer after the final layer.
