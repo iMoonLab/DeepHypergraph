@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 import dhg
-from dhg.nn import UniGCNConv, UniGATConv, UniSAGEConv, UniGINConv
+from dhg.nn import UniGCNConv, UniGATConv, UniSAGEConv, UniGINConv, MultiHeadWrapper
 
 
 class UniGCN(nn.Module):
@@ -61,13 +61,16 @@ class UniGAT(nn.Module):
     ) -> None:
         super().__init__()
         self.drop_layer = nn.Dropout(drop_rate)
-        self.layers = nn.ModuleList()
-        for _ in range(num_heads):
-            self.layers.append(
-                UniGATConv(
-                    in_channels, hid_channels, use_bn=use_bn, drop_rate=drop_rate, atten_neg_slope=atten_neg_slope,
-                )
-            )
+        self.multi_head_layer = MultiHeadWrapper(
+            num_heads,
+            "concat",
+            UniGATConv,
+            in_channels=in_channels,
+            out_channels=hid_channels,
+            use_bn=use_bn,
+            drop_rate=drop_rate,
+            atten_neg_slope=atten_neg_slope,
+        )
         # The original implementation has applied activation layer after the final layer.
         # Thus, we donot set ``is_last`` to ``True``.
         self.out_layer = UniGATConv(
@@ -79,7 +82,7 @@ class UniGAT(nn.Module):
             is_last=False,
         )
 
-    def forward(self, X: torch.Tensor, g: "dhg.Hypergraph") -> torch.Tensor:
+    def forward(self, X: torch.Tensor, hg: "dhg.Hypergraph") -> torch.Tensor:
         r"""The forward function.
 
         Args:
@@ -87,9 +90,9 @@ class UniGAT(nn.Module):
             ``hg`` (``dhg.Hypergraph``): The hypergraph structure that contains :math:`N` vertices.
         """
         X = self.drop_layer(X)
-        X = torch.cat([layer(X, g) for layer in self.layers], dim=1)
+        X = self.multi_head_layer(X=X, hg=hg)
         X = self.drop_layer(X)
-        X = self.out_layer(X, g)
+        X = self.out_layer(X, hg)
         return X
 
 

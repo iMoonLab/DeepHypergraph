@@ -12,6 +12,7 @@ Common Layers
    :template: conv_template.rst
 
    dhg.nn.MLP
+   dhg.nn.MultiHeadWrapper
 
 
 Layers on Graph

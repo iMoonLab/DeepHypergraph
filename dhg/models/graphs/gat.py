@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 import dhg
-from dhg.nn import GATConv
+from dhg.nn import GATConv, MultiHeadWrapper
 
 
 class GAT(nn.Module):
@@ -30,13 +30,16 @@ class GAT(nn.Module):
     ) -> None:
         super().__init__()
         self.drop_layer = nn.Dropout(drop_rate)
-        self.layers = nn.ModuleList()
-        for _ in range(num_heads):
-            self.layers.append(
-                GATConv(
-                    in_channels, hid_channels, use_bn=use_bn, drop_rate=drop_rate, atten_neg_slope=atten_neg_slope,
-                )
-            )
+        self.multi_head_layer = MultiHeadWrapper(
+            num_heads,
+            "concat",
+            GATConv,
+            in_channels=in_channels,
+            out_channels=hid_channels,
+            use_bn=use_bn,
+            drop_rate=drop_rate,
+            atten_neg_slope=atten_neg_slope,
+        )
         # The original implementation has applied activation layer after the final layer.
         # Thus, we donot set ``is_last`` to ``True``.
         self.out_layer = GATConv(
@@ -56,7 +59,7 @@ class GAT(nn.Module):
             ``g`` (``dhg.Graph``): The graph structure that contains :math:`N` vertices.
         """
         X = self.drop_layer(X)
-        X = torch.cat([layer(X, g) for layer in self.layers], dim=1)
+        X = self.multi_head_layer(X=X, g=g)
         X = self.drop_layer(X)
         X = self.out_layer(X, g)
         return X

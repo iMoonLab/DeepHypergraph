@@ -1,7 +1,7 @@
 Feature Visualization
 =========================
 
-Basic Usage
+Basic Usages
 ---------------
 DHG provides an interface to visualize the distribution of feaures:
 
@@ -62,11 +62,12 @@ Visualization of Features in Poincare Space
 
 Make Animation
 -------------------------
+
 Furthermore, we also offer interfaces for the visual presentation of 
 rotation on three-dimensional visualisations with the option of `Rotation` in Euclidean and Poincare Space. 
 
 Rotating Visualization of Features in Euclidean Space
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. .. image:: ../_static/img/vis_ft_euclidean.png
 ..     :align: center
@@ -90,7 +91,7 @@ Rotating Visualization of Features in Euclidean Space
         )
 
 Rotating Visualization of Features in Poincare Space
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. .. image:: ../_static/img/vis_ft_euclidean.png
 ..     :align: center
@@ -116,7 +117,8 @@ Rotating Visualization of Features in Poincare Space
 
 
 Mathamatical Principles of Hyperbolic Space
----------------------------
+--------------------------------------------------
+
 The hyperbolic space is a manifold with constant Gaussian constant negative curvature everywhere, 
 which has several models. We base our work on the Poincaré ball model for its well-suited for gradient-based optimization. 
 
