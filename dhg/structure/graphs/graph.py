@@ -129,7 +129,23 @@ class Graph(BaseGraph):
             ``pull_e_strength`` (``float``): The edge pull strength. Defaults to ``1.0``.
             ``pull_center_strength`` (``float``): The center pull strength. Defaults to ``1.0``.
         """
-        draw_graph(self, e_style, v_label, v_size, v_color, v_line_width, e_color, e_fill_color, e_line_width, font_size, font_family, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
+        draw_graph(
+            self,
+            e_style,
+            v_label,
+            v_size,
+            v_color,
+            v_line_width,
+            e_color,
+            e_fill_color,
+            e_line_width,
+            font_size,
+            font_family,
+            push_v_strength,
+            push_e_strength,
+            pull_e_strength,
+            pull_center_strength,
+        )
 
     def clear(self):
         r"""Remove all edges in this graph.
@@ -334,6 +350,45 @@ class Graph(BaseGraph):
         """
         return super().remove_selfloop()
 
+    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
+        r"""Drop edges from the graph. This function will return a modified new graph object. The original graph will not be modified.
+
+        .. note::
+            This function will only affect those deep learning variables ``vars_for_DL``, 
+            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
+            Thus, those dropped edges are still exist in the graph, but with different weights.
+            You can restore those dropped weights with ``restore_edges()`` function.
+
+        Args:
+            ``drop_rate`` (``float``): The drop rate of edges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
+        """
+        _g = self.clone()
+        _g._clear_cache()
+        if ord == "uniform":
+            num_raw_e, num_extra_e = len(_g._raw_e_dict), len(_g._raw_selfloop_dict)
+            if _g._has_extra_selfloop:
+                num_extra_e += _g.num_v
+            num_e = num_raw_e + num_extra_e
+            p = torch.ones(num_e) * drop_rate
+            drop_mask = torch.bernoulli(p).bool()
+            drop_mask = torch.cat([drop_mask, drop_mask[:num_raw_e]])
+            e_list, e_weight = _g.e_both_side
+            indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
+            values[drop_mask] = fill_value
+            _g.cache["A"] = torch.sparse_coo_tensor(
+                indices, values, size=(_g.num_v, _g.num_v), device=_g.device
+            ).coalesce()
+        else:
+            raise ValueError(f"Unknown drop order: {ord}.")
+        return _g
+
+    def restore_edges(self):
+        r"""Restore the dropped edges.
+        """
+        return super().restore_edges()
+
     # =====================================================================================
     # properties for representation
     @property
@@ -344,7 +399,10 @@ class Graph(BaseGraph):
 
     @property
     def e(self) -> Tuple[List[List[int]], List[float]]:
-        r"""Return the edge list and weight list in the graph.
+        r"""Return edges and their weights in the graph with ``(edge_list, edge_weight_list)``
+        format. ``i-th`` element in the ``edge_list`` denotes ``i-th`` edge, :math:`[v_{src} \longleftrightarrow v_{dst}]`.
+        ``i-th`` element in ``edge_weight_list`` denotes the weight of ``i-th`` edge, :math:`e_{w}`.
+        The lenght of the two lists are both :math:`|\mathcal{E}|`.
         """
         return super().e
 

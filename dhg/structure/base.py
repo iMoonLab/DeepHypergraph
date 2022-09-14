@@ -84,7 +84,7 @@ class BaseGraph:
         Args:
             ``state_dict`` (``dict``): The state dict to load the DHG's graph.
         """
-    
+
     @abc.abstractmethod
     def draw(self, **kwargs):
         r"""Draw the structure.
@@ -255,6 +255,28 @@ class BaseGraph:
         self.remove_extra_selfloop()
         self._clear_cache()
 
+    @abc.abstractmethod
+    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
+        r"""Drop edges from the graph.
+
+        .. note::
+            This function will only affect those deep learning variables ``vars_for_DL``, 
+            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
+            Thus, those dropped edges are still exist in the graph, but with different weights.
+            You can restore those dropped weights with ``restore_edges()`` function.
+
+        Args:
+            ``drop_rate`` (``float``): The drop rate of edges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
+        """
+
+    def restore_edges(self):
+        r"""Restore the dropped edges.
+        """
+        self._clear_cache()
+        return self
+
     # =====================================================================================
     # properties for representation
     @property
@@ -265,10 +287,7 @@ class BaseGraph:
 
     @property
     def e(self) -> Tuple[List[List[int]], List[float]]:
-        r"""Return edges and their weights in the graph with ``(edge_list, edge_weight_list)``
-        format. ``i-th`` element in the ``edge_list`` denotes ``i-th`` edge, :math:`[v_{src} <---> v_{dst}]`.
-        ``i-th`` element in ``edge_weight_list`` denotes the weight of ``i-th`` edge, :math:`e_{w}`.
-        The lenght of the two lists are both :math:`|\mathcal{E}|`.
+        r"""Return the edge list and weight list in the graph.
         """
         if self.cache.get("e", None) is None:
             e_list = [(src_idx, dst_idx) for src_idx, dst_idx in self._raw_e_dict.keys()]

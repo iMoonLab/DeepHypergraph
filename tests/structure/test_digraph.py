@@ -319,3 +319,13 @@ def test_v2v(g1):
     assert y.shape == (4, 8)
     y = g1.v2v(x, "softmax_then_sum", w)
     assert y.shape == (4, 8)
+
+
+def test_drop_edges(g1):
+    # TODO
+    pass
+
+
+def test_restore_edges(g1):
+    # TODO
+    pass

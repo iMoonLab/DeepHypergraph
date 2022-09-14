@@ -427,3 +427,12 @@ def test_v2u():
         assert pytest.approx(sum_v2u) == g.v2u(x, "sum")
         assert pytest.approx(mean_v2u) == g.v2u(x, "mean")
 
+
+def test_drop_edges(g1):
+    # TODO
+    pass
+
+
+def test_restore_edges(g1):
+    # TODO
+    pass

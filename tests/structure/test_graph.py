@@ -312,3 +312,13 @@ def test_v2v(g1):
             assert pytest.approx(g.v2v(x, "mean").cpu()) == mean_v2v.cpu()
 
     # TODO: manually compute and compare with g1.v2v
+
+
+def test_drop_edges(g1):
+    # TODO
+    pass
+
+
+def test_restore_edges(g1):
+    # TODO
+    pass

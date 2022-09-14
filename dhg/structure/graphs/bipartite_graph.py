@@ -318,6 +318,40 @@ class BiGraph(BaseGraph):
         _g._clear_cache()
         return _g
 
+    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
+        r"""Drop edges from the bipartite graph. This function will return a modified new bipartite graph object. The original directed graph will not be modified.
+
+        .. note::
+            This function will only affect those deep learning variables ``vars_for_DL``, 
+            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
+            Thus, those dropped edges are still exist in the bipartite graph, but with different weights.
+            You can restore those dropped weights with ``restore_edges()`` function.
+
+        Args:
+            ``drop_rate`` (``float``): The drop rate of edges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
+        """
+        _g = self.clone()
+        _g._clear_cache()
+        if ord == "uniform":
+            p = torch.ones(_g.num_e) * drop_rate
+            drop_mask = torch.bernoulli(p).bool()
+            e_list, e_weight = _g.e
+            indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
+            values[drop_mask] = fill_value
+            _g.cache["B"] = torch.sparse_coo_tensor(
+                indices, values, size=(_g.num_v, _g.num_v), device=_g.device
+            ).coalesce()
+        else:
+            raise ValueError(f"Unknown drop order: {ord}.")
+        return _g
+
+    def restore_edges(self):
+        r"""Restore the dropped edges.
+        """
+        return super().restore_edges()
+
     # ==============================================================================
     # properties for representation
     @property
@@ -334,7 +368,10 @@ class BiGraph(BaseGraph):
 
     @property
     def e(self) -> Tuple[List[List[int]], List[float]]:
-        r"""Return the edge list and weight list in the bipartite graph.
+        r"""Return edges and their weights in the bipartite graph with ``(edge_list, edge_weight_list)``
+        format. ``i-th`` element in the ``edge_list`` denotes ``i-th`` edge, :math:`[u \longleftrightarrow v]`.
+        ``i-th`` element in ``edge_weight_list`` denotes the weight of ``i-th`` edge, :math:`e_{w}`.
+        The lenght of the two lists are both :math:`|\mathcal{E}|`.
         """
         return super().e
 
