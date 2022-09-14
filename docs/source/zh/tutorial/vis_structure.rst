@@ -3,12 +3,12 @@
 
 即将上线！
 
-.. Basic Usage
+.. Basic Usages
 .. --------------
 .. init a structure, call the draw method, and plt.show(), and plt.savefig().
 
 
-.. Advanced Usage
+.. Advanced Usages
 .. ---------------------
 
 .. different style, change size, change color, change opacity
@@ -17,7 +17,7 @@
 .. Mathamatical Principles
 .. -----------------------
 
-.. Simple Graph
+.. Graph
 .. ~~~~~~~~~~~~~~
 
 .. Directed Graph
@@ -26,7 +26,7 @@
 .. Bipartite Graph
 .. ~~~~~~~~~~~~~~~~
 
-.. Simple Hypergraph
+.. Hypergraph
 .. ~~~~~~~~~~~~~~~~~~
 
 

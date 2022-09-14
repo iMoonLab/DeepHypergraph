@@ -18,7 +18,7 @@ whose partition has the parts :math:`\mathcal{U}` and :math:`\mathcal{V}`, with 
 - :math:`\mathcal{V}`, is another set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ (x, y) \mid x \in \mathcal{U}~and~y \in \mathcal{V} \}`, a set of **edges** (also called **links** or **lines**).
 
-When modelling relations between two different classes of objects, bipartite graphs very often arise naturally. 
+When modelling relations between two different classes of objects, bipartite graph very often arise naturally. 
 For instance, a bipartite graph of football players and clubs, with an edge between a player and a club if the player has played for that club, 
 is a natural example of an affiliation network, a type of bipartite graph used in social network analysis. 
 Another example is a bipartite graph of user-item interactions, where the user watches/clicks/views/likes/budges an item can model 
@@ -31,7 +31,7 @@ The bipartite graph structure can be constructed by the following methods. More 
 
 - Edge list (**default**) :py:class:`dhg.BiGraph`
 - Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`
-- Simple hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
+- Hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
 
 In the following example, we randomly generate a bipartite graph structure and two feature matrices to perform some basic learning operations on this structure.
 

@@ -32,7 +32,7 @@
 
 - 边列表 (**默认**) :py:class:`dhg.BiGraph`
 - 邻接表 :py:meth:`dhg.BiGraph.from_adj_list`
-- 简单超图 :py:meth:`dhg.BiGraph.from_hypergraph`
+- 超图 :py:meth:`dhg.BiGraph.from_hypergraph`
 
 在如下的例子中，我们随机生成一个二分图关联结构和两个特征矩阵，并对此结构进行一些基本的学习操作。
 

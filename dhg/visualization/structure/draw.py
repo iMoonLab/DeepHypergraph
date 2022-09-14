@@ -37,10 +37,10 @@ def draw_graph(
     pull_e_strength: float = 1.0,
     pull_center_strength: float = 1.0,
 ):
-    r"""Draw the simple graph structure. The supported edge styles are: ``'line'`` and ``'circle'``.
+    r"""Draw the graph structure. The supported edge styles are: ``'line'`` and ``'circle'``.
 
     Args:
-        ``g`` (``dhg.Graph``): The DHG's simple graph object.
+        ``g`` (``dhg.Graph``): The DHG's graph object.
         ``e_style`` (``str``): The edge style. The supported edge styles are: ``'line'`` and ``'circle'``. Defaults to ``'line'``.
         ``v_label`` (``list``, optional): A list of vertex labels. Defaults to ``None``.
         ``v_size`` (``Union[float, list]``): The vertex size. If ``v_size`` is a ``float``, all vertices will have the same size. If ``v_size`` is a ``list``, the size of each vertex will be set according to the corresponding element in the list. Defaults to ``1.0``.
@@ -286,7 +286,7 @@ def draw_hypergraph(
     pull_e_strength: float = 1.0,
     pull_center_strength: float = 1.0,
 ):
-    r"""Draw the simple hypergraph structure.
+    r"""Draw the hypergraph structure.
     
     Args:
         ``hg`` (``dhg.Hypergraph``): The DHG's hypergraph object.

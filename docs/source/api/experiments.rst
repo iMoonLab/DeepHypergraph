@@ -17,7 +17,7 @@ Vertex Classification Task
    :show-inheritance:
 
 
-On Simple Graphs
+On Graph
 ++++++++++++++++++++++++++++++++++++++++++
 
 .. autoclass:: dhg.experiments.GraphVertexClassificationTask
@@ -25,7 +25,7 @@ On Simple Graphs
    :show-inheritance:
 
 
-On Simple Hypergraphs
+On Hypergraph
 ++++++++++++++++++++++++++++++++++++++++++++++
 
 .. autoclass:: dhg.experiments.HypergraphVertexClassificationTask
@@ -35,7 +35,7 @@ On Simple Hypergraphs
 Recommender Task
 -------------------------
 
-On User-Item Bipartite Graphs
+On User-Item Bipartite Graph
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. autoclass:: dhg.experiments.UserItemRecommenderTask

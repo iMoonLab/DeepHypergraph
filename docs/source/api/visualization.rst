@@ -4,7 +4,7 @@ dhg.visualization
 Structure Visualization
 ---------------------------
 
-Simple Graph
+Graph
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: dhg.visualization.draw_graph
@@ -20,7 +20,7 @@ Bipartite Graph
 
 .. autofunction:: dhg.visualization.draw_bigraph
 
-Simple Hypergraph
+Hypergraph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: dhg.visualization.draw_hypergraph

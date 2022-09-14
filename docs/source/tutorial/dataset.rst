@@ -12,7 +12,7 @@ the architecture of creating a data object, and how to build your own dataset an
 We welcome to contribute to the dataset by submitting a pull request on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_,
 please following the :doc:`instruction </start/contribution>` guide.
 
-Usage
+Basic Usages
 -----------------------
 
 You can directly use any of the datasets in :doc:`/api/data` as follows after your network is ready:
@@ -141,7 +141,7 @@ Call the :py:meth:`raw() <dhg.data.BaseData.raw>` method if you want to get the 
             [13.]], dtype=float32)
 
 The vertex featue is pre-processed with L1 normalization in Cora dataset in default.
-To build a simple graph structucture for training in Cora dataset, you can refer to the :ref:`construct a simple graph from edge list <build_graph>` tutorial.
+To build a graph structucture for training in Cora dataset, you can refer to the :ref:`construct a graph from edge list <build_graph>` tutorial.
 
 Architechture
 -----------------------

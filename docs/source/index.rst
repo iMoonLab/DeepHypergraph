@@ -23,8 +23,8 @@ DHG Overview
 It is a general framework that supports both low-order and high-order message passing like 
 **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
-It supports a wide variety of structures like low-order structures (simple graph, directed graph, bipartite graph, etc.), 
-high-order structures (simple hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) 
+It supports a wide variety of structures like low-order structures (graph, directed graph, bipartite graph, etc.), 
+high-order structures (hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) 
 and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. 
 It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are 
 implemented and can be easily used for research. We also provide various visualization tools for both low-order 

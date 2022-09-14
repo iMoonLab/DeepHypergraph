@@ -166,7 +166,7 @@ def ndcg(
 
 
 class UserItemRecommenderEvaluator(BaseEvaluator):
-    r"""Return the metric evaluator for recommender task on user-item bipartite graphs. The supported metrics includes: ``precision``, ``recall``, ``ndcg``.
+    r"""Return the metric evaluator for recommender task on user-item bipartite graph. The supported metrics includes: ``precision``, ``recall``, ``ndcg``.
     
     Args:
         ``metric_configs`` (``List[Union[str, Dict[str, dict]]]``): The metric configurations. The key is the metric name and the value is the metric parameters.

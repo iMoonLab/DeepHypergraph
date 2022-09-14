@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class Hypergraph(BaseHypergraph):
-    r"""The ``Hypergraph`` class is developed for simple hypergraph structures.
+    r"""The ``Hypergraph`` class is developed for hypergraph structures.
 
     Args:
         ``num_v`` (``int``): The number of vertices in the hypergraph.
@@ -37,13 +37,13 @@ class Hypergraph(BaseHypergraph):
             self.add_hyperedges(e_list, e_weight, merge_op=merge_op)
 
     def __repr__(self) -> str:
-        r"""Print the simple hypergraph information.
+        r"""Print the hypergraph information.
         """
-        return f"Simple Hypergraph(num_v={self.num_v}, num_e={self.num_e})"
+        return f"Hypergraph(num_v={self.num_v}, num_e={self.num_e})"
 
     @property
     def state_dict(self) -> Dict[str, Any]:
-        r"""Get the state dict of the simple hypergraph.
+        r"""Get the state dict of the hypergraph.
         """
         return {"num_v": self.num_v, "raw_groups": self._raw_groups}
 
@@ -104,7 +104,7 @@ class Hypergraph(BaseHypergraph):
         pull_e_strength: float = 1.0,
         pull_center_strength: float = 1.0,
     ):
-        r"""Draw the simple hypergraph structure.
+        r"""Draw the hypergraph structure.
         
         Args:
             ``e_style`` (``str``): The style of hyperedges. The available styles are only ``'circle'``. Defaults to ``'circle'``.
@@ -167,7 +167,7 @@ class Hypergraph(BaseHypergraph):
 
     @staticmethod
     def from_feature_kNN(features: torch.Tensor, k: int, device: torch.device = torch.device("cpu")):
-        r"""Construct the simple hypergraph from the feature matrix. Each hyperedge in the hypergraph is constructed by the central vertex ans its :math:`k-1` neighbor vertices.
+        r"""Construct the hypergraph from the feature matrix. Each hyperedge in the hypergraph is constructed by the central vertex ans its :math:`k-1` neighbor vertices.
 
         .. note::
             The constructed hypergraph is a k-uniform hypergraph. If the feature matrix has the size :math:`N \times C`, the number of vertices and hyperedges of the constructed hypergraph are both :math:`N`.
@@ -183,7 +183,7 @@ class Hypergraph(BaseHypergraph):
 
     @staticmethod
     def from_graph(graph: "Graph", device: torch.device = torch.device("cpu")) -> "Hypergraph":
-        r"""Construct the simple hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph. 
+        r"""Construct the hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph. 
 
         .. note::
             The construsted hypergraph is a 2-uniform hypergraph, and has the same number of vertices and edges/hyperedges as the graph.
@@ -250,9 +250,9 @@ class Hypergraph(BaseHypergraph):
         Args:
             ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
             ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
              If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+             will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
         """
         e_list = []
         if U_as_vertex:
@@ -271,14 +271,14 @@ class Hypergraph(BaseHypergraph):
     def from_bigraph(
         bigraph: "BiGraph", U_as_vertex: bool = True, device: torch.device = torch.device("cpu")
     ) -> "Hypergraph":
-        r"""Construct the simple hypergraph from the bipartite graph. 
+        r"""Construct the hypergraph from the bipartite graph. 
 
         Args:
             ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
             ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
              If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+             will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
             ``device`` (``torch.device``, optional): The device to store the hypergraph. Defaults to ``torch.device('cpu')``.
         """
         e_list = Hypergraph._e_list_from_bigraph(bigraph, U_as_vertex)
@@ -372,9 +372,9 @@ class Hypergraph(BaseHypergraph):
         Args:
             ``bigraph`` (``BiGraph``): The bigraph to join the hypergraph.
             ``U_as_vertex`` (``bool``): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed simple hypergraph, respectively. 
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
              If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as hyperedges and vertices in the constructed simple hypergraph, respectively. Defaults to ``True``.
+             will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
             ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
         """
         if U_as_vertex:
@@ -558,7 +558,7 @@ class Hypergraph(BaseHypergraph):
     # properties for deep learning
     @property
     def vars_for_DL(self) -> List[str]:
-        r"""Return a name list of available variables for deep learning in the simple hypergraph including 
+        r"""Return a name list of available variables for deep learning in the hypergraph including 
 
         Sparse Matrices:
         
@@ -598,7 +598,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def v2e_src(self) -> torch.Tensor:
-        r"""Return the source vertex index vector :math:`\overrightarrow{v2e}_{src}` of the connections (vertices point to hyperedges) in the simple hypergraph.
+        r"""Return the source vertex index vector :math:`\overrightarrow{v2e}_{src}` of the connections (vertices point to hyperedges) in the hypergraph.
         """
         return self.H_T._indices()[1].clone()
 
@@ -613,7 +613,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def v2e_dst(self) -> torch.Tensor:
-        r"""Return the destination hyperedge index vector :math:`\overrightarrow{v2e}_{dst}` of the connections (vertices point to hyperedges) in the simple hypergraph.
+        r"""Return the destination hyperedge index vector :math:`\overrightarrow{v2e}_{dst}` of the connections (vertices point to hyperedges) in the hypergraph.
         """
         return self.H_T._indices()[0].clone()
 
@@ -628,7 +628,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def v2e_weight(self) -> torch.Tensor:
-        r"""Return the weight vector :math:`\overrightarrow{v2e}_{weight}` of the connections (vertices point to hyperedges) in the simple hypergraph.
+        r"""Return the weight vector :math:`\overrightarrow{v2e}_{weight}` of the connections (vertices point to hyperedges) in the hypergraph.
         """
         return self.H_T._values().clone()
 
@@ -643,7 +643,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def e2v_src(self) -> torch.Tensor:
-        r"""Return the source hyperedge index vector :math:`\overrightarrow{e2v}_{src}` of the connections (hyperedges point to vertices) in the simple hypergraph.
+        r"""Return the source hyperedge index vector :math:`\overrightarrow{e2v}_{src}` of the connections (hyperedges point to vertices) in the hypergraph.
         """
         return self.H._indices()[1].clone()
 
@@ -658,7 +658,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def e2v_dst(self) -> torch.Tensor:
-        r"""Return the destination vertex index vector :math:`\overrightarrow{e2v}_{dst}` of the connections (hyperedges point to vertices) in the simple hypergraph.
+        r"""Return the destination vertex index vector :math:`\overrightarrow{e2v}_{dst}` of the connections (hyperedges point to vertices) in the hypergraph.
         """
         return self.H._indices()[0].clone()
 
@@ -673,7 +673,7 @@ class Hypergraph(BaseHypergraph):
 
     @property
     def e2v_weight(self) -> torch.Tensor:
-        r"""Return the weight vector :math:`\overrightarrow{e2v}_{weight}` of the connections (hyperedges point to vertices) in the simple hypergraph.
+        r"""Return the weight vector :math:`\overrightarrow{e2v}_{weight}` of the connections (hyperedges point to vertices) in the hypergraph.
         """
         return self.H._values().clone()
 

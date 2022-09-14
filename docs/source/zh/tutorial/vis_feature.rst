@@ -3,7 +3,7 @@
 
 即将上线！
 
-.. Basic Usage
+.. Basic Usages
 .. ---------------
 
 .. draw feature in Euclidean space, draw feature in manifold space

@@ -12,7 +12,7 @@ from ..base import BaseGraph
 
 
 class BiGraph(BaseGraph):
-    r""" Class for bipartite graphs.
+    r""" Class for bipartite graph.
 
         Args:
             ``num_u`` (``int``): The Number of vertices in set :math:`\mathcal{U}`.

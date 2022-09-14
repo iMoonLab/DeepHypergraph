@@ -6,19 +6,19 @@ Basic Usages
 --------------
 DHG provides a simple interface to visualize the correlation structures:
 
-1. Create a Structure object (*i.e.*, :py:class:`dhg.Graph`, :py:class:`dhg.BiGraph`, :py:class:`dhg.DiGraph`, and :py:class:`dhg.Hypergraph`);
+1. Create a structure object (*i.e.*, :py:class:`dhg.Graph`, :py:class:`dhg.BiGraph`, :py:class:`dhg.DiGraph`, and :py:class:`dhg.Hypergraph`);
 2. Call the ``draw()`` method of the object;
 3. Call ``plt.show()`` to show the figure or ``plt.savefig()`` to save the figure. 
    
-.. note:: The ``plt`` is short of ``matplotlib.pyplot`` module.
+.. note:: The ``plt`` is short for ``matplotlib.pyplot`` module.
 
 
-Visualization of Undirected Graph
+Visualization of Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/vis_graph.png
     :align: center
-    :alt: Visualization of Undirected Graph
+    :alt: Visualization of Graph
     :height: 400px
 
 
@@ -66,12 +66,12 @@ Visualization of Bipartite Graph
     >>> plt.show()
 
 
-Visualization of Undirected Hypergraph
+Visualization of Hypergraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../_static/img/vis_hypergraph.png
     :align: center
-    :alt: Visualization of Undirected Hypergraph
+    :alt: Visualization of Hypergraph
     :height: 400px
 
 .. code-block:: python
@@ -110,7 +110,7 @@ Coming soon...
 .. Mathamatical Principles
 .. -----------------------
 
-.. Simple Graph
+.. Graph
 .. ~~~~~~~~~~~~~~
 
 .. Directed Graph
@@ -119,5 +119,5 @@ Coming soon...
 .. Bipartite Graph
 .. ~~~~~~~~~~~~~~~~
 
-.. Simple Hypergraph
+.. Hypergraph
 .. ~~~~~~~~~~~~~~~~~~

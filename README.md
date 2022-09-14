@@ -8,17 +8,15 @@
 [![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
 [![PyPI downloads](https://img.shields.io/pypi/dm/dhg.svg)](https://pypistats.org/packages/dhg)
 [![Visits Badge](https://visitor-badge.glitch.me/badge?page_id=iMoonLab.DeepHypergraph)](https://visitor-badge.glitch.me/)
-[![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
+<!-- [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black) -->
 [![license](https://img.shields.io/github/license/imoonlab/DeepHypergraph)](LICENSE)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/)
+<!-- [![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/) -->
 
 
-**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文教程](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
+**[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文文档](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
 
 <p align="center">
-We are rushing the documentation and tutorials, which will be updated twice a day!<br>
 The v0.9.2 will be released soon, which will include many structure visualizations!<br>
-我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！<br>
 我们很快将发布v0.9.2版本，其中包含了各种关联结构的可视化！
 </p>
 
@@ -29,7 +27,7 @@ The v0.9.2 will be released soon, which will include many structure visualizatio
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
-It supports a wide variety of structures like low-order structures (simple graph, directed graph, bipartite graph, etc.), high-order structures (simple hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
+It supports a wide variety of structures like low-order structures (graph, directed graph, bipartite graph, etc.), high-order structures (hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
 
 In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
@@ -56,10 +54,10 @@ DHG is built upon Pytorch, and any Pytorch-based models can be integrated into D
 DHG provides various Laplacian matrices and message passing functions to help build your spectral/spatial-based models, respectively.
 
 - **Visualization of Graphs and Hypergraphs**
-DHG provides a powerful visualization tool for graphs and hypergraphs. You can easily visualize the structure of your graphs and hypergraphs.
+DHG provides a powerful visualization tool for graph and hypergraph. You can easily visualize the structure of your graph and hypergraph.
 
 - **Bridge the Gap between Graphs and Hypergraphs**:
-DHG provides functions to build hypergraphs from graphs and build graphs from hypergraphs. Maybe promoting the graphs to hypergraphs can exploit those potential high-order connections and improve the performance of your model.
+DHG provides functions to build hypergraph from graph and build graph from hypergraph. Maybe promoting the graph to hypergraph can exploit those potential high-order connections and improve the performance of your model.
 
 - **Attach Spectral/Spatial-Based Operations to Structure**:
 In DHG, those Laplacian matrices and message passing functions are attached to the graph/hypergraph structure. As soon as you build a structure with DHG, those functions will be ready to be used in the process of building your model.
@@ -84,7 +82,7 @@ pip install dhg
 
 ### Learning on Low-Order Structures
 
-On simple graph structures, you can smooth a given vertex features with GCN's Laplacian matrix by:
+On graph structures, you can smooth a given vertex features with GCN's Laplacian matrix by:
 
 ```python
 import torch
@@ -94,7 +92,7 @@ X = torch.rand(5, 2)
 X_ = g.smoothing_with_GCN(X)
 ```
 
-On simple graph structures, you can pass messages from vertex to vertex with `mean` aggregation by:
+On graph structures, you can pass messages from vertex to vertex with `mean` aggregation by:
 
 ```python
 import torch
@@ -138,7 +136,7 @@ X_v_ = g.u2v(X_u, aggr="mean")
 
 ### Learning on High-Order Structures
 
-On simple hypergraph structures, you can smooth a given vertex features with HGNN's Laplacian matrix by:
+On hypergraph structures, you can smooth a given vertex features with HGNN's Laplacian matrix by:
 
 ```python
 import torch
@@ -148,7 +146,7 @@ X = torch.rand(5, 2)
 X_ = hg.smoothing_with_HGNN(X)
 ```
 
-On simple hypergraph structures, you can pass messages from vertex to hyperedge with `mean` aggregation by:
+On hypergraph structures, you can pass messages from vertex to hyperedge with `mean` aggregation by:
 
 ```python
 import torch
@@ -362,7 +360,7 @@ If you find **DHG** is useful in your research, please consider citing:
 
 ## The DHG Team
 
-DHG is developed by DHG's core team including [Yifan Feng](http://fengyifan.site/), [Xinwei Zhang](https://github.com/zhangxwww), and [Yue Gao (Adivsor)](http://moon-lab.tech/). It is maintained by the [iMoon-Lab](http://moon-lab.tech/), Tsinghua University. You can contact us at [email](mailto:evanfeng97@gmail.com).
+DHG is developed by DHG's core team including [Yifan Feng](http://fengyifan.site/), [Xinwei Zhang](https://github.com/zhangxwww), [Jielong Yan](https://github.com/JasonYanjl), [Shuyi Ji](), [Yue Gao](http://moon-lab.tech/), and [Qionghai Dai](https://ysg.ckcest.cn/html/details/8058/index.html). It is maintained by the [iMoon-Lab](http://moon-lab.tech/), Tsinghua University. You can contact us at [email](mailto:evanfeng97@gmail.com).
 
 
 ## License

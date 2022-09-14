@@ -10,7 +10,7 @@ from dhg.metrics import BaseEvaluator
 
 
 class HypergraphVertexClassificationTask(VertexClassificationTask):
-    r"""The auto-experiment class for the vertex classification task on hypergraphs.
+    r"""The auto-experiment class for the vertex classification task on hypergraph.
 
     Args:
         ``work_root`` (``Optional[Union[str, Path]]``): User's work root to store all studies.
@@ -58,7 +58,7 @@ class HypergraphVertexClassificationTask(VertexClassificationTask):
 
     @property
     def vars_for_DL(self):
-        r"""Return a name list for available variables for deep learning in the vertex classification on hypergraphs. The name list includes ``features``, ``structure``, ``labels``, ``train_mask``, ``val_mask``, and ``test_mask``.
+        r"""Return a name list for available variables for deep learning in the vertex classification on hypergraph. The name list includes ``features``, ``structure``, ``labels``, ``train_mask``, ``val_mask``, and ``test_mask``.
         """
         return super().vars_for_DL
 

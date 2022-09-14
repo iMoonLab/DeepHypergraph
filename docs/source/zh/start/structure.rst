@@ -19,13 +19,13 @@ DHG内的关联结构
     :header: "关联结构", "类", "类型", "基于谱域的操作", "基于空域的操作"
     :widths: 2 2 2 3 3
 
-    "简单图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
+    "图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
     "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *未来工作*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`"
     "二分图", ":py:class:`dhg.BiGraph`", "低阶关联", ":math:`\mathcal{L}_{GCN}`", "| :math:`u \rightarrow v`
     | :math:`v \rightarrow u`"
-    "简单超图", ":py:class:`dhg.Hypergraph`", "高阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
+    "超图", ":py:class:`dhg.Hypergraph`", "高阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{HGNN}`", "| :math:`v \rightarrow e`
     | :math:`v \rightarrow e` (特定超边组内)
     | :math:`e \rightarrow v`
@@ -39,11 +39,11 @@ DHG内的关联结构
     :header: 关联结构, "应用", "示例代码"
     :widths: 2, 6, 3
 
-    "简单图", "基于引用网络的论文分类等", ":doc:`样例 </zh/examples/vertex_cls/graph>`"
+    "图", "基于引用网络的论文分类等", ":doc:`样例 </zh/examples/vertex_cls/graph>`"
     "有向图", "点云分类等", "\-"
     "二分图", "| 基于<用户-物品>二分图的物品推荐、
     | 基于<蛋白质-药品>二分图的关联预测等", ":doc:`样例 </zh/examples/recommender>`"
-    "简单超图", "| 基于社交网络的顶点分类,
+    "超图", "| 基于社交网络的顶点分类,
     | 基于多模态视觉对象图的视觉对象分类等", ":doc:`样例 </zh/examples/vertex_cls/hypergraph>`"
     
 
@@ -60,11 +60,11 @@ DHG内的关联结构
 +++++++++++++++++++++++++++++++
 基于谱域卷积的核心在于如拉普拉斯矩阵的平滑矩阵。
 每种关联结构中都提供常见的平滑矩阵。
-例如, 简单图和二分图结构中可以调用  `GCN <_blank>`_ 中的拉普拉斯矩阵, 简单超图结构中可以调用 `HGNN <_blank>`_ 中的拉普拉斯矩阵。
+例如, 图和二分图结构中可以调用  `GCN <_blank>`_ 中的拉普拉斯矩阵, 超图结构中可以调用 `HGNN <_blank>`_ 中的拉普拉斯矩阵。
 
-在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **图**。
 我们可以使用 ``g.L_GCN`` 内部属性获取指定图结构的拉普拉斯矩阵，其生成的拉普拉斯矩阵大小为 :math:`5 \times 5` 。
-然后，对于任意输入的顶点特征，您可以使用特定简单图 ``g`` 中的函数  ``g.smoothing_with_GCN()`` 来对特征平滑处理。
+然后，对于任意输入的顶点特征，您可以使用特定图 ``g`` 中的函数  ``g.smoothing_with_GCN()`` 来对特征平滑处理。
 
     .. code:: python
 
@@ -75,7 +75,7 @@ DHG内的关联结构
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -86,7 +86,7 @@ DHG内的关联结构
                 [0.0262, 0.3594],
                 [0.7933, 0.7811],
                 [0.4643, 0.6329]])
-        >>> # Print the inside Laplacian Matrix by GCN on the simple graph structure
+        >>> # Print the inside Laplacian Matrix by GCN on the graph structure
         >>> g.L_GCN.to_dense()
         tensor([[0.2000, 0.2582, 0.2236, 0.2000, 0.2236],
                 [0.2582, 0.3333, 0.0000, 0.2582, 0.0000],
@@ -131,9 +131,9 @@ DHG内的关联结构
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.2500, 0.0000],
                 [0.2887, 0.2887, 0.2236, 0.0000, 0.0000, 0.0000, 0.0000, 0.2500]])
 
-在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **简单超图**。
+在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **超图**。
 我们可以使用 ``hg.L_HGNN`` 内部属性获取指定超图结构的拉普拉斯矩阵，其生成的拉普拉斯矩阵大小为 :math:`5 \times 5` 。
-然后，对于任意输入的顶点特征，您可以使用 特定简单超图 ``hg`` 中的函数  ``hg.smoothing_with_HGNN()`` 来对特征平滑处理。
+然后，对于任意输入的顶点特征，您可以使用 特定超图 ``hg`` 中的函数  ``hg.smoothing_with_HGNN()`` 来对特征平滑处理。
 更多细节可以参考自 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
 
     .. code:: python
@@ -141,10 +141,10 @@ DHG内的关联结构
         >>> import torch
         >>> import dhg
         >>> hg = dhg.random.hypergraph_Gnm(5, 4)
-        >>> # Print hyperedges in the simple hypergraph structure 
+        >>> # Print hyperedges in the hypergraph structure 
         >>> hg.e[0]
         [(2, 3), (0, 2, 4), (2, 3, 4), (1, 2, 3, 4)]
-        >>> # Print the inside Laplacian Matrix by HGNN on the simple hypergraph structure
+        >>> # Print the inside Laplacian Matrix by HGNN on the hypergraph structure
         >>> hg.L_HGNN.to_dense()
         tensor([[0.3333, 0.0000, 0.1667, 0.0000, 0.1925],
                 [0.0000, 0.2500, 0.1250, 0.1443, 0.1443],
@@ -160,8 +160,8 @@ DHG内的关联结构
 因此，与 `PyG <https://www.pyg.org/>`_ 和 `DGL <https://www.dgl.ai/>`_ 中只能将信息从 ``a vertex`` 传输到 ``another vertex or edge`` 不同，
 **DHG** 为低阶和高阶关联结构提供更多种类型的信息传递操作。
 
-在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
-简单图结构提供从 ``a vertex`` 到 ``another vertex`` 的信息传递，以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **图**。
+图结构提供从 ``a vertex`` 到 ``another vertex`` 的信息传递，以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
 
     .. code:: python
 
@@ -172,7 +172,7 @@ DHG内的关联结构
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -258,11 +258,11 @@ DHG内的关联结构
                 [0.3936, 0.5542],
                 [0.3936, 0.5542]])
 
-在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **简单超图**。
-简单超图关联结构中，提供从 ``a vertex`` 到 ``another vertex`` 、 从 ``a vertex set`` 到 ``a hyperedge`` 、
+在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **超图**。
+超图关联结构中，提供从 ``a vertex`` 到 ``another vertex`` 、 从 ``a vertex set`` 到 ``a hyperedge`` 、
 从 ``a hyperedge`` 到 ``a vertex set`` 、  从 ``a vertex set`` 到 ``another vertex set`` 四种信息传递
 以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
-简单超图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
+超图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
  
     .. code:: python
     
@@ -273,7 +273,7 @@ DHG内的关联结构
         >>> X = torch.rand(5, 2)
         >>> # Print information about the hypergraph and feature
         >>> g 
-        Simple Hypergraph(num_v=5, num_e=4)
+        Hypergraph(num_v=5, num_e=4)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(2, 3), (0, 2, 4), (2, 3, 4), (1, 2, 3, 4)]
@@ -310,9 +310,9 @@ DHG内的关联结构
 增加先自环以及后自环
 ++++++++++++++++++++++++++++++++++++++++++
 
-自环是特征学习特别是简单图关联结构中的重要结构。
-在如下的例子中，我们介绍如何在简单图关联结构中为基于空域的学习增加先自环和后自环。
-我们使用 :math:`\mathbf{A} \in \mathbb{R}^{N \times N}` 来表示一个给定简单图的邻接矩阵，:math:`\mathbf{X} \in \mathbb{R}^{N \times C}` 来表示一个给定简单图的节点特征.
+自环是特征学习特别是图关联结构中的重要结构。
+在如下的例子中，我们介绍如何在图关联结构中为基于空域的学习增加先自环和后自环。
+我们使用 :math:`\mathbf{A} \in \mathbb{R}^{N \times N}` 来表示一个给定图的邻接矩阵，:math:`\mathbf{X} \in \mathbb{R}^{N \times C}` 来表示一个给定图的节点特征.
 
 
     .. code:: python
@@ -324,7 +324,7 @@ DHG内的关联结构
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -407,7 +407,7 @@ DHG内的关联结构
 融合从谱域和空域中学习到的特征
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-在如下例子中，我们随机生成一个包含5个顶点和8条边的 **简单图**。
+在如下例子中，我们随机生成一个包含5个顶点和8条边的 **图**。
 然后，我们尝试融合从相同关联结构 ``g`` 使用不同方法学习的特征。
 
     .. code:: python
@@ -419,7 +419,7 @@ DHG内的关联结构
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -443,7 +443,7 @@ DHG内的关联结构
 融合从不同关联结构中学习到的特征
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-在如下例子中，我们在相同顶点集上随机构建一个 **简单图** 结构和一个 **简单超图** 结构。
+在如下例子中，我们在相同顶点集上随机构建一个 **图** 结构和一个 **超图** 结构。
 然后，采用两种关联结构中的消息传递函数来生成不同的顶点特征，通过它们的组合连接生成最终的混合顶点特征。
 
     .. code:: python

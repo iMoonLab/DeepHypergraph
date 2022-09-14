@@ -42,7 +42,7 @@ Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模�
 定义结构调优构造函数
 ++++++++++++++++++++++++++++++++++++
 
-结构调优构造函数一般来说是针对简单超图之类的高阶关联结构自动搜索出最有效的高阶关联结构。
+结构调优构造函数一般来说是针对超图之类的高阶关联结构自动搜索出最有效的高阶关联结构。
 低阶关联结构在模型使用时一般来说是固定的。
 但高阶关联结构的构造是灵活多变的。
 不同的高阶关联结构可能会影响最终模型的性能，详情可参考自论文 `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ 。
@@ -52,7 +52,7 @@ Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模�
 .. code-block:: python
 
     def structure_builder(trial):
-        # ``g`` is the simple graph, ``X`` is the vertex feature matrix
+        # ``g`` is the graph, ``X`` is the vertex feature matrix
         global g, X
 
         hg = dhg.Hypergraph.from_graph(g)
@@ -123,8 +123,8 @@ Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模�
 我们需要定义一个任务特定的类，来使用Auto-ML实验。
 目前，DHG支持以下任务：
 
-- :py:class:`dhg.experiments.GraphVertexClassificationTask`: 简单图上的顶点分类任务。
-- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: 简单超图上的顶点分类任务。
+- :py:class:`dhg.experiments.GraphVertexClassificationTask`: 图上的顶点分类任务。
+- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: 超图上的顶点分类任务。
 - :py:class:`dhg.experiments.UserItemRecommenderTask`: <用户-物品>二分图上的物品推荐任务。
 
 更多的Auto-ML任务将会在以后添加。期待您的贡献以及在 `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_ 上提出问题。
@@ -133,9 +133,9 @@ Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模�
 自动化节点分类任务
 ---------------------------------------
 
-在如下的例子中，我们将分别在简单图和简单超图的顶点分类任务中介绍如何使用DHG的Auto-ML进行实验。
+在如下的例子中，我们将分别在图和超图的顶点分类任务中介绍如何使用DHG的Auto-ML进行实验。
 
-自动化简单图节点分类任务
+自动化图节点分类任务
 ++++++++++++++++++++++++
 
 .. code-block:: python
@@ -184,7 +184,7 @@ Auto-ML是一种自动化超参搜索及调优技术，可以帮助您挖掘模�
         task = Task(work_root, input_data, model_builder, train_builder, evaluator, device,)
         task.run(200, 50, "maximize")
 
-自动化简单超图节点分类任务
+自动化超图节点分类任务
 +++++++++++++++++++++++++++
 
 .. code-block:: python

@@ -154,7 +154,7 @@ class BaseGraph:
         r"""Construct a graph from the adjacency list. Each line in the adjacency list has two components. The first element in each line is the source vertex index, and the rest elements are the target vertex indices that connected to the source vertex.
 
         .. note::
-            This function can only construct unweighted graphs.
+            This function can only construct unweighted graph.
 
         Args:
             ``num_v`` (``int``): The number of vertices.
