@@ -8,8 +8,8 @@
 [![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
 [![PyPI downloads](https://img.shields.io/pypi/dm/dhg.svg)](https://pypistats.org/packages/dhg)
 [![Visits Badge](https://visitor-badge.glitch.me/badge?page_id=iMoonLab.DeepHypergraph)](https://visitor-badge.glitch.me/)
-<!-- [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black) -->
 [![license](https://img.shields.io/github/license/imoonlab/DeepHypergraph)](LICENSE)
+<!-- [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black) -->
 <!-- [![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/) -->
 
 
