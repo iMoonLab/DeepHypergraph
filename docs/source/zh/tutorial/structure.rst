@@ -16,19 +16,19 @@
 构建低阶关联结构
 -----------------------
 
-当前版本DHG实现的低阶关联结构包括简单图、有向图、二分图，以后我们将增加更多的低阶关联结构。
+当前版本DHG实现的低阶关联结构包括图、有向图、二分图，以后我们将增加更多的低阶关联结构。
 
 .. _zh_build_graph:
 
-构建简单图
+构建图
 +++++++++++++++++++++++
 
-`简单图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 为无自环无重边的图，边 ``(x, y)`` 和边 ``(y, x)`` 视为相同的边。
+`图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 为无自环无重边的图，边 ``(x, y)`` 和边 ``(y, x)`` 视为相同的边。
 可以使用如下方式构建：
 
 - 边列表 (**默认**) :py:class:`dhg.Graph`
 - 邻接列表 :py:meth:`dhg.Graph.from_adj_list`
-- 从简单超图关联结构简化而来
+- 从超图关联结构简化而来
   
   - 星扩展 :py:meth:`dhg.Graph.from_hypergraph_star`
   - 团扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
@@ -37,14 +37,14 @@
 常用方法
 ^^^^^^^^^^^^^^^^^^^
 
-使用 :py:class:`dhg.Graph` 类 **从边列表构建一个简单图**
+使用 :py:class:`dhg.Graph` 类 **从边列表构建一个图**
 
 .. code-block:: python
 
     >>> import dhg
     >>> g = dhg.Graph(5, [(0, 1), (0, 2), (1, 2), (3, 4)])
     >>> g
-    Simple Graph(num_v=5, num_e=4)
+    Graph(num_v=5, num_e=4)
     >>> g.v
     [0, 1, 2, 3, 4]
     >>> g.e
@@ -64,13 +64,13 @@
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
 
-可以发现简单图的邻接矩阵是一个对称矩阵。
+可以发现图的邻接矩阵是一个对称矩阵。
 :py:attr:`g.e <dhg.Graph.e>` 属性会返回两个列表的元组，第一个列表是边列表，第二个列表是每条边的权重。
-:py:attr:`g.e_both_side <dhg.Graph.e_both_side>` 属性会返回简单图里所有边及其对应的对称形式。
+:py:attr:`g.e_both_side <dhg.Graph.e_both_side>` 属性会返回图里所有边及其对应的对称形式。
 
 .. important::
 
-    简单图里的边是无序对，也就意味着边 ``(0, 1)`` 和边 ``(1, 0)`` 是同一条边。
+    图里的边是无序对，也就意味着边 ``(0, 1)`` 和边 ``(1, 0)`` 是同一条边。
     增加边 ``(0, 1)`` 和边 ``(1, 0)`` 等同于增加边 ``(0, 1)`` 两次。
 
 
@@ -106,7 +106,7 @@
 
 如果你分别设置 ``merge_op`` 为 ``mean`` 和 ``sum`` ，你会发现最后一条边的权重分别是 ``1.0`` 和 ``2.0`` 。
 
-使用 :py:meth:`dhg.Graph.from_adj_list` 函数 **从邻接列表构建一个简单图**
+使用 :py:meth:`dhg.Graph.from_adj_list` 函数 **从邻接列表构建一个图**
 
 邻接列表是一个嵌套列表，每一个内层列表包含两个部分。
 第一个部分是列表的 **第一个元素** ，代表源点的索引。
@@ -123,7 +123,7 @@
 
     [(0, 1), (0, 2), (0, 3), (1, 2), (3, 4)]
 
-我们可以根据邻接列表构建简单图，如：
+我们可以根据邻接列表构建图，如：
 
 .. code-block:: python
 
@@ -141,7 +141,7 @@
 从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-我们首先定义一个简单超图：
+我们首先定义一个超图：
 
 .. code-block:: python
 
@@ -158,17 +158,17 @@
 
 **星扩展** :py:meth:`dhg.Graph.from_hypergraph_star`
 
-星扩展会在简单图内将超图的超边视为虚拟顶点。
+星扩展会在图内将超图的超边视为虚拟顶点。
 每一个虚拟顶点连接超边内所有的顶点。
 :py:meth:`dhg.Graph.from_hypergraph_star` 函数会返回两个值。
-第一个值是简化得到的简单图，第二个值为表示顶点是否为实际顶点的 ``vertex mask`` 。
+第一个值是简化得到的图，第二个值为表示顶点是否为实际顶点的 ``vertex mask`` 。
 ``vertex mask`` 为 ``True`` 代表着该顶点为实际顶点，为 ``False`` 表示顶点为从超边转换的虚拟顶点。
 
 .. code-block:: python
 
     >>> g, v_mask = dhg.Graph.from_hypergraph_star(hg)
     >>> g
-    Simple Graph(num_v=9, num_e=11)
+    Graph(num_v=9, num_e=11)
     >>> g.e[0]
     [(0, 5), (0, 8), (1, 5), (1, 6), (1, 7), (2, 5), (2, 6), (2, 7), (3, 6), (3, 8), (4, 8)]
     >>> v_mask
@@ -186,8 +186,8 @@
 
 **团扩展** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
-和星扩展不同的是，团扩展不会在简单图内增加虚拟顶点。
-它将简单超图内的超边简化为简单图的边。
+和星扩展不同的是，团扩展不会在图内增加虚拟顶点。
+它将超图内的超边简化为图的边。
 对于每一条超边，星扩展会增加边把超边内的顶点两两连接。
 
 .. code-block:: python
@@ -195,7 +195,7 @@
     >>> g = dhg.Hypergraph.from_hypergraph_clique(hg)
     >>> g = dhg.Graph.from_hypergraph_clique(hg)
     >>> g
-    Simple Graph(num_v=5, num_e=8)
+    Graph(num_v=5, num_e=8)
     >>> g.e
     ([(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (2, 3), (3, 4)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     >>> g.A.to_dense()
@@ -224,7 +224,7 @@
                            [0.9049, 0.6371]]))
     >>> g = dhg.Graph.from_hypergraph_hypergcn(hg, X)
     >>> g
-    Simple Graph(num_v=5, num_e=4)
+    Graph(num_v=5, num_e=4)
     >>> g.e
     ([(0, 2), (2, 3), (1, 2), (3, 4)], [0.3333333432674408, 0.3333333432674408, 0.5, 0.3333333432674408])
     >>> g.A.to_dense()
@@ -235,7 +235,7 @@
             [0.0000, 0.0000, 0.0000, 0.3333, 0.0000]])
     >>> g = dhg.Graph.from_hypergraph_hypergcn(hg, X, with_mediator=True)
     >>> g
-    Simple Graph(num_v=5, num_e=6)
+    Graph(num_v=5, num_e=6)
     >>> g.e
     ([(1, 2), (0, 1), (2, 3), (1, 3), (3, 4), (0, 3)], [0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408])
     >>> g.A.to_dense()
@@ -340,7 +340,7 @@
 
 - 边列表 (**默认**) :py:class:`dhg.BiGraph`
 - 邻接列表 :py:meth:`dhg.BiGraph.from_adj_list`
-- 简单超图 :py:meth:`dhg.BiGraph.from_hypergraph`
+- 超图 :py:meth:`dhg.BiGraph.from_hypergraph`
 
 常用方法
 ^^^^^^^^^^^^^^^^^^^
@@ -406,7 +406,7 @@
 从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-我们首先定义一个简单超图：
+我们首先定义一个超图：
 
 .. code-block:: python
 
@@ -421,7 +421,7 @@
             [0., 1., 0., 1.],
             [0., 0., 0., 1.]])
 
-使用函数 :py:meth:`dhg.BiGraph.from_hypergraph` **从简单超图构建一个二分图**
+使用函数 :py:meth:`dhg.BiGraph.from_hypergraph` **从超图构建一个二分图**
 
 .. code-block:: python
 
@@ -451,13 +451,13 @@
 构建高阶关联结构
 -----------------------
 
-当前版本DHG实现的高阶关联结构包括简单超图，以后我们将增加更多的高阶关联结构。
+当前版本DHG实现的高阶关联结构包括超图，以后我们将增加更多的高阶关联结构。
 
 .. _zh_build_hypergraph:
 
-构建简单超图
+构建超图
 ++++++++++++++++++++++++++
-`简单超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ 是超边中不含方向信息的超图。
+`超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ 是超边中不含方向信息的超图。
 超图内的每条超边可以连接两个或更多的顶点，其可以用所有顶点的子集表示。
 可以使用如下方式构建：
 
@@ -465,24 +465,24 @@
 - 使用特征的k近邻 :py:meth:`dhg.Hypergraph.from_feature_kNN`
 - 从低阶关联结构提升
 
-  - 简单图 :py:meth:`dhg.Hypergraph.from_graph`
-  - 简单图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - 图 :py:meth:`dhg.Hypergraph.from_graph`
+  - 图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
   - 二分图 :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
 常用方法
 ^^^^^^^^^^^^^^^^^^^
 
-使用 :py:class:`dhg.Hypergraph` 类 **从边列表构建一个简单超图**
+使用 :py:class:`dhg.Hypergraph` 类 **从边列表构建一个超图**
 
 .. code-block:: python
 
     >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (2, 3), (0, 4)])
     >>> hg
-    Simple Hypergraph(num_v=5, num_e=3)
+    Hypergraph(num_v=5, num_e=3)
     >>> hg.e
     ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
-    >>> # print the incidence matrix of the simple hypergraph
+    >>> # print the incidence matrix of the hypergraph
     >>> hg.H.to_dense()
     tensor([[1., 0., 1.],
             [1., 0., 0.],
@@ -492,7 +492,7 @@
 
 .. important:: 
 
-    简单超图里面的超边是顶点的无序集，也就意味着超边 ``(0, 1, 2)`` 、超边 ``(0, 2, 1)`` 和超边 ``(2, 1, 0)`` 是同一条超边。
+    超图里面的超边是顶点的无序集，也就意味着超边 ``(0, 1, 2)`` 、超边 ``(0, 2, 1)`` 和超边 ``(2, 1, 0)`` 是同一条超边。
 
 .. code-block:: python
 
@@ -538,7 +538,7 @@
 You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
 
 
-使用 :py:meth:`dhg.Hypergraph.from_feature_kNN` 函数 **根据特征的k近邻构建简单超图**
+使用 :py:meth:`dhg.Hypergraph.from_feature_kNN` 函数 **根据特征的k近邻构建超图**
 
 .. code-block:: python
 
@@ -554,7 +554,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
                           [0.6308, 0.1469, 0.0304, 0.2073]])
     >>> hg = dhg.Hypergraph.from_feature_kNN(X, k=3)
     >>> hg
-    Simple Hypergraph(num_v=10, num_e=9)
+    Hypergraph(num_v=10, num_e=9)
     >>> hg.e
     ([(0, 1, 2), (0, 1, 5), (0, 2, 9), (3, 5, 7), (4, 7, 8), (4, 6, 9), (3, 4, 7), (4, 5, 8), (2, 6, 9)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     >>> hg.H.to_dense()
@@ -577,7 +577,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
 从低阶关联结构提升得到
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-使用 :py:meth:`dhg.Hypergraph.from_graph` 函数 **从简单图构建一个简单超图**
+使用 :py:meth:`dhg.Hypergraph.from_graph` 函数 **从图构建一个超图**
 
 
 .. code-block:: python
@@ -602,7 +602,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 0., 0., 1.]])
 
 
-使用 :py:meth:`dhg.Hypergraph.from_graph_kHop` 函数 **根据简单图顶点的k阶邻居构建一个简单超图**
+使用 :py:meth:`dhg.Hypergraph.from_graph_kHop` 函数 **根据图顶点的k阶邻居构建一个超图**
 
 .. code-block:: python
 
@@ -634,7 +634,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 1., 1.],
             [1., 1., 0.]])
 
-使用 :py:meth:`dhg.Hypergraph.from_bigraph` 函数 **从二分图构建一个简单超图**
+使用 :py:meth:`dhg.Hypergraph.from_bigraph` 函数 **从二分图构建一个超图**
 
     .. code-block:: python
 
@@ -650,7 +650,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
                 [1., 0., 1.]])
         >>> hg = dhg.Hypergraph.from_bigraph(g, U_as_vertex=True)
         >>> hg
-        Simple Hypergraph(num_v=4, num_e=3)
+        Hypergraph(num_v=4, num_e=3)
         >>> hg.e
         ([(3,), (0, 1, 2), (1,)], [1.0, 1.0, 1.0])
         >>> hg.H.to_dense()
@@ -660,7 +660,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
                 [1., 0., 0.]])
         >>> hg = dhg.Hypergraph.from_bigraph(g, U_as_vertex=False)
         >>> hg
-        Simple Hypergraph(num_v=3, num_e=3)
+        Hypergraph(num_v=3, num_e=3)
         >>> hg.e
         ([(1,), (1, 2), (0,)], [1.0, 1.0, 1.0])
         >>> hg.H.to_dense()

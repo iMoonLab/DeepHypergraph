@@ -66,14 +66,14 @@ Base Class
 Vertex Classification Task
 ++++++++++++++++++++++++++++++++++++
 
-On Simple Graphs
+On Graph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: dhg.metrics.GraphVertexClassificationEvaluator
     :members:
     :show-inheritance:
 
 
-On Simple Hypergraphs
+On Hypergraph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: dhg.metrics.HypergraphVertexClassificationEvaluator
@@ -83,7 +83,7 @@ On Simple Hypergraphs
 Recommender Task
 ++++++++++++++++++
 
-On User-Item Bipartite Graphs
+On User-Item Bipartite Graph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: dhg.metrics.UserItemRecommenderEvaluator

@@ -15,20 +15,20 @@ and some structure transformation functions of them, including:
 Low-Order Structures
 -----------------------
 
-Currently, DHG's low-order structures include simple graph, directed graph, and bipartite graph.
+Currently, DHG's low-order structures include graph, directed graph, and bipartite graph.
 In the future, we will add more low-order structures.
 
 .. _build_graph:
 
-Building Simple Graph
+Building Graph
 +++++++++++++++++++++++
 
-A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edges ``(x, y)`` and ``(y, x)`` are the same edge.
+A `graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ is a graph with no loops and no multiple edges, where the edges ``(x, y)`` and ``(y, x)`` are the same edge.
 It can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`
-- Reduced from the simple hypergraph structure
+- Reduced from the hypergraph structure
 
   - Star expansion :py:meth:`dhg.Graph.from_hypergraph_star`
   - Clique expansion :py:meth:`dhg.Graph.from_hypergraph_clique`
@@ -37,14 +37,14 @@ It can be constructed by the following methods:
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple graph from edge list with** :py:class:`dhg.Graph`
+**Construct a graph from edge list with** :py:class:`dhg.Graph`
 
 .. code-block:: python
 
     >>> import dhg
     >>> g = dhg.Graph(5, [(0, 1), (0, 2), (1, 2), (3, 4)])
     >>> g
-    Simple Graph(num_v=5, num_e=4)
+    Graph(num_v=5, num_e=4)
     >>> g.v
     [0, 1, 2, 3, 4]
     >>> g.e
@@ -64,13 +64,13 @@ Common Methods
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
 
-You can find that the adjacency matrix of the simple graph is a symmetric matrix.
+You can find that the adjacency matrix of the graph is a symmetric matrix.
 The :py:attr:`g.e <dhg.Graph.e>` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
-The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the both side of edges in the simple graph.
+The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the both side of edges in the graph.
 
 .. important::
 
-    In simple graph the edge is unordered pair, which means ``(0, 1)`` and ``(1, 0)`` are the same edge. Adding edges ``(0, 1)`` and ``(1, 0)`` is equivalent to adding edge ``(0, 1)`` twice.
+    In graph the edge is unordered pair, which means ``(0, 1)`` and ``(1, 0)`` are the same edge. Adding edges ``(0, 1)`` and ``(1, 0)`` is equivalent to adding edge ``(0, 1)`` twice.
 
 
 .. code-block:: python
@@ -106,7 +106,7 @@ The :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` attribute will return the b
 You can find the weight of the last edge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
 
 
-**Construct a simple graph from adjacency list with** :py:meth:`dhg.Graph.from_adj_list`
+**Construct a graph from adjacency list with** :py:meth:`dhg.Graph.from_adj_list`
 
 The adjacency list is a list of lists, each list contains two parts. The first part is the **first element** of the list, which is the vertex index of the source vertex.
 The second part is the **remaining elements** of the list, which are the vertex indices of the destination vertices.
@@ -122,7 +122,7 @@ Then, the transformed edge list is:
 
     [(0, 1), (0, 2), (0, 3), (1, 2), (3, 4)]
 
-We can construct a simple graph from the adjacency list as:
+We can construct a graph from the adjacency list as:
 
 .. code-block:: python
 
@@ -140,7 +140,7 @@ We can construct a simple graph from the adjacency list as:
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We first define a simple hypergraph as:
+We first define a hypergraph as:
 
 .. code-block:: python
 
@@ -157,17 +157,17 @@ We first define a simple hypergraph as:
 
 **Star Expansion** :py:meth:`dhg.Graph.from_hypergraph_star`
 
-The star expansion will treat the hyperedges in the hypergraph as virtual vertices in the simple graph.
+The star expansion will treat the hyperedges in the hypergraph as virtual vertices in the graph.
 Each virtual vertex will connect to all the vertices in the hyperedge.
 The :py:meth:`dhg.Graph.from_hypergraph_star` function will return two values.
-The first value is the reduced simple graph and the second value is a ``vertex mask`` that indicates whether the vertex is a actual vertex.
+The first value is the reduced graph and the second value is a ``vertex mask`` that indicates whether the vertex is a actual vertex.
 The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and the ``False`` indicates the vertex is a virtual vertex that is transformed from a hyperedge.
 
 .. code-block:: python
 
     >>> g, v_mask = dhg.Graph.from_hypergraph_star(hg)
     >>> g
-    Simple Graph(num_v=9, num_e=11)
+    Graph(num_v=9, num_e=11)
     >>> g.e[0]
     [(0, 5), (0, 8), (1, 5), (1, 6), (1, 7), (2, 5), (2, 6), (2, 7), (3, 6), (3, 8), (4, 8)]
     >>> v_mask
@@ -185,8 +185,8 @@ The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and 
 
 **Clique Expansion** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
-Unlike the star expansion, the clique expansion will not add any virtual vertex to the simple graph.
-It is designed to reduce the hyperedges in the simple hypergraph to the edges in the simple graph.
+Unlike the star expansion, the clique expansion will not add any virtual vertex to the graph.
+It is designed to reduce the hyperedges in the hypergraph to the edges in the graph.
 For each hyperedge, the clique expansion will add edges to any two vertices in the hyperedge.
 
 .. code-block:: python
@@ -194,7 +194,7 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
     >>> g = dhg.Hypergraph.from_hypergraph_clique(hg)
     >>> g = dhg.Graph.from_hypergraph_clique(hg)
     >>> g
-    Simple Graph(num_v=5, num_e=8)
+    Graph(num_v=5, num_e=8)
     >>> g.e
     ([(0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (2, 3), (3, 4)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     >>> g.A.to_dense()
@@ -207,7 +207,7 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
 **HyperGCN-based Expansion** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
 In the `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ paper, the authors also describe
-a method to reduce the hyperedges in the hypergraph to the edges in the simple graph as the following figure.
+a method to reduce the hyperedges in the hypergraph to the edges in the graph as the following figure.
 
 .. image:: ../_static/img/hypergcn.png
     :align: center
@@ -224,7 +224,7 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
                            [0.9049, 0.6371]]))
     >>> g = dhg.Graph.from_hypergraph_hypergcn(hg, X)
     >>> g
-    Simple Graph(num_v=5, num_e=4)
+    Graph(num_v=5, num_e=4)
     >>> g.e
     ([(0, 2), (2, 3), (1, 2), (3, 4)], [0.3333333432674408, 0.3333333432674408, 0.5, 0.3333333432674408])
     >>> g.A.to_dense()
@@ -235,7 +235,7 @@ a method to reduce the hyperedges in the hypergraph to the edges in the simple g
             [0.0000, 0.0000, 0.0000, 0.3333, 0.0000]])
     >>> g = dhg.Graph.from_hypergraph_hypergcn(hg, X, with_mediator=True)
     >>> g
-    Simple Graph(num_v=5, num_e=6)
+    Graph(num_v=5, num_e=6)
     >>> g.e
     ([(1, 2), (0, 1), (2, 3), (1, 3), (3, 4), (0, 3)], [0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408, 0.3333333432674408])
     >>> g.A.to_dense()
@@ -341,7 +341,7 @@ It can be constructed by the following methods:
 
 - Edge list (**default**) :py:class:`dhg.BiGraph`
 - Adjacency list :py:meth:`dhg.BiGraph.from_adj_list`
-- Simple hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
+- Hypergraph :py:meth:`dhg.BiGraph.from_hypergraph`
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
@@ -407,7 +407,7 @@ Common Methods
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We first define a simple hypergraph as:
+We first define a hypergraph as:
 
 .. code-block:: python
 
@@ -422,7 +422,7 @@ We first define a simple hypergraph as:
             [0., 1., 0., 1.],
             [0., 0., 0., 1.]])
 
-**Construct a bipartite graph from simple hypergraph with** :py:meth:`dhg.BiGraph.from_hypergraph`
+**Construct a bipartite graph from hypergraph with** :py:meth:`dhg.BiGraph.from_hypergraph`
 
 .. code-block:: python
 
@@ -452,39 +452,39 @@ We first define a simple hypergraph as:
 High-Order Structures
 -----------------------
 
-Currently, DHG's high-order structures include simple hypergraph.
+Currently, DHG's high-order structures include hypergraph.
 In the future, we will add more high-order structures, such as directed hypergraph.
 
 .. _build_hypergraph:
 
-Building Simple Hypergraph
+Building Hypergraph
 ++++++++++++++++++++++++++++
-A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge.
+A `hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ is a hypergraph with no direction information in each hyperedge.
 Each hyperedge in a hypergraph can connect more than two vertices, which can be indicated with a sub-set of total vertices.
-Simple hypergraph can be constructed by the following methods:
+hypergraph can be constructed by the following methods:
 
 - Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
 - Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
 - Promoted from the low-order structures
 
-  - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
-  - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - Graph :py:meth:`dhg.Hypergraph.from_graph`
+  - k-Hop Neighbors of vertices in a graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
   - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
 Common Methods
 ^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple hypergraph from edge list with** :py:class:`dhg.Hypergraph`
+**Construct a hypergraph from edge list with** :py:class:`dhg.Hypergraph`
 
 .. code-block:: python
 
     >>> hg = dhg.Hypergraph(5, [(0, 1, 2), (2, 3), (0, 4)])
     >>> hg
-    Simple Hypergraph(num_v=5, num_e=3)
+    Hypergraph(num_v=5, num_e=3)
     >>> hg.e
     ([(0, 1, 2), (2, 3), (0, 4)], [1.0, 1.0, 1.0])
-    >>> # print the incidence matrix of the simple hypergraph
+    >>> # print the incidence matrix of the hypergraph
     >>> hg.H.to_dense()
     tensor([[1., 0., 1.],
             [1., 0., 0.],
@@ -539,7 +539,7 @@ Common Methods
 You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set the ``merge_op`` to ``mean`` and ``sum``, respectively.
 
 
-**Construct a simple hypergraph from feature k-Nearest Neighbors with** :py:meth:`dhg.Hypergraph.from_feature_kNN`
+**Construct a hypergraph from feature k-Nearest Neighbors with** :py:meth:`dhg.Hypergraph.from_feature_kNN`
 
 .. code-block:: python
 
@@ -555,7 +555,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
                           [0.6308, 0.1469, 0.0304, 0.2073]])
     >>> hg = dhg.Hypergraph.from_feature_kNN(X, k=3)
     >>> hg
-    Simple Hypergraph(num_v=10, num_e=9)
+    Hypergraph(num_v=10, num_e=9)
     >>> hg.e
     ([(0, 1, 2), (0, 1, 5), (0, 2, 9), (3, 5, 7), (4, 7, 8), (4, 6, 9), (3, 4, 7), (4, 5, 8), (2, 6, 9)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     >>> hg.H.to_dense()
@@ -578,7 +578,7 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
 Prometed from Low-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Construct a simple hypergraph from a simple graph with** :py:meth:`dhg.Hypergraph.from_graph`
+**Construct a hypergraph from a graph with** :py:meth:`dhg.Hypergraph.from_graph`
 
 
 .. code-block:: python
@@ -603,7 +603,7 @@ Prometed from Low-Order Structures
             [0., 0., 0., 1.]])
 
 
-**Construct a simple hypergraph from vertex's k-Hop neighbors of a simple graph with** :py:meth:`dhg.Hypergraph.from_graph_kHop`
+**Construct a hypergraph from vertex's k-Hop neighbors of a graph with** :py:meth:`dhg.Hypergraph.from_graph_kHop`
 
 .. code-block:: python
 
@@ -636,7 +636,7 @@ Prometed from Low-Order Structures
             [1., 1., 0.]])
 
 
-**Construct a simple hypergraph from a bipartite graph with** :py:meth:`dhg.Hypergraph.from_bigraph`
+**Construct a hypergraph from a bipartite graph with** :py:meth:`dhg.Hypergraph.from_bigraph`
 
     .. code-block:: python
 
@@ -652,7 +652,7 @@ Prometed from Low-Order Structures
                 [1., 0., 1.]])
         >>> hg = dhg.Hypergraph.from_bigraph(g, U_as_vertex=True)
         >>> hg
-        Simple Hypergraph(num_v=4, num_e=3)
+        Hypergraph(num_v=4, num_e=3)
         >>> hg.e
         ([(3,), (0, 1, 2), (1,)], [1.0, 1.0, 1.0])
         >>> hg.H.to_dense()
@@ -662,7 +662,7 @@ Prometed from Low-Order Structures
                 [1., 0., 0.]])
         >>> hg = dhg.Hypergraph.from_bigraph(g, U_as_vertex=False)
         >>> hg
-        Simple Hypergraph(num_v=3, num_e=3)
+        Hypergraph(num_v=3, num_e=3)
         >>> hg.e
         ([(1,), (1, 2), (0,)], [1.0, 1.0, 1.0])
         >>> hg.H.to_dense()

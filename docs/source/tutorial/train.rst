@@ -16,7 +16,7 @@ Here, we provide two templates for training models.
 Training without Batch Data
 -----------------------------
 
-This template is suitable for models that do not require batch iteration like vertex classification on simple graph and hypergraph structures.
+This template is suitable for models that do not require batch iteration like vertex classification on graph and hypergraph structures.
 
 .. code-block:: python
 

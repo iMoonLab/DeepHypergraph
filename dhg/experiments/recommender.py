@@ -10,7 +10,7 @@ from .base import BaseTask
 
 
 class UserItemRecommenderTask(BaseTask):
-    r"""The auto-experiment class for the recommender task on user-item bipartite graphs.
+    r"""The auto-experiment class for the recommender task on user-item bipartite graph.
 
     Args:
         ``work_root`` (``Optional[Union[str, Path]]``): User's work root to store all studies.
@@ -63,7 +63,7 @@ class UserItemRecommenderTask(BaseTask):
 
     @property
     def vars_for_DL(self):
-        r"""Return a name list for available deep learning variables for the recommender task on user-item bipartite graphs. The name list includes ``structure``.
+        r"""Return a name list for available deep learning variables for the recommender task on user-item bipartite graph. The name list includes ``structure``.
         """
         return ("structure",)
 

@@ -10,7 +10,7 @@ from dhg.metrics import BaseEvaluator
 
 
 class GraphVertexClassificationTask(VertexClassificationTask):
-    r"""The auto-experiment class for the vertex classification task on graphs.
+    r"""The auto-experiment class for the vertex classification task on graph.
 
     Args:
         ``work_root`` (``Optional[Union[str, Path]]``): User's work root to store all studies.
@@ -55,7 +55,7 @@ class GraphVertexClassificationTask(VertexClassificationTask):
 
     @property
     def vars_for_DL(self):
-        r"""Return a name list for available variables for deep learning in the vertex classification on graphs. The name list includes ``features``, ``structure``, ``labels``, ``train_mask``, ``val_mask``, and ``test_mask``.
+        r"""Return a name list for available variables for deep learning in the vertex classification on graph. The name list includes ``features``, ``structure``, ``labels``, ``train_mask``, ``val_mask``, and ``test_mask``.
         """
         return super().vars_for_DL
 

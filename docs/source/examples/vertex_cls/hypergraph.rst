@@ -1,4 +1,4 @@
-On Simple Hypergraph
+On Hypergraph
 ==========================================
 
 .. hint:: 
@@ -7,7 +7,7 @@ On Simple Hypergraph
     - Proof: Xinwei Zhang
 
 
-In the following examples, three typical graph/hypergraph neural networks are used to perform vertex classification task on the simple hypergraph structure.
+In the following examples, three typical graph/hypergraph neural networks are used to perform vertex classification task on the hypergraph structure.
 
 Models
 ---------------------------
@@ -27,7 +27,7 @@ Chinese, Japanese, French, and Russian.
 .. note:: 
 
     The dataset is a hypergraph dataset, which cannot be directly used for GCN model. 
-    Thus, the ``clique expansion`` is adpoted to reduce the simple hypergraph structure to a simple graph structure.
+    Thus, the ``clique expansion`` is adpoted to reduce the hypergraph structure to a graph structure.
 
 .. note:: 
 

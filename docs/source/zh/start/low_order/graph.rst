@@ -1,4 +1,4 @@
-简单图上的表示学习
+图上的表示学习
 =============================
 
 .. hint:: 
@@ -9,7 +9,7 @@
 
 定义
 -------------------------
-`简单图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
+`图 <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
 
 - :math:`\mathcal{V}` 是 **顶点** 集(也可以称为 **节点** 或者 **点**);
 - :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}` 是 **边** 集(也可以称为 **连接** 或者 **线**),
@@ -22,29 +22,29 @@
 
 结构构建
 -------------------------
-简单图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_graph>`。
+图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_graph>`。
 
 - 边列表 (**默认**) :py:class:`dhg.Graph`
 - 邻接表 :py:meth:`dhg.Graph.from_adj_list`
-- 从简单超图关联结构简化而来
+- 从超图关联结构简化而来
   
   - 星扩展 :py:meth:`dhg.Graph.from_hypergraph_star`
   - 团扩展 :py:meth:`dhg.Graph.from_hypergraph_clique`
   - 基于 `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_ 的扩展 :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-在如下的例子中，我们随机生成一个简单图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
+在如下的例子中，我们随机生成一个图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> # Generate a random simple graph with 5 vertices and 8 edges
+        >>> # Generate a random graph with 5 vertices and 8 edges
         >>> g = dhg.random.graph_Gnm(5, 8) 
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -79,7 +79,7 @@
 
     .. code:: python
 
-        >>> # Print the Laplacian matrix defined by GCN that associated with the simple graph structure
+        >>> # Print the Laplacian matrix defined by GCN that associated with the graph structure
         >>> g.L_GCN.to_dense()
         tensor([[0.2000, 0.2582, 0.2236, 0.2000, 0.2236],
                 [0.2582, 0.3333, 0.0000, 0.2582, 0.0000],
@@ -107,7 +107,7 @@
 
     .. code:: python
 
-        >>> # Print the symmetrically normalized Laplacian matrix associated with the simple graph structure
+        >>> # Print the symmetrically normalized Laplacian matrix associated with the graph structure
         >>> g.L_sym.to_dense()
         tensor([[ 1.0000, -0.3536, -0.2887, -0.2500, -0.2887],
                 [-0.3536,  1.0000,  0.0000, -0.3536,  0.0000],
@@ -135,7 +135,7 @@
 
     .. code:: python
 
-        >>> # Print the left(random-walk) normalized Laplacian matrix associated with the simple graph structure
+        >>> # Print the left(random-walk) normalized Laplacian matrix associated with the graph structure
         >>> g.L_rw.to_dense()
         tensor([[ 1.0000, -0.2500, -0.2500, -0.2500, -0.2500],
                 [-0.5000,  1.0000,  0.0000, -0.5000,  0.0000],

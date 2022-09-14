@@ -79,7 +79,7 @@ DHG中所有的评测器都可以使用与如下代码一样的参数构建：
     ``evaluator.validate(y_true, y_pred)`` 只会返回第i个指标的值， 其中 ``i`` 为指定的 ``validate_index`` 。
     ``evaluator.test(y_true, y_pred)`` 会返回一个包含在 ``metric_configs`` 中所有指标的结果字典。
 
-如下的例子展示了一个包含 ``5`` 个顶点、每个顶点属于 ``3`` 类之一的简单图。
+如下的例子展示了一个包含 ``5`` 个顶点、每个顶点属于 ``3`` 类之一的图。
 
 .. code-block:: python
 

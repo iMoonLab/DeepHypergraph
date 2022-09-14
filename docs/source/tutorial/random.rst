@@ -14,29 +14,29 @@ The name of DHG's structure generator can be divided into types:
 - ``Gnp``: Generate a random structure with ``n`` vertices and ``p`` probability of choosing an/a edge/hyperedge.
 
 
-Random Simple Graph Generation
+Random Graph Generation
 --------------------------------
 
-Generating a simple with ``n`` vertices and ``m`` edges:
+Generating a with ``n`` vertices and ``m`` edges:
 
 .. code-block:: python
 
     >>> import dhg.random as dr
     >>> g = dr.graph_Gnm(10, 20)
     >>> g
-    Simple Graph(num_v=10, num_e=20)
+    Graph(num_v=10, num_e=20)
 
-Generating a simple with ``n`` vertices and ``p`` probability of choosing an edge:
+Generating a with ``n`` vertices and ``p`` probability of choosing an edge:
 
 .. code-block:: python
 
     >>> import dhg.random as dr
     >>> g = dr.graph_Gnp(10, 0.5)
     >>> g
-    Simple Graph(num_v=10, num_e=24)
+    Graph(num_v=10, num_e=24)
     >>> g = dr.graph_Gnp_fast(10, 0.5)
     >>> g
-    Simple Graph(num_v=10, num_e=22)
+    Graph(num_v=10, num_e=22)
 
 
 Random Directed Graph Generation
@@ -84,10 +84,10 @@ Generating a bipartite graph with ``num_u`` vertices in set :math:`U`, ``num_v``
     >>> g
     Bipartite Graph(num_u=5, num_v=6, num_e=19)
 
-Random Simple Hypergraph Generation
+Random Hypergraph Generation
 -------------------------------------
 
-The simple hypergraph generator can be divided into two types:
+The hypergraph generator can be divided into two types:
 
 - ``k``-uniform hypergraph: Each hyperedge has the same number (k) of vertices.
 - General hypergraph: Each hyperedge has a random number of vertices.
@@ -99,7 +99,7 @@ Generating a ``k``-uniform hypergraph with ``n`` vertices and ``m`` hyperedges:
     >>> import dhg.random as dr
     >>> hg = dr.uniform_hypergraph_Gnm(3, 20, 5)
     >>> hg
-    Simple Hypergraph(num_v=20, num_e=5)
+    Hypergraph(num_v=20, num_e=5)
     >>> hg.e
     ([(2, 11, 12), (4, 14, 18), (0, 5, 16), (2, 6, 12), (1, 3, 6)], [1.0, 1.0, 1.0, 1.0, 1.0])
 
@@ -110,7 +110,7 @@ Generating a ``k``-uniform hypergraph with ``n`` vertices and ``p`` probability 
     >>> import dhg.random as dr
     >>> hg = dr.uniform_hypergraph_Gnp(3, 20, 0.01)
     >>> hg
-    Simple Hypergraph(num_v=20, num_e=8)
+    Hypergraph(num_v=20, num_e=8)
     >>> hg.e
     ([(1, 6, 16), (2, 17, 18), (3, 14, 16), (5, 9, 17), (7, 12, 14), (10, 18, 19), (12, 13, 19), (12, 18, 19)], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 
@@ -121,7 +121,7 @@ Generating a general hypergraph with ``n`` vertices and ``m`` hyperedges:
     >>> import dhg.random as dr
     >>> hg = dr.hypergraph_Gnm(8, 4)
     >>> hg
-    Simple Hypergraph(num_v=8, num_e=4)
+    Hypergraph(num_v=8, num_e=4)
     >>> hg.e
     ([(0, 2, 5, 6, 7), (3, 4), (0, 1, 4, 5, 6, 7), (2, 5, 6)], [1.0, 1.0, 1.0, 1.0])
 

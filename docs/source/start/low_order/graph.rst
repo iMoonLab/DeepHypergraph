@@ -1,4 +1,4 @@
-Learning on Simple Graph
+Learning on Graph
 =============================
 
 .. hint:: 
@@ -8,7 +8,7 @@ Learning on Simple Graph
 
 Definition
 -------------------------
-A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+A `graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ \{x, y\} \mid x, y \in \mathcal{V}~and~x \neq y \}`, a set of **edges** (also called **links** or **lines**), 
@@ -16,34 +16,34 @@ A `simple graph <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>`_ c
 
 In the edge :math:`\{x, y\}`, the vertices :math:`x` and :math:`y` are called the **endpoints** of the edge. 
 The edge is said to **join** :math:`x` and :math:`y` and to be **incident** on :math:`x` and on :math:`y`. 
-A vertex may exist in a simple graph and not belong to an edge. 
+A vertex may exist in a graph and not belong to an edge.
 `Multiple edges <https://en.wikipedia.org/wiki/Multiple_edges>`_, not allowed under the definition above, are two or more edges that join the same two vertices.
 
 Construction
 -------------------------
-The simple graph structure can be constructed by the following methods. More details can refer to :ref:`here <build_graph>`.
+The graph structure can be constructed by the following methods. More details can refer to :ref:`here <build_graph>`.
 
 - Edge list (**default**) :py:class:`dhg.Graph`
 - Adjacency list :py:meth:`dhg.Graph.from_adj_list`
-- Reduced from the simple hypergraph structure
+- Reduced from the hypergraph structure
   
   - Star expansion :py:meth:`dhg.Graph.from_hypergraph_star`
   - Clique expansion :py:meth:`dhg.Graph.from_hypergraph_clique`
   - `HyperGCN <https://arxiv.org/pdf/1809.02589.pdf>`_-based expansion :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
-In the following example, we randomly generate a simple graph structure and a feature matrix to perform some basic learning operations on this structure.
+In the following example, we randomly generate a graph structure and a feature matrix to perform some basic learning operations on this structure.
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> # Generate a random simple graph with 5 vertices and 8 edges
+        >>> # Generate a random graph with 5 vertices and 8 edges
         >>> g = dhg.random.graph_Gnm(5, 8) 
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the graph and feature
         >>> g 
-        Simple Graph(num_v=5, num_e=8)
+        Graph(num_v=5, num_e=8)
         >>> # Print edges in the graph
         >>> g.e[0]
         [(0, 1), (2, 4), (0, 4), (3, 4), (0, 3), (2, 3), (0, 2), (1, 3)]
@@ -78,7 +78,7 @@ Smoothing with GCN's Laplacian
 
     .. code:: python
 
-        >>> # Print the Laplacian matrix defined by GCN that associated with the simple graph structure
+        >>> # Print the Laplacian matrix defined by GCN that associated with the graph structure
         >>> g.L_GCN.to_dense()
         tensor([[0.2000, 0.2582, 0.2236, 0.2000, 0.2236],
                 [0.2582, 0.3333, 0.0000, 0.2582, 0.0000],
@@ -106,7 +106,7 @@ Smoothing with Symmetrically Normalized Laplacian
 
     .. code:: python
 
-        >>> # Print the symmetrically normalized Laplacian matrix associated with the simple graph structure
+        >>> # Print the symmetrically normalized Laplacian matrix associated with the graph structure
         >>> g.L_sym.to_dense()
         tensor([[ 1.0000, -0.3536, -0.2887, -0.2500, -0.2887],
                 [-0.3536,  1.0000,  0.0000, -0.3536,  0.0000],
@@ -134,7 +134,7 @@ Smoothing with Left (random-walk) Normalized Laplacian
 
     .. code:: python
 
-        >>> # Print the left(random-walk) normalized Laplacian matrix associated with the simple graph structure
+        >>> # Print the left(random-walk) normalized Laplacian matrix associated with the graph structure
         >>> g.L_rw.to_dense()
         tensor([[ 1.0000, -0.2500, -0.2500, -0.2500, -0.2500],
                 [-0.5000,  1.0000,  0.0000, -0.5000,  0.0000],

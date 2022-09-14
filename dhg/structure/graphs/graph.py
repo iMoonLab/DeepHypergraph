@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class Graph(BaseGraph):
-    r""" Class for simple graphs (undirected graphs).
+    r""" Class for graph (undirected graph).
 
         Args:
             ``num_v`` (``int``): The number of vertices.
@@ -39,11 +39,11 @@ class Graph(BaseGraph):
     def __repr__(self) -> str:
         r"""Print the graph information.
         """
-        return f"Simple Graph(num_v={self.num_v}, num_e={self.num_e})"
+        return f"Graph(num_v={self.num_v}, num_e={self.num_e})"
 
     @property
     def state_dict(self) -> Dict[str, Any]:
-        r"""Get the state dict of the simple graph.
+        r"""Get the state dict of the graph.
         """
         return {
             "num_v": self.num_v,
@@ -113,7 +113,7 @@ class Graph(BaseGraph):
         r"""Move the graph to the specified device.
 
         Args:
-            ``device`` (``torch.device``): The device to store the simple graph.
+            ``device`` (``torch.device``): The device to store the graph.
         """
         return super().to(device)
 
@@ -129,7 +129,7 @@ class Graph(BaseGraph):
         r"""Construct a graph from the adjacency list. Each line in the adjacency list has two components. The first element in each line is the source vertex index, and the rest elements are the target vertex indices that connected to the source vertex.
 
         .. note::
-            This function can only construct the unweighted simple graph.
+            This function can only construct the unweighted graph.
 
         Args:
             ``num_v`` (``int``): The number of vertices.
@@ -306,7 +306,7 @@ class Graph(BaseGraph):
 
     @property
     def e(self) -> Tuple[List[List[int]], List[float]]:
-        r"""Return the edge list and weight list in the simple graph.
+        r"""Return the edge list and weight list in the graph.
         """
         return super().e
 
@@ -323,19 +323,19 @@ class Graph(BaseGraph):
 
     @property
     def num_v(self) -> int:
-        r"""Return the number of vertices in the simple graph.
+        r"""Return the number of vertices in the graph.
         """
         return super().num_v
 
     @property
     def num_e(self) -> int:
-        r"""Return the number of edges in the simple graph.
+        r"""Return the number of edges in the graph.
         """
         return super().num_e
 
     @property
     def deg_v(self) -> List[int]:
-        r"""Return the degree list of each vertex in the simple graph.
+        r"""Return the degree list of each vertex in the graph.
         """
         return self.D_v._values().cpu().numpy().tolist()
 
@@ -351,7 +351,7 @@ class Graph(BaseGraph):
     # properties for deep learning
     @property
     def vars_for_DL(self) -> List[str]:
-        r"""Return a name list of available variables for deep learning in the simple graph including 
+        r"""Return a name list of available variables for deep learning in the graph including
 
         Sparse Matrices:
 

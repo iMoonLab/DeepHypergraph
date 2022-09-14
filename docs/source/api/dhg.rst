@@ -17,7 +17,7 @@ Base Class
 
 .. _dhg_graph_class:
 
-Simple Graph
+Graph
 +++++++++++++++++
 
 .. autoclass:: dhg.Graph
@@ -53,7 +53,7 @@ Base Class
 
 .. _dhg_hypergraph_class:
 
-Simple Hypergraph
+Hypergraph
 +++++++++++++++++
 
 .. autoclass:: dhg.Hypergraph

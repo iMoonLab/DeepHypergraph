@@ -11,7 +11,7 @@ from ..base import BaseGraph
 
 
 class DiGraph(BaseGraph):
-    r""" Class for directed graphs.
+    r""" Class for directed graph.
 
         Args:
             ``num_v`` (``int``): The Number of vertices.

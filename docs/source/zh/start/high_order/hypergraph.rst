@@ -1,6 +1,6 @@
 .. _zh_start_learning_on_simple_hypergraph:
 
-简单超图上的表示学习
+超图上的表示学习
 =================================
 
 .. hint:: 
@@ -11,7 +11,7 @@
 
 定义
 -----------------
-`简单超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ (也可以称为无向超图) 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
+`超图 <https://en.wikipedia.org/wiki/Hypergraph>`_ (也可以称为无向超图) 可以表示为 :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`。
 
 - :math:`\mathcal{V}` 是 **顶点** 集(也可以称为 **节点** 或者 **点**);
 - :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}` 是 **超边** 集(也可以称为 **边**), 其中 :math:`\mathcal{P}(\mathcal{V})` 是 :math:`\mathcal{V}` 的 `幂集 <https://en.wikipedia.org/wiki/Power_set>`_ 。
@@ -28,30 +28,30 @@ k-uniform超图是所有超边连接的顶点数均为k的超图。
 
 结构构建
 ---------------------
-简单超图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_hypergraph>`。
+超图的关联结构可以通过以下方法构建。详细参考 :ref:`这里 <zh_build_hypergraph>`。
 
 - 超边列表 (**默认**) :py:class:`dhg.Hypergraph`
 - 使用特征的k近邻 :py:meth:`dhg.Hypergraph.from_feature_kNN`
 - 从低阶关联结构得到
 
-  - 简单图 :py:meth:`dhg.Hypergraph.from_graph`
-  - 简单图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - 图 :py:meth:`dhg.Hypergraph.from_graph`
+  - 图顶点的k阶邻居 :py:meth:`dhg.Hypergraph.from_graph_kHop`
   - 二分图 :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
-在如下的例子中，我们随机生成一个简单超图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
+在如下的例子中，我们随机生成一个超图关联结构和一个特征矩阵，并对此结构进行一些基本的学习操作。
 
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> # Generate a random simple hypergraph with 5 vertices and 4 hyperedges
+        >>> # Generate a random hypergraph with 5 vertices and 4 hyperedges
         >>> hg = dhg.random.hypergraph_Gnm(5, 4) 
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the hypergraph and feature
         >>> hg 
-        Simple Hypergraph(num_v=5, num_e=4)
+        Hypergraph(num_v=5, num_e=4)
         >>> # Print edges in the hypergraph
         >>> hg.e[0]
         [(2, 3), (0, 2, 4), (2, 3, 4), (1, 2, 3, 4)]
@@ -206,7 +206,7 @@ k-uniform超图是所有超边连接的顶点数均为k的超图。
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 每一条超边连接一个顶点集，其为两个顶点集合的信息桥梁。
-在简单超图中，超边连接的源顶点集和汇顶点集是相同的。
+在超图中，超边连接的源顶点集和汇顶点集是相同的。
 
     .. code:: python
 

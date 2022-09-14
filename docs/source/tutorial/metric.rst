@@ -31,7 +31,7 @@ Generally speaking, the evaluation strategy can be divided into two categories:
 
 - :ref:`Epoch Evaluation <tutorial_evaluation_ee>`
   
-  like vertex classification in simple graph, the evaluation is performed on the whole graph at each epoch.
+  like vertex classification in graph, the evaluation is performed on the whole graph at each epoch.
 
 
 - :ref:`Add Batches Then Do Epoch Evaluation <tutorial_evaluation_abe>`
@@ -79,7 +79,7 @@ As for validation and testing, you can directly call the :py:meth:`validate(y_tr
     The ``evaluator.validate(y_true, y_pred)`` will only return ``i``-th metric value, where ``i`` is specified by ``validate_index``. 
     The ``evaluator.test(y_true, y_pred)`` will return a result dictionary of all metrics specified in ``metric_configs``.
 
-The following example shows a simple graph with ``5`` vertices and each vertex belongs to one of ``3`` classes.
+The following example shows a graph with ``5`` vertices and each vertex belongs to one of ``3`` classes.
 
 .. code-block:: python
 

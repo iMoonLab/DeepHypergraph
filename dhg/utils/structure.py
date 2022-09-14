@@ -6,7 +6,7 @@ def edge_list_to_adj_list(e_list: List[Tuple[int, int]]) -> List[List[int]]:
     r"""Convert edge list to adjacency list for low-order structures.
 
     .. note::
-        Adjacency list can only represent low-order structures like simple graphs, directed graphs, and bipartite graphs.
+        Adjacency list can only represent low-order structures like graph, directed graph, and bipartite graph.
 
     Args:
         ``e_list`` (``List[Tuple[int, int]]``): Edge list.
@@ -22,7 +22,7 @@ def edge_list_to_adj_dict(e_list: List[Tuple[int, int]]) -> Dict[int, List[int]]
     r"""Convert edge list to adjacency dictionary for low-order structures.
 
     .. note::
-        Adjacency list can only represent low-order structures like simple graphs, directed graphs, and bipartite graphs.
+        Adjacency list can only represent low-order structures like graph, directed graph, and bipartite graph.
 
     Args:
         ``e_list`` (``List[Tuple[int, int]]``): Edge list.
@@ -37,7 +37,7 @@ def adj_list_to_edge_list(adj_list: List[List[int]]) -> List[Tuple[int, int]]:
     r"""Convert adjacency list to edge list for low-order structures.
 
     .. note::
-        Adjacency list can only represent low-order structures like simple graphs, directed graphs, and bipartite graphs.
+        Adjacency list can only represent low-order structures like graph, directed graph, and bipartite graph.
 
     Args:
         ``adj_list`` (``List[List[int]]``): Adjacency list.
@@ -144,7 +144,7 @@ def remap_adj_list(
     r"""Remap the vertex markers to numbers of an ordered and continuous range.
 
     .. note::
-        This function can only support low-order structures like simple graphs, directed graphs, and bipartite graphs.
+        This function can only support low-order structures like graph, directed graph, and bipartite graph.
 
     Args:
         ``adj_list`` (``List[List[int]]``): Adjacency list of low-order structures.
@@ -195,7 +195,7 @@ def remap_adj_lists(
     r"""Remap the vertex markers to numbers of an ordered and continuous range for given multiple adjacency lists.
 
     .. note::
-        This function can only support low-order structures like simple graphs, directed graphs, and bipartite graphs.
+        This function can only support low-order structures like graph, directed graph, and bipartite graph.
 
     Args:
         ``adj_lists`` (``List[List[List[int]]]``): The list of adjacency list of low-order structures.

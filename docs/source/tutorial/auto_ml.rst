@@ -40,7 +40,7 @@ In each builder function, the ``trial`` parameter can be called to suggest hyper
 Defining the Structure Builder
 ++++++++++++++++++++++++++++++++++++
 
-The structure builder is a function that defines the input correlation structure, especially for high-order structures like simple hypergraphs. 
+The structure builder is a function that defines the input correlation structure, especially for high-order structures like hypergraph.
 Generally, the low-order structure is usually fixed when fed to the model. But the construction of high-order structures is flexible.
 Different high-order structures may lead to different performances refer to the `HGNN+ <https://ieeexplore.ieee.org/document/9795251>`_ paper for more details.
 
@@ -49,7 +49,7 @@ In the following examples, we show how to define the structure builder to constr
 .. code-block:: python
 
     def structure_builder(trial):
-        # ``g`` is the simple graph, ``X`` is the vertex feature matrix
+        # ``g`` is the graph, ``X`` is the vertex feature matrix
         global g, X
 
         hg = dhg.Hypergraph.from_graph(g)
@@ -120,9 +120,9 @@ Task Class for Auto-ML
 To run experiments with Auto-ML, we need to define a task-specific class. 
 Currently, DHG supports the following tasks:
 
-- :py:class:`dhg.experiments.GraphVertexClassificationTask`: Vertex classification task on simple graphs.
-- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: Vertex classification task on simple hypergraphs.
-- :py:class:`dhg.experiments.UserItemRecommenderTask`: Item recommendation task on User-Item bipartite graphs.
+- :py:class:`dhg.experiments.GraphVertexClassificationTask`: Vertex classification task on graph.
+- :py:class:`dhg.experiments.HypergraphVertexClassificationTask`: Vertex classification task on hypergraph.
+- :py:class:`dhg.experiments.UserItemRecommenderTask`: Item recommendation task on User-Item bipartite graph.
 
 More Auto-ML tasks will be added in the future. Welcome to contribute and propose issues on `GitHub <https://github.com/iMoonLab/DeepHypergraph>`_.
 
@@ -130,9 +130,9 @@ More Auto-ML tasks will be added in the future. Welcome to contribute and propos
 Auto-ML for Vertex Classification Task
 ---------------------------------------
 
-In the following examples, we show how to use DHG to run Auto-ML experiments for vertex classification tasks on simple graphs and hypergraphs, respectively.
+In the following examples, we show how to use DHG to run Auto-ML experiments for vertex classification tasks on graph and hypergraph, respectively.
 
-On Simple Graphs
+On Graph
 ++++++++++++++++++++
 
 .. code-block:: python
@@ -181,7 +181,7 @@ On Simple Graphs
         task = Task(work_root, input_data, model_builder, train_builder, evaluator, device,)
         task.run(200, 50, "maximize")
 
-On Simple Hypergraphs
+On Hypergraph
 ++++++++++++++++++++++++
 
 .. code-block:: python
@@ -245,7 +245,7 @@ On Simple Hypergraphs
 Auto-ML for Item Recommender Task
 ---------------------------------------
 
-In the following example, we show how to use DHG to run Auto-ML experiments for item recommendation tasks on User-Item bipartite graphs.
+In the following example, we show how to use DHG to run Auto-ML experiments for item recommendation tasks on User-Item bipartite graph.
 
 .. code-block:: python
 

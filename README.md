@@ -12,10 +12,6 @@
 
 **[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文教程](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
 
-<p align="center">
-We are rushing the documentation and tutorials, which will be updated twice a day!<br>
-我们正在加快文档和教程的更新，每天会在午饭和晚饭期间进行两次更新！
-</p>
 
 ## News
 - 2022-08-25 -> DHG's first version v0.9.1 is now available! 
@@ -24,7 +20,7 @@ We are rushing the documentation and tutorials, which will be updated twice a da
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
-It supports a wide variety of structures like low-order structures (simple graph, directed graph, bipartite graph, etc.), high-order structures (simple hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
+It supports a wide variety of structures like low-order structures (graph, directed graph, bipartite graph, etc.), high-order structures (hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
 
 In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
@@ -51,10 +47,10 @@ DHG is built upon Pytorch, and any Pytorch-based models can be integrated into D
 DHG provides various Laplacian matrices and message passing functions to help build your spectral/spatial-based models, respectively.
 
 - **Visualization of Graphs and Hypergraphs**
-DHG provides a powerful visualization tool for graphs and hypergraphs. You can easily visualize the structure of your graphs and hypergraphs.
+DHG provides a powerful visualization tool for graph and hypergraph. You can easily visualize the structure of your graph and hypergraph.
 
 - **Bridge the Gap between Graphs and Hypergraphs**:
-DHG provides functions to build hypergraphs from graphs and build graphs from hypergraphs. Maybe promoting the graphs to hypergraphs can exploit those potential high-order connections and improve the performance of your model.
+DHG provides functions to build hypergraph from graph and build graph from hypergraph. Maybe promoting the graph to hypergraph can exploit those potential high-order connections and improve the performance of your model.
 
 - **Attach Spectral/Spatial-Based Operations to Structure**:
 In DHG, those Laplacian matrices and message passing functions are attached to the graph/hypergraph structure. As soon as you build a structure with DHG, those functions will be ready to be used in the process of building your model.
@@ -79,7 +75,7 @@ pip install dhg
 
 ### Learning on Low-Order Structures
 
-On simple graph structures, you can smooth a given vertex features with GCN's Laplacian matrix by:
+On graph structures, you can smooth a given vertex features with GCN's Laplacian matrix by:
 
 ```python
 import torch
@@ -89,7 +85,7 @@ X = torch.rand(5, 2)
 X_ = g.smoothing_with_GCN(X)
 ```
 
-On simple graph structures, you can pass messages from vertex to vertex with `mean` aggregation by:
+On graph structures, you can pass messages from vertex to vertex with `mean` aggregation by:
 
 ```python
 import torch
@@ -133,7 +129,7 @@ X_v_ = g.u2v(X_u, aggr="mean")
 
 ### Learning on High-Order Structures
 
-On simple hypergraph structures, you can smooth a given vertex features with HGNN's Laplacian matrix by:
+On hypergraph structures, you can smooth a given vertex features with HGNN's Laplacian matrix by:
 
 ```python
 import torch
@@ -143,7 +139,7 @@ X = torch.rand(5, 2)
 X_ = hg.smoothing_with_HGNN(X)
 ```
 
-On simple hypergraph structures, you can pass messages from vertex to hyperedge with `mean` aggregation by:
+On hypergraph structures, you can pass messages from vertex to hyperedge with `mean` aggregation by:
 
 ```python
 import torch

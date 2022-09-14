@@ -6,7 +6,7 @@ GCN on Cora
     - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
     - Proof: Xinwei Zhang
 
-In the following example, we present a simple example of Auto-ML for vertex classification on simple graph.
+In the following example, we present an example of Auto-ML for vertex classification on graph.
 More details for how to use the :doc:`/api/experiments` to auto tuning your own model can be found in the tutorial <:doc:`/tutorial/auto_ml`>.
 
 Configuration

@@ -1,4 +1,4 @@
-On Simple Graph
+On Graph
 ==========================================
 
 .. hint:: 
@@ -6,7 +6,7 @@ On Simple Graph
     - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
     - Proof: Xinwei Zhang
 
-In the following examples, four typical graph/hypergraph neural networks are used to perform vertex classification task on the simple graph structure.
+In the following examples, four typical graph/hypergraph neural networks are used to perform vertex classification task on the graph structure.
 
 Models
 ---------------------------

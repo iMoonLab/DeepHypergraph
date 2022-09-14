@@ -1,6 +1,6 @@
 .. _start_learning_on_simple_hypergraph:
 
-Learning on Simple Hypergraph
+Learning on Hypergraph
 =================================
 
 .. hint:: 
@@ -10,14 +10,14 @@ Learning on Simple Hypergraph
 
 Definition
 -----------------
-A `simple hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
+A `hypergraph <https://en.wikipedia.org/wiki/Hypergraph>`_ (also called undirected hypergraph) can be indicated with :math:`\mathcal{G} = \{\mathcal{V}, \mathcal{E}\}`.
 
 - :math:`\mathcal{V}`, is a set of **vertices** (also called **nodes** or **points**);
 - :math:`\mathcal{E} \subseteq \{ \mathcal{P}(\mathcal{V}) \}`, a set of **hyperedges** (also called **edges**), where :math:`\mathcal{P}(\mathcal{V})` is the `power set <https://en.wikipedia.org/wiki/Power_set>`_ of :math:`\mathcal{V}`.
   Each hyperedge :math:`e \in \mathcal{E}` can contains two or more vertices.
 
 While graph edges connect only 2 vertices, hyperedges connect an arbitrary number of vertices. 
-However, it is often desirable to study hypergraphs where all hyperedges have the same cardinality; 
+However, it is often desirable to study hypergraph where all hyperedges have the same cardinality;
 a k-uniform hypergraph is a hypergraph such that all its hyperedges have size k. 
 (In other words, one such hypergraph is a collection of sets, 
 each such set a hyperedge connecting k nodes.) So a 2-uniform hypergraph is a graph, 
@@ -27,30 +27,30 @@ An undirected hypergraph is also called a set system or a family of sets drawn f
 
 Construction
 ---------------------
-The simple hypergraph structure can be constructed by the following methods. More details can refer to :ref:`here <build_hypergraph>`.
+The hypergraph structure can be constructed by the following methods. More details can refer to :ref:`here <build_hypergraph>`.
 
 - Hyperedge list (**default**) :py:class:`dhg.Hypergraph`
 - Features with k-Nearest Neighbors :py:meth:`dhg.Hypergraph.from_feature_kNN`
 - Promoted from the low-order structures
 
-  - Simple Graph :py:meth:`dhg.Hypergraph.from_graph`
-  - k-Hop Neighbors of vertices in a simple graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
+  - Graph :py:meth:`dhg.Hypergraph.from_graph`
+  - k-Hop Neighbors of vertices in a graph :py:meth:`dhg.Hypergraph.from_graph_kHop`
   - Bipartite Graph :py:meth:`dhg.Hypergraph.from_bigraph`
 
 
-In the following example, we randomly generate a simple hypergraph structure and a feature matrix to perform some basic learning operations on this structure.
+In the following example, we randomly generate a hypergraph structure and a feature matrix to perform some basic learning operations on this structure.
    
     .. code:: python
 
         >>> import torch
         >>> import dhg
-        >>> # Generate a random simple hypergraph with 5 vertices and 4 hyperedges
+        >>> # Generate a random hypergraph with 5 vertices and 4 hyperedges
         >>> hg = dhg.random.hypergraph_Gnm(5, 4) 
         >>> # Generate a vertex feature matrix with size 5x2
         >>> X = torch.rand(5, 2)
         >>> # Print information about the hypergraph and feature
         >>> hg 
-        Simple Hypergraph(num_v=5, num_e=4)
+        Hypergraph(num_v=5, num_e=4)
         >>> # Print edges in the hypergraph
         >>> hg.e[0]
         [(2, 3), (0, 2, 4), (2, 3, 4), (1, 2, 3, 4)]
@@ -205,7 +205,7 @@ Message Propagation from Vertex Set to Vertex Set
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Each hyperedge connects a set of vertices, and it is a message bridge between two sets of vertices.
-In simple hypergraph, the source vertex set and the target vertex set that the hyperedge connects are the same.
+In hypergraph, the source vertex set and the target vertex set that the hyperedge connects are the same.
 
     .. code:: python
 
