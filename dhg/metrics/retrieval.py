@@ -6,28 +6,16 @@ import numpy as np
 from dhg.metrics.base import BaseEvaluator
 
 
-__all__ = [
-    "available_retrieval_metrics",
-    "precision",
-    "recall",
-    "ap" "map",
-    "ndcg",
-    "rr",
-    "mrr",
-    "pr_curve",
-]
-
-
 def available_retrieval_metrics():
     r"""Return available metrics for the retrieval task.
     
-    The available metrics are: ``precision``, ``recall``, ``ap``, ``map``, ``ndcg``, ``rr``, ``mrr``, ``pr_curve``.
+    The available metrics are: ``precision``, ``recall``, ``map``, ``ndcg``, ``mrr``, ``pr_curve``.
     """
-    return ("precision", "recall", "ap", "map", "ndcg", "rr", "mrr", "pr_curve")
+    return ("precision", "recall", "map", "ndcg", "mrr", "pr_curve")
 
 
 def _format_inputs(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ratio: Optional[float] = None
 ) -> Tuple[torch.Tensor, torch.Tensor, int]:
     r"""Format the inputs
     
@@ -35,6 +23,7 @@ def _format_inputs(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
     """
     assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() in (1, 2), "The input y_true must be 1-D or 2-D."
@@ -45,7 +34,10 @@ def _format_inputs(
         y_pred = y_pred.unsqueeze(0)
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[1]
-    k = min(k, max_k) if k is not None else max_k
+    if ratio is not None:
+        k = int(max_k * ratio)
+    else:
+        k = min(k, max_k) if k is not None else max_k
     return y_true, y_pred, k
 
 
@@ -79,7 +71,11 @@ def precision(
 
 
 def recall(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
+    y_true: torch.Tensor,
+    y_pred: torch.Tensor,
+    k: Optional[int] = None,
+    ratio: Optional[float] = None,
+    ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Recall score for the retrieval task.
 
@@ -87,8 +83,8 @@ def recall(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
-
     
     Examples:
         >>> import torch
@@ -98,7 +94,7 @@ def recall(
         >>> dm.retrieval.recall(y_true, y_pred, k=5)
         0.6666666666666666
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     num_true = y_true.sum(dim=1)

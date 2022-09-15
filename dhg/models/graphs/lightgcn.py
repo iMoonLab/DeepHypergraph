@@ -43,6 +43,8 @@ class LightGCN(nn.Module):
         Args:
             ``ui_bigraph`` (``dhg.BiGraph``): The user-item bipartite graph.
         """
+        # if self.training:
+        #     ui_bigraph = ui_bigraph.drop_edges(0.4)
         u_embs = self.u_embedding.weight
         i_embs = self.i_embedding.weight
         all_embs = torch.cat([u_embs, i_embs], dim=0)

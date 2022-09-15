@@ -332,20 +332,33 @@ class BiGraph(BaseGraph):
             ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
             ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
         """
-        _g = self.clone()
-        _g._clear_cache()
+        # e_list, e_weight = self.e
+        # self._clear_cache()
+        # _g = self.clone()
+        # if ord == "uniform":
+        #     p = torch.ones(_g.num_e) * drop_rate
+        #     drop_mask = torch.bernoulli(p).bool()
+        #     indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
+        #     values[drop_mask] = fill_value
+        #     _g.cache["B"] = torch.sparse_coo_tensor(
+        #         indices, values, size=(_g.num_u, _g.num_v), device=_g.device
+        #     ).coalesce()
+        # else:
+        #     raise ValueError(f"Unknown drop order: {ord}.")
+        # return _g
+        e_list, e_weight = self.e
+        self._clear_cache()
         if ord == "uniform":
-            p = torch.ones(_g.num_e) * drop_rate
+            p = torch.ones(self.num_e) * drop_rate
             drop_mask = torch.bernoulli(p).bool()
-            e_list, e_weight = _g.e
             indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
             values[drop_mask] = fill_value
-            _g.cache["B"] = torch.sparse_coo_tensor(
-                indices, values, size=(_g.num_v, _g.num_v), device=_g.device
+            self.cache["B"] = torch.sparse_coo_tensor(
+                indices, values, size=(self.num_u, self.num_v), device=self.device
             ).coalesce()
         else:
             raise ValueError(f"Unknown drop order: {ord}.")
-        return _g
+        return self
 
     def restore_edges(self):
         r"""Restore the dropped edges.

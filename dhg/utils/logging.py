@@ -20,6 +20,7 @@ def simple_stdout2file(file_path: Union[str, Path]) -> None:
 
     class SimpleLogger:
         def __init__(self, file_path: Path):
+            file_path = Path(file_path).absolute()
             assert (
                 file_path.parent.exists()
             ), f"The parent directory of {file_path} does not exist."

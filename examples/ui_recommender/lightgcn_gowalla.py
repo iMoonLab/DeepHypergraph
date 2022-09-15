@@ -37,6 +37,7 @@ def train(net, data_loader, optimizer, criterion, epoch):
     net.train()
 
     loss_mean, st = 0, time.time()
+    # droped_ui_bigraph = ui_bigraph.drop_edges(0.4)
     for users, pos_items, neg_items in data_loader:
         users, pos_items, neg_items = users.to(device), pos_items.to(device), neg_items.to(device)
         optimizer.zero_grad()
@@ -87,6 +88,8 @@ def test(net, data_loader):
 
 
 if __name__ == "__main__":
+    # from dhg.utils import simple_stdout2file
+    # simple_stdout2file("/home/fengyifan/lightgcn_gowalla.log")
     dim_emb = 64
     lr = 0.001
     num_workers = 0
