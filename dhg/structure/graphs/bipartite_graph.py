@@ -1,3 +1,4 @@
+import random
 import pickle
 from pathlib import Path
 from copy import deepcopy
@@ -9,6 +10,7 @@ import numpy as np
 from dhg.structure.hypergraphs import Hypergraph
 from dhg.visualization.structure.draw import draw_bigraph
 from ..base import BaseGraph
+from dhg.utils.sparse import sparse_dropout
 
 
 class BiGraph(BaseGraph):
@@ -79,19 +81,8 @@ class BiGraph(BaseGraph):
         with open(file_path, "rb") as fp:
             data = pickle.load(fp)
         assert data["class"] == "BiGraph", "The file is not a bipartite graph."
-        return BiGraph.load_from_state_dict(data["state_dict"])
+        return BiGraph.from_state_dict(data["state_dict"])
 
-    @staticmethod
-    def load_from_state_dict(state_dict: dict):
-        r"""Load the bipartite graph structure from a state dictionary.
-
-        Args:
-            ``state_dict`` (``dict``): The state dictionary to load the bipartite graph structure.
-        """
-        _g = BiGraph(state_dict["num_u"], state_dict["num_v"])
-        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
-        return _g
-    
     def draw(
         self,
         e_style: str = "line",
@@ -139,7 +130,29 @@ class BiGraph(BaseGraph):
             ``pull_u_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{U}` to the center. Defaults to ``1.0``.
             ``pull_v_center_strength`` (``float``): The strength of pulling vertices in set :math:`\mathcal{V}` to the center. Defaults to ``1.0``.
         """
-        draw_bigraph(self, e_style, u_label, u_size, u_color, u_line_width, v_label, v_size, v_color, v_line_width, e_color, e_line_width, u_font_size, v_font_size, font_family, push_u_strength, push_v_strength, push_e_strength, pull_e_strength, pull_u_center_strength, pull_v_center_strength)
+        draw_bigraph(
+            self,
+            e_style,
+            u_label,
+            u_size,
+            u_color,
+            u_line_width,
+            v_label,
+            v_size,
+            v_color,
+            v_line_width,
+            e_color,
+            e_line_width,
+            u_font_size,
+            v_font_size,
+            font_family,
+            push_u_strength,
+            push_v_strength,
+            push_e_strength,
+            pull_e_strength,
+            pull_u_center_strength,
+            pull_v_center_strength,
+        )
 
     def clear(self):
         r"""Remove all edges in the bipartite graph.
@@ -193,6 +206,17 @@ class BiGraph(BaseGraph):
 
     # =====================================================================================
     # some construction functions
+    @staticmethod
+    def from_state_dict(state_dict: dict):
+        r"""Load the bipartite graph structure from a state dictionary.
+
+        Args:
+            ``state_dict`` (``dict``): The state dictionary to load the bipartite graph structure.
+        """
+        _g = BiGraph(state_dict["num_u"], state_dict["num_v"])
+        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
+        return _g
+
     @staticmethod
     def from_adj_list(
         num_u: int, num_v: int, adj_list: List[List[int]], device: torch.device = torch.device("cpu"),
@@ -318,52 +342,25 @@ class BiGraph(BaseGraph):
         _g._clear_cache()
         return _g
 
-    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
-        r"""Drop edges from the bipartite graph. This function will return a modified new bipartite graph object. The original directed graph will not be modified.
-
-        .. note::
-            This function will only affect those deep learning variables ``vars_for_DL``, 
-            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
-            Thus, those dropped edges are still exist in the bipartite graph, but with different weights.
-            You can restore those dropped weights with ``restore_edges()`` function.
+    def drop_edges(self, drop_rate: float, ord: str = "uniform"):
+        r"""Drop edges from the bipartite graph. This function will return a new bipartite graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
             ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
-            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
         """
-        # e_list, e_weight = self.e
-        # self._clear_cache()
-        # _g = self.clone()
-        # if ord == "uniform":
-        #     p = torch.ones(_g.num_e) * drop_rate
-        #     drop_mask = torch.bernoulli(p).bool()
-        #     indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
-        #     values[drop_mask] = fill_value
-        #     _g.cache["B"] = torch.sparse_coo_tensor(
-        #         indices, values, size=(_g.num_u, _g.num_v), device=_g.device
-        #     ).coalesce()
-        # else:
-        #     raise ValueError(f"Unknown drop order: {ord}.")
-        # return _g
-        e_list, e_weight = self.e
-        self._clear_cache()
         if ord == "uniform":
-            p = torch.ones(self.num_e) * drop_rate
-            drop_mask = torch.bernoulli(p).bool()
-            indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
-            values[drop_mask] = fill_value
-            self.cache["B"] = torch.sparse_coo_tensor(
-                indices, values, size=(self.num_u, self.num_v), device=self.device
-            ).coalesce()
+            _raw_e_dict = {k: v for k, v in self._raw_e_dict.items() if random.random() > drop_rate}
+            state_dict = {
+                "num_u": self.num_u,
+                "num_v": self.num_v,
+                "raw_e_dict": _raw_e_dict,
+            }
+            _g = BiGraph.from_state_dict(state_dict)
+            _g = _g.to(self.device)
         else:
             raise ValueError(f"Unknown drop order: {ord}.")
-        return self
-
-    def restore_edges(self):
-        r"""Restore the dropped edges.
-        """
-        return super().restore_edges()
+        return _g
 
     # ==============================================================================
     # properties for representation

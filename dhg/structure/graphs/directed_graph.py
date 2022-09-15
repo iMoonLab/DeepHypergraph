@@ -1,3 +1,4 @@
+import random
 import pickle
 from pathlib import Path
 from copy import deepcopy
@@ -9,6 +10,7 @@ import scipy.spatial
 
 from dhg.visualization.structure.draw import draw_digraph
 from ..base import BaseGraph
+from dhg.utils.sparse import sparse_dropout
 
 
 class DiGraph(BaseGraph):
@@ -76,19 +78,7 @@ class DiGraph(BaseGraph):
         with open(file_path, "rb") as fp:
             data = pickle.load(fp)
         assert data["class"] == "DiGraph", "The file is not a DHG's directed graph."
-        return DiGraph.load_from_state_dict(data["state_dict"])
-
-    @staticmethod
-    def load_from_state_dict(state_dict: dict):
-        r"""Load the directed graph from the state dict.
-
-        Args:
-            ``state_dict`` (``dict``): The state dict to load the directed graph.
-        """
-        _g = DiGraph(state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"])
-        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
-        _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
-        return _g
+        return DiGraph.from_state_dict(data["state_dict"])
 
     def draw(
         self,
@@ -166,6 +156,18 @@ class DiGraph(BaseGraph):
 
     # =====================================================================================
     # some construction functions
+    @staticmethod
+    def from_state_dict(state_dict: dict):
+        r"""Load the directed graph from the state dict.
+
+        Args:
+            ``state_dict`` (``dict``): The state dict to load the directed graph.
+        """
+        _g = DiGraph(state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"])
+        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
+        _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
+        return _g
+
     @staticmethod
     def from_adj_list(
         num_v: int,
@@ -297,39 +299,27 @@ class DiGraph(BaseGraph):
         """
         self._raw_e_dict = {(dst, src): w for (src, dst), w in self._raw_e_dict.items()}
 
-    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
-        r"""Drop edges from the directed graph. This function will return a modified new directed graph object. The original directed graph will not be modified. 
-
-        .. note::
-            This function will only affect those deep learning variables ``vars_for_DL``, 
-            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
-            Thus, those dropped edges are still exist in the directed graph, but with different weights.
-            You can restore those dropped weights with ``restore_edges()`` function.
+    def drop_edges(self, drop_rate: float, ord: str = "uniform"):
+        r"""Drop edges from the directed graph. This function will return a new directed graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
             ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
-            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
         """
-        _g = self.clone()
-        _g._clear_cache()
         if ord == "uniform":
-            p = torch.ones(_g.num_e) * drop_rate
-            drop_mask = torch.bernoulli(p).bool()
-            e_list, e_weight = _g.e
-            indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
-            values[drop_mask] = fill_value
-            _g.cache["A"] = torch.sparse_coo_tensor(
-                indices, values, size=(_g.num_v, _g.num_v), device=_g.device
-            ).coalesce()
+            _raw_e_dict = {k: v for k, v in self._raw_e_dict.items() if random.random() > drop_rate}
+            _raw_selfloop_dict = {k: v for k, v in self._raw_selfloop_dict.items() if random.random() > drop_rate}
+            state_dict = {
+                "num_v": self.num_v,
+                "raw_e_dict": _raw_e_dict,
+                "raw_selfloop_dict": _raw_selfloop_dict,
+                "has_extra_selfloop": self._has_extra_selfloop,
+            }
+            _g = DiGraph.from_state_dict(state_dict)
+            _g.to(self.device)
         else:
             raise ValueError(f"Unknown drop order: {ord}.")
         return _g
-
-    def restore_edges(self):
-        r"""Restore the dropped edges.
-        """
-        return super().restore_edges()
 
     # ==============================================================================
     # properties for representation

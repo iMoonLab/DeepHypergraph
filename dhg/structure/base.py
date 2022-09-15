@@ -22,7 +22,7 @@ def load_structure(file_path: Union[str, Path]):
         data = pkl.load(f)
     class_name, state_dict = data["class"], data["state_dict"]
     structure_class = getattr(dhg, class_name)
-    structure = structure_class.load_from_state_dict(state_dict)
+    structure = structure_class.from_state_dict(state_dict)
     return structure
 
 
@@ -75,14 +75,6 @@ class BaseGraph:
 
         Args:
             ``file_path`` (``Union[str, Path]``): The file path to load the DHG's graph structure from.
-        """
-
-    @abc.abstractstaticmethod
-    def load_from_state_dict(state_dict: dict):
-        r"""Load the DHG's graph structure from the state dict.
-
-        Args:
-            ``state_dict`` (``dict``): The state dict to load the DHG's graph.
         """
 
     @abc.abstractmethod
@@ -148,6 +140,16 @@ class BaseGraph:
 
     # =====================================================================================
     # some construction functions
+
+    @staticmethod
+    @abc.abstractmethod
+    def from_state_dict(state_dict: dict):
+        r"""Load the DHG's graph structure from the state dict.
+
+        Args:
+            ``state_dict`` (``dict``): The state dict to load the DHG's graph.
+        """
+
     @staticmethod
     @abc.abstractmethod
     def from_adj_list(num_v: int, adj_list: List[List[int]], extra_selfloop: bool = False,) -> "BaseGraph":
@@ -256,26 +258,13 @@ class BaseGraph:
         self._clear_cache()
 
     @abc.abstractmethod
-    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
-        r"""Drop edges from the graph.
-
-        .. note::
-            This function will only affect those deep learning variables ``vars_for_DL``, 
-            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
-            Thus, those dropped edges are still exist in the graph, but with different weights.
-            You can restore those dropped weights with ``restore_edges()`` function.
+    def drop_edges(self, drop_rate: float, ord: str = "uniform"):
+        r"""Drop edges from the graph. This function will return a new graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
             ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
-            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
         """
-
-    def restore_edges(self):
-        r"""Restore the dropped edges.
-        """
-        self._clear_cache()
-        return self
 
     # =====================================================================================
     # properties for representation
@@ -417,7 +406,7 @@ class BaseHypergraph:
         """
 
     @abc.abstractstaticmethod
-    def load_from_state_dict(state_dict: dict):
+    def from_state_dict(state_dict: dict):
         r"""Load the DHG's hypergraph structure from the state dict.
 
         Args:

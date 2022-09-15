@@ -1,3 +1,4 @@
+import random
 import pickle
 from pathlib import Path
 from copy import deepcopy
@@ -7,6 +8,7 @@ import torch
 
 from dhg.visualization.structure.draw import draw_graph
 from ..base import BaseGraph
+from dhg.utils.sparse import sparse_dropout
 
 if TYPE_CHECKING:
     from ..hypergraphs import Hypergraph
@@ -80,19 +82,7 @@ class Graph(BaseGraph):
         with open(file_path, "rb") as fp:
             data = pickle.load(fp)
         assert data["class"] == "Graph", "The file is not a DHG's graph structure."
-        return Graph.load_from_state_dict(data["state_dict"])
-
-    @staticmethod
-    def load_from_state_dict(state_dict: dict):
-        r"""Load the DHG's graph structure from the state dict.
-
-        Args:
-            ``state_dict`` (``dict``): The state dict to load the DHG's graph.
-        """
-        _g = Graph(state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"])
-        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
-        _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
-        return _g
+        return Graph.from_state_dict(data["state_dict"])
 
     def draw(
         self,
@@ -173,6 +163,19 @@ class Graph(BaseGraph):
 
     # =====================================================================================
     # some construction functions
+
+    @staticmethod
+    def from_state_dict(state_dict: dict):
+        r"""Load the DHG's graph structure from the state dict.
+
+        Args:
+            ``state_dict`` (``dict``): The state dict to load the DHG's graph.
+        """
+        _g = Graph(state_dict["num_v"], extra_selfloop=state_dict["has_extra_selfloop"])
+        _g._raw_e_dict = deepcopy(state_dict["raw_e_dict"])
+        _g._raw_selfloop_dict = deepcopy(state_dict["raw_selfloop_dict"])
+        return _g
+
     @staticmethod
     def from_adj_list(
         num_v: int,
@@ -350,44 +353,27 @@ class Graph(BaseGraph):
         """
         return super().remove_selfloop()
 
-    def drop_edges(self, drop_rate: float, ord: str = "uniform", fill_value: float = 0.0):
-        r"""Drop edges from the graph. This function will return a modified new graph object. The original graph will not be modified.
-
-        .. note::
-            This function will only affect those deep learning variables ``vars_for_DL``, 
-            which is achieved by filling the weights of those dropped edges with ``fill_value``. 
-            Thus, those dropped edges are still exist in the graph, but with different weights.
-            You can restore those dropped weights with ``restore_edges()`` function.
+    def drop_edges(self, drop_rate: float, ord: str = "uniform"):
+        r"""Drop edges from the graph. This function will return a new graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
             ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
-            ``fill_value`` (``float``): The fill value for dropped edges. Defaults to ``0.0``.
         """
-        _g = self.clone()
-        _g._clear_cache()
         if ord == "uniform":
-            num_raw_e, num_extra_e = len(_g._raw_e_dict), len(_g._raw_selfloop_dict)
-            if _g._has_extra_selfloop:
-                num_extra_e += _g.num_v
-            num_e = num_raw_e + num_extra_e
-            p = torch.ones(num_e) * drop_rate
-            drop_mask = torch.bernoulli(p).bool()
-            drop_mask = torch.cat([drop_mask, drop_mask[:num_raw_e]])
-            e_list, e_weight = _g.e_both_side
-            indices, values = torch.tensor(e_list).t(), torch.tensor(e_weight)
-            values[drop_mask] = fill_value
-            _g.cache["A"] = torch.sparse_coo_tensor(
-                indices, values, size=(_g.num_v, _g.num_v), device=_g.device
-            ).coalesce()
+            _raw_e_dict = {k: v for k, v in self._raw_e_dict.items() if random.random() > drop_rate}
+            _raw_selfloop_dict = {k: v for k, v in self._raw_selfloop_dict.items() if random.random() > drop_rate}
+            state_dict = {
+                "num_v": self.num_v,
+                "raw_e_dict": _raw_e_dict,
+                "raw_selfloop_dict": _raw_selfloop_dict,
+                "has_extra_selfloop": self._has_extra_selfloop,
+            }
+            _g = Graph.from_state_dict(state_dict)
+            _g = _g.to(self.device)
         else:
             raise ValueError(f"Unknown drop order: {ord}.")
         return _g
-
-    def restore_edges(self):
-        r"""Restore the dropped edges.
-        """
-        return super().restore_edges()
 
     # =====================================================================================
     # properties for representation

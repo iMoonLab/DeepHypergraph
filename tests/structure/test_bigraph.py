@@ -432,7 +432,3 @@ def test_drop_edges(g1):
     # TODO
     pass
 
-
-def test_restore_edges(g1):
-    # TODO
-    pass

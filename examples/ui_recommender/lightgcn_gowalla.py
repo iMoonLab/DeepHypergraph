@@ -35,13 +35,12 @@ class BPR_Reg(nn.Module):
 
 def train(net, data_loader, optimizer, criterion, epoch):
     net.train()
-
+    dropped_ui_bigraph = ui_bigraph.drop_edges(0.2)
     loss_mean, st = 0, time.time()
-    # droped_ui_bigraph = ui_bigraph.drop_edges(0.4)
     for users, pos_items, neg_items in data_loader:
         users, pos_items, neg_items = users.to(device), pos_items.to(device), neg_items.to(device)
         optimizer.zero_grad()
-        emb_users, emb_items = net(ui_bigraph)
+        emb_users, emb_items = net(dropped_ui_bigraph)
         loss = criterion(
             emb_users, emb_items, users, pos_items, neg_items, net.u_embedding.weight, net.i_embedding.weight,
         )

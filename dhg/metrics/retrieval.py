@@ -28,6 +28,7 @@ def _format_inputs(
     assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() in (1, 2), "The input y_true must be 1-D or 2-D."
     assert y_pred.dim() in (1, 2), "The input y_pred must be 1-D or 2-D."
+    assert ratio is None or (ratio > 0 and ratio <= 1), "The ratio must be in (0, 1]."
     if y_true.dim() == 1:
         y_true = y_true.unsqueeze(0)
     if y_pred.dim() == 1:

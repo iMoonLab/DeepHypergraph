@@ -74,18 +74,7 @@ class Hypergraph(BaseHypergraph):
         with open(file_path, "rb") as fp:
             data = pickle.load(fp)
         assert data["class"] == "Hypergraph", "The file is not a DHG's hypergraph file."
-        return Hypergraph.load_from_state_dict(data["state_dict"])
-
-    @staticmethod
-    def load_from_state_dict(state_dict: dict):
-        r"""Load the hypergraph from the state dict.
-
-        Args:
-            ``state_dict`` (``dict``): The state dict to load the hypergraph.
-        """
-        _hg = Hypergraph(state_dict["num_v"])
-        _hg._raw_groups = deepcopy(state_dict["raw_groups"])
-        return _hg
+        return Hypergraph.from_state_dict(data["state_dict"])
 
     def draw(
         self,
@@ -122,7 +111,23 @@ class Hypergraph(BaseHypergraph):
             ``pull_e_strength`` (``float``): The strength of pulling hyperedges. Defaults to ``1.0``.
             ``pull_center_strength`` (``float``): The strength of pulling vertices to the center. Defaults to ``1.0``.
         """
-        draw_hypergraph(self, e_style, v_label, v_size, v_color, v_line_width, e_color, e_fill_color, e_line_width, font_size, font_family, push_v_strength, push_e_strength, pull_e_strength, pull_center_strength)
+        draw_hypergraph(
+            self,
+            e_style,
+            v_label,
+            v_size,
+            v_color,
+            v_line_width,
+            e_color,
+            e_fill_color,
+            e_line_width,
+            font_size,
+            font_family,
+            push_v_strength,
+            push_e_strength,
+            pull_e_strength,
+            pull_center_strength,
+        )
 
     def clear(self):
         r"""Clear all hyperedges and caches from the hypergraph.
@@ -148,6 +153,17 @@ class Hypergraph(BaseHypergraph):
 
     # =====================================================================================
     # some construction functions
+    @staticmethod
+    def from_state_dict(state_dict: dict):
+        r"""Load the hypergraph from the state dict.
+
+        Args:
+            ``state_dict`` (``dict``): The state dict to load the hypergraph.
+        """
+        _hg = Hypergraph(state_dict["num_v"])
+        _hg._raw_groups = deepcopy(state_dict["raw_groups"])
+        return _hg
+
     @staticmethod
     def _e_list_from_feature_kNN(features: torch.Tensor, k: int):
         r"""Construct hyperedges from the feature matrix. Each hyperedge in the hypergraph is constructed by the central vertex ans its :math:`k-1` neighbor vertices.
