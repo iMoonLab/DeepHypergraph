@@ -11,7 +11,7 @@ from .structure import (
     remap_adj_lists,
 )
 from .dataset_wrapers import UserItemDataset
-from .sparse import sparse_dropout, sparse_mul
+from .sparse import sparse_dropout
 
 __all__ = [
     "C",
@@ -29,5 +29,4 @@ __all__ = [
     "edge_list_to_adj_dict",
     "adj_list_to_edge_list",
     "sparse_dropout",
-    "sparse_mul",
 ]

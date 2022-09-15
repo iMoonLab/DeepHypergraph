@@ -259,7 +259,7 @@ class BaseGraph:
 
     @abc.abstractmethod
     def drop_edges(self, drop_rate: float, ord: str = "uniform"):
-        r"""Drop edges from the graph. This function will return a new graph with non-dropped edges.
+        r"""Randomly drop edges from the graph. This function will return a new graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
@@ -599,6 +599,116 @@ class BaseHypergraph:
         W = torch.tensor(w_list, device=self.device).view((-1, 1))
         return W
 
+    # some structure modification functions
+    def add_hyperedges(
+        self,
+        e_list_v2e: Union[List[int], List[List[int]]],
+        e_list_e2v: Union[List[int], List[List[int]]],
+        w_list_v2e: Optional[Union[List[float], List[List[float]]]] = None,
+        w_list_e2v: Optional[Union[List[float], List[List[float]]]] = None,
+        e_weight: Optional[Union[float, List[float]]] = None,
+        merge_op: str = "mean",
+        group_name: str = "main",
+    ):
+        r"""Add hyperedges to the hypergraph. If the ``group_name`` is not specified, the hyperedges will be added to the default ``main`` hyperedge group.
+
+        Args:
+            ``num_v`` (``int``): The number of vertices in the hypergraph.
+            ``e_list_v2e`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the vertices point to the hyperedges.
+            ``e_list_e2v`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the hyperedges point to the vertices.
+            ``w_list_v2e`` (``Union[List[float], List[List[float]]]``, optional): The weights are attached to the connections from vertices to hyperedges, which has the same shape
+                as ``e_list_v2e``. If set to ``None``, the value ``1`` is used for all connections. Defaults to ``None``.
+            ``w_list_e2v`` (``Union[List[float], List[List[float]]]``, optional): The weights are attached to the connections from the hyperedges to the vertices, which has the
+                same shape to ``e_list_e2v``. If set to ``None``, the value ``1`` is used for all connections. Defaults to ``None``.
+            ``e_weight`` (``Union[float, List[float]]``, optional): A list of weights for hyperedges. If set to ``None``, the value ``1`` is used for all hyperedges. Defaults to ``None``.
+            ``merge_op`` (``str``): The merge operation for the conflicting hyperedges. The possible values are ``mean``, ``sum``, ``max``, and ``min``. Defaults to ``mean``.
+            ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
+        """
+        e_list_v2e, w_list_v2e = self._format_e_list_and_w_on_them(e_list_v2e, w_list_v2e)
+        e_list_e2v, w_list_e2v = self._format_e_list_and_w_on_them(e_list_e2v, w_list_e2v)
+        if e_weight is None:
+            e_weight = [1.0] * len(e_list_v2e)
+        assert len(e_list_v2e) == len(e_weight), "The number of hyperedges and the number of weights are not equal."
+        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
+        for _idx in range(len(e_list_v2e)):
+            self._add_hyperedge(
+                self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx]),
+                {"w_v2e": w_list_v2e[_idx], "w_e2v": w_list_e2v[_idx], "w_e": e_weight[_idx],},
+                merge_op,
+                group_name,
+            )
+        self._clear_cache(group_name)
+
+    def _add_hyperedge(
+        self, hyperedge_code: Tuple[List[int], List[int]], content: Dict[str, Any], merge_op: str, group_name: str,
+    ):
+        r"""Add a hyperedge to the specified hyperedge group.
+
+        Args:
+            ``hyperedge_code`` (``Tuple[List[int], List[int]]``): The hyperedge code.
+            ``content`` (``Dict[str, Any]``): The content of the hyperedge.
+            ``merge_op`` (``str``): The merge operation for the conflicting hyperedges.
+            ``group_name`` (``str``): The target hyperedge group to add this hyperedge.
+        """
+        if group_name not in self.group_names:
+            self._raw_groups[group_name] = {}
+            self._raw_groups[group_name][hyperedge_code] = content
+        else:
+            if hyperedge_code not in self._raw_groups[group_name]:
+                self._raw_groups[group_name][hyperedge_code] = content
+            else:
+                self._raw_groups[group_name][hyperedge_code] = self._merge_hyperedges(
+                    self._raw_groups[group_name][hyperedge_code], content, merge_op
+                )
+
+    def remove_hyperedges(
+        self,
+        e_list_v2e: Union[List[int], List[List[int]]],
+        e_list_e2v: Union[List[int], List[List[int]]],
+        group_name: Optional[str] = None,
+    ):
+        r"""Remove the specified hyperedges from the hypergraph.
+
+        Args:
+            ``e_list_v2e`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the vertices point to the hyperedges.
+            ``e_list_e2v`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the hyperedges point to the vertices.
+            ``group_name`` (``str``, optional): Remove these hyperedges from the specified hyperedge group. If not specified, the function will
+                remove those hyperedges from all hyperedge groups. Defaults to the ``None``.
+        """
+        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
+        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
+        e_list_v2e = self._format_e_list(e_list_v2e)
+        e_list_e2v = self._format_e_list(e_list_e2v)
+        if group_name is None:
+            for _idx in range(len(e_list_v2e)):
+                e_code = self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx])
+                for name in self.group_names:
+                    self._raw_groups[name].pop(e_code, None)
+        else:
+            for _idx in range(len(e_list_v2e)):
+                e_code = self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx])
+                self._raw_groups[group_name].pop(e_code, None)
+        self._clear_cache(group_name)
+
+    @abc.abstractmethod
+    def drop_hyperedges(self, drop_rate: float, ord="uniform"):
+        r"""Randomly drop hyperedges from the hypergraph. This function will return a new hypergraph with non-dropped hyperedges.
+
+        Args:
+            ``drop_rate`` (``float``): The drop rate of hyperedges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+        """
+
+    @abc.abstractmethod
+    def drop_hyperedges_of_group(self, group_name: str, drop_rate: float, ord="uniform"):
+        r"""Randomly drop hyperedges from the specified hyperedge group. This function will return a new hypergraph with non-dropped hyperedges.
+
+        Args:
+            ``group_name`` (``str``): The name of the hyperedge group.
+            ``drop_rate`` (``float``): The drop rate of hyperedges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+        """
+
     # properties for the hypergraph
     @property
     def v(self) -> List[int]:
@@ -803,97 +913,6 @@ class BaseHypergraph:
         if self.group_cache[group_name].get("R_e2v") is None:
             self.group_cache[group_name]["R_e2v"] = self._fetch_R_of_group("e2v", group_name)
         return self.group_cache[group_name]["R_e2v"]
-
-    # some structure modification functions
-    def add_hyperedges(
-        self,
-        e_list_v2e: Union[List[int], List[List[int]]],
-        e_list_e2v: Union[List[int], List[List[int]]],
-        w_list_v2e: Optional[Union[List[float], List[List[float]]]] = None,
-        w_list_e2v: Optional[Union[List[float], List[List[float]]]] = None,
-        e_weight: Optional[Union[float, List[float]]] = None,
-        merge_op: str = "mean",
-        group_name: str = "main",
-    ):
-        r"""Add hyperedges to the hypergraph. If the ``group_name`` is not specified, the hyperedges will be added to the default ``main`` hyperedge group.
-
-        Args:
-            ``num_v`` (``int``): The number of vertices in the hypergraph.
-            ``e_list_v2e`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the vertices point to the hyperedges.
-            ``e_list_e2v`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the hyperedges point to the vertices.
-            ``w_list_v2e`` (``Union[List[float], List[List[float]]]``, optional): The weights are attached to the connections from vertices to hyperedges, which has the same shape
-                as ``e_list_v2e``. If set to ``None``, the value ``1`` is used for all connections. Defaults to ``None``.
-            ``w_list_e2v`` (``Union[List[float], List[List[float]]]``, optional): The weights are attached to the connections from the hyperedges to the vertices, which has the
-                same shape to ``e_list_e2v``. If set to ``None``, the value ``1`` is used for all connections. Defaults to ``None``.
-            ``e_weight`` (``Union[float, List[float]]``, optional): A list of weights for hyperedges. If set to ``None``, the value ``1`` is used for all hyperedges. Defaults to ``None``.
-            ``merge_op`` (``str``): The merge operation for the conflicting hyperedges. The possible values are ``mean``, ``sum``, ``max``, and ``min``. Defaults to ``mean``.
-            ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
-        """
-        e_list_v2e, w_list_v2e = self._format_e_list_and_w_on_them(e_list_v2e, w_list_v2e)
-        e_list_e2v, w_list_e2v = self._format_e_list_and_w_on_them(e_list_e2v, w_list_e2v)
-        if e_weight is None:
-            e_weight = [1.0] * len(e_list_v2e)
-        assert len(e_list_v2e) == len(e_weight), "The number of hyperedges and the number of weights are not equal."
-        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
-        for _idx in range(len(e_list_v2e)):
-            self._add_hyperedge(
-                self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx]),
-                {"w_v2e": w_list_v2e[_idx], "w_e2v": w_list_e2v[_idx], "w_e": e_weight[_idx],},
-                merge_op,
-                group_name,
-            )
-        self._clear_cache(group_name)
-
-    def _add_hyperedge(
-        self, hyperedge_code: Tuple[List[int], List[int]], content: Dict[str, Any], merge_op: str, group_name: str,
-    ):
-        r"""Add a hyperedge to the specified hyperedge group.
-
-        Args:
-            ``hyperedge_code`` (``Tuple[List[int], List[int]]``): The hyperedge code.
-            ``content`` (``Dict[str, Any]``): The content of the hyperedge.
-            ``merge_op`` (``str``): The merge operation for the conflicting hyperedges.
-            ``group_name`` (``str``): The target hyperedge group to add this hyperedge.
-        """
-        if group_name not in self.group_names:
-            self._raw_groups[group_name] = {}
-            self._raw_groups[group_name][hyperedge_code] = content
-        else:
-            if hyperedge_code not in self._raw_groups[group_name]:
-                self._raw_groups[group_name][hyperedge_code] = content
-            else:
-                self._raw_groups[group_name][hyperedge_code] = self._merge_hyperedges(
-                    self._raw_groups[group_name][hyperedge_code], content, merge_op
-                )
-
-    def remove_hyperedges(
-        self,
-        e_list_v2e: Union[List[int], List[List[int]]],
-        e_list_e2v: Union[List[int], List[List[int]]],
-        group_name: Optional[str] = None,
-    ):
-        r"""Remove the specified hyperedges from the hypergraph.
-
-        Args:
-            ``e_list_v2e`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the vertices point to the hyperedges.
-            ``e_list_e2v`` (``Union[List[int], List[List[int]]]``): A list of hyperedges describes how the hyperedges point to the vertices.
-            ``group_name`` (``str``, optional): Remove these hyperedges from the specified hyperedge group. If not specified, the function will
-                remove those hyperedges from all hyperedge groups. Defaults to the ``None``.
-        """
-        assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
-        assert len(e_list_v2e) == len(e_list_e2v), "Hyperedges of 'v2e' and 'e2v' must have the same size."
-        e_list_v2e = self._format_e_list(e_list_v2e)
-        e_list_e2v = self._format_e_list(e_list_e2v)
-        if group_name is None:
-            for _idx in range(len(e_list_v2e)):
-                e_code = self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx])
-                for name in self.group_names:
-                    self._raw_groups[name].pop(e_code, None)
-        else:
-            for _idx in range(len(e_list_v2e)):
-                e_code = self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx])
-                self._raw_groups[group_name].pop(e_code, None)
-        self._clear_cache(group_name)
 
     # spectral-based smoothing
     def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:

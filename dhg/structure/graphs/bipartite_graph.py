@@ -343,7 +343,7 @@ class BiGraph(BaseGraph):
         return _g
 
     def drop_edges(self, drop_rate: float, ord: str = "uniform"):
-        r"""Drop edges from the bipartite graph. This function will return a new bipartite graph with non-dropped edges.
+        r"""Randomly drop edges from the bipartite graph. This function will return a new bipartite graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
@@ -619,43 +619,54 @@ class BiGraph(BaseGraph):
                 size=torch.Size([self.num_u + self.num_v, self.num_u + self.num_v]),
                 device=self.device,
             ).coalesce()
-            _mm = torch.sparse.mm
-            self.cache["L_GCN"] = _mm(D_v_neg_1_2, _mm(A_, D_v_neg_1_2)).clone().coalesce()
+            self.cache["L_GCN"] = D_v_neg_1_2.mm(A_).mm(D_v_neg_1_2).clone().coalesce()
         return self.cache["L_GCN"]
 
-    def smoothing_with_GCN(self, X: torch.Tensor):
+    def smoothing_with_GCN(self, X: torch.Tensor, drop_rate: float = 0.0) -> torch.Tensor:
         r"""Return the smoothed feature matrix with GCN Laplacian matrix :math:`\mathcal{L}_{GCN}`.
 
         Args:
             ``X`` (``torch.Tensor``): Vertex feature matrix of the bipartite graph. Size :math:`(|\mathcal{U}| + |\mathcal{V}|, C)`.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         if self.device != X.device:
             X = X.to(self.device)
-        return torch.sparse.mm(self.L_GCN, X)
+        if drop_rate > 0.0:
+            L_GCN = sparse_dropout(self.L_GCN, drop_rate)
+        else:
+            L_GCN = self.L_GCN
+        return L_GCN.mm(X)
 
     # ==============================================================================
     # spatial-based convolution/message-passing functions
     # general message passing
-    def u2v(self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,) -> torch.Tensor:
+    def u2v(
+        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0
+    ) -> torch.Tensor:
         r"""Message passing from vertices in set :math:`\mathcal{U}` to vertices in set :math:`\mathcal{V}` on the bipartite graph structure.
 
         Args:
             ``X`` (``torch.Tensor``): Feature matrix of vertices in set :math:`\mathcal{U}`. Size: :math:`(|\mathcal{U}|, C)`.
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         if self.device != X.device:
             self.to(X.device)
         if e_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.B_T, drop_rate)
+            else:
+                P = self.B_T
             # message passing
             if aggr == "mean":
-                X = torch.sparse.mm(self.B_T, X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_v_neg_1, X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.B_T, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.B_T, dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 pass
@@ -665,6 +676,8 @@ class BiGraph(BaseGraph):
                 e_weight.shape[0] == self.e_weight.shape[0]
             ), "The size of e_weight must be equal to the size of self.e_weight."
             P = torch.sparse_coo_tensor(self.B._indices(), e_weight, self.B.shape, device=self.device).t().coalesce()
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -680,18 +693,25 @@ class BiGraph(BaseGraph):
                 pass
         return X
 
-    def v2u(self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,) -> torch.Tensor:
+    def v2u(
+        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0
+    ) -> torch.Tensor:
         r"""Message passing from vertices in set :math:`\mathcal{V}` to vertices in set :math:`\mathcal{U}` on the bipartite graph structure.
 
         Args:
             ``X`` (``torch.Tensor``): Feature matrix of vertices in set :math:`\mathcal{V}`. Size: :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         if self.device != X.device:
             self.to(X.device)
         if e_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.B, drop_rate)
+            else:
+                P = self.B
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(self.B, X)
@@ -709,6 +729,8 @@ class BiGraph(BaseGraph):
                 e_weight.shape[0] == self.e_weight.shape[0]
             ), "The size of e_weight must be equal to the size of self.e_weight."
             P = torch.sparse_coo_tensor(self.B._indices(), e_weight, self.B.shape, device=self.device).coalesce()
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)

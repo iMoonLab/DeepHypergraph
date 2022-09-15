@@ -610,7 +610,7 @@ def test_smoothing_with_HGNN_group(g1):
 
     gt = D_v_inv_1_2 @ H @ D_e_inv @ H.t() @ D_v_inv_1_2 @ x
 
-    res = g1.smoothing_with_HGNN_of_group(x, "main")
+    res = g1.smoothing_with_HGNN_of_group("main", x)
 
     assert pytest.approx(gt, rel=1e-6) == res.cpu()
 

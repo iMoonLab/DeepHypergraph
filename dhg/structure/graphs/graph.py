@@ -244,7 +244,7 @@ class Graph(BaseGraph):
         """
         num_v = hypergraph.num_v
         miu = 1.0
-        adj = miu * torch.sparse.mm(hypergraph.H, hypergraph.H_T).coalesce().cpu().clone()
+        adj = miu * hypergraph.H.mm(hypergraph.H_T).coalesce().cpu().clone()
         src_idx, dst_idx = adj._indices()
         edge_mask = src_idx < dst_idx
         edge_list = torch.stack([src_idx[edge_mask], dst_idx[edge_mask]]).t().cpu().numpy().tolist()
@@ -354,7 +354,7 @@ class Graph(BaseGraph):
         return super().remove_selfloop()
 
     def drop_edges(self, drop_rate: float, ord: str = "uniform"):
-        r"""Drop edges from the graph. This function will return a new graph with non-dropped edges.
+        r"""Randomly drop edges from the graph. This function will return a new graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
@@ -563,8 +563,7 @@ class Graph(BaseGraph):
         if self.cache.get("L_sym") is None:
             _tmp_g = self.clone()
             _tmp_g.remove_selfloop()
-            _mm = torch.sparse.mm
-            _L = _mm(_tmp_g.D_v_neg_1_2, _mm(_tmp_g.A, _tmp_g.D_v_neg_1_2)).clone()
+            _L = _tmp_g.D_v_neg_1_2.mm(_tmp_g.A).mm(_tmp_g.D_v_neg_1_2).clone()
             self.cache["L_sym"] = torch.sparse_coo_tensor(
                 torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _L._indices(),]),
                 torch.hstack([torch.ones(self.num_v), -_L._values()]),
@@ -583,8 +582,7 @@ class Graph(BaseGraph):
         if self.cache.get("L_rw") is None:
             _tmp_g = self.clone()
             _tmp_g.remove_selfloop()
-            _mm = torch.sparse.mm
-            _L = _mm(_tmp_g.D_v_neg_1, _tmp_g.A).clone()
+            _L = _tmp_g.D_v_neg_1.mm(_tmp_g.A).clone()
             self.cache["L_rw"] = torch.sparse_coo_tensor(
                 torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _L._indices(),]),
                 torch.hstack([torch.ones(self.num_v), -_L._values()]),
@@ -605,25 +603,29 @@ class Graph(BaseGraph):
         if self.cache.get("L_GCN") is None:
             _tmp_g = self.clone()
             _tmp_g.add_extra_selfloop()
-            _mm = torch.sparse.mm
-            self.cache["L_GCN"] = _mm(_tmp_g.D_v_neg_1_2, _mm(_tmp_g.A, _tmp_g.D_v_neg_1_2),).clone().coalesce()
+            self.cache["L_GCN"] = _tmp_g.D_v_neg_1_2.mm(_tmp_g.A).mm(_tmp_g.D_v_neg_1_2).clone().coalesce()
         return self.cache["L_GCN"]
 
-    def smoothing_with_GCN(self, X: torch.Tensor):
+    def smoothing_with_GCN(self, X: torch.Tensor, drop_rate: float = 0.0) -> torch.Tensor:
         r"""Return the smoothed feature matrix with GCN Laplacian matrix :math:`\mathcal{L}_{GCN}`.
 
         Args:
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         if self.device != X.device:
             self.to(X.device)
-        return torch.sparse.mm(self.L_GCN, X)
+        if drop_rate > 0.0:
+            L_GCN = sparse_dropout(self.L_GCN, drop_rate)
+        else:
+            L_GCN = self.L_GCN
+        return L_GCN.mm(X)
 
     # =====================================================================================
     # spatial-based convolution/message-passing
     ## general message passing functions
     def v2v(
-        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0
     ):
         r"""Message passing from vertex to vertex on the graph structure.
 
@@ -631,20 +633,25 @@ class Graph(BaseGraph):
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size: :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         if self.device != X.device:
             self.to(X.device)
         if e_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.A, drop_rate)
+            else:
+                P = self.A
             # message passing
             if aggr == "mean":
-                X = torch.sparse.mm(self.A, X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_v_neg_1, X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.A, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                A = torch.sparse.mm(self.A, dim=1)
-                X = torch.sparse.mm(A, X)
+                P = torch.sparse.mm(P, dim=1)
+                X = torch.sparse.mm(P, X)
             else:
                 pass
         else:
@@ -652,18 +659,20 @@ class Graph(BaseGraph):
             assert (
                 e_weight.shape[0] == self.e_weight.shape[0]
             ), "The size of e_weight must be equal to the size of self.e_weight."
-            A = torch.sparse_coo_tensor(self.A._indices(), e_weight, self.A.shape, device=self.device).coalesce()
+            P = torch.sparse_coo_tensor(self.A._indices(), e_weight, self.A.shape, device=self.device).coalesce()
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
-                X = torch.sparse.mm(A, X)
-                D_v_neg_1 = torch.sparse.sum(A, dim=1).to_dense().view(-1, 1)
+                X = torch.sparse.mm(P, X)
+                D_v_neg_1 = torch.sparse.sum(P, dim=1).to_dense().view(-1, 1)
                 D_v_neg_1[torch.isinf(D_v_neg_1)] = 0
                 X = D_v_neg_1 * X
             elif aggr == "sum":
-                X = torch.sparse.mm(A, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                A = torch.sparse.softmax(A, dim=1)
-                X = torch.sparse.mm(A, X)
+                P = torch.sparse.softmax(P, dim=1)
+                X = torch.sparse.mm(P, X)
             else:
                 pass
         return X

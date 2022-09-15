@@ -1,3 +1,4 @@
+import random
 import pickle
 from pathlib import Path
 from copy import deepcopy
@@ -8,6 +9,7 @@ import scipy.spatial
 
 from dhg.structure import BaseHypergraph
 from dhg.visualization.structure.draw import draw_hypergraph
+from dhg.utils.sparse import sparse_dropout
 
 if TYPE_CHECKING:
     from ..graphs import Graph, BiGraph
@@ -437,6 +439,54 @@ class Hypergraph(BaseHypergraph):
         """
         self._raw_groups.pop(group_name, None)
         self._clear_cache(group_name)
+
+    def drop_hyperedges(self, drop_rate: float, ord="uniform"):
+        r"""Randomly drop hyperedges from the hypergraph. This function will return a new hypergraph with non-dropped hyperedges.
+
+        Args:
+            ``drop_rate`` (``float``): The drop rate of hyperedges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+        """
+        if ord == "uniform":
+            _raw_groups = {}
+            for name in self.group_names:
+                _raw_groups[name] = {k: v for k, v in self._raw_groups[name].items() if random.random() > drop_rate}
+            state_dict = {
+                "num_v": self.num_v,
+                "raw_groups": _raw_groups,
+            }
+            _hg = Hypergraph.from_state_dict(state_dict)
+            _hg = _hg.to(self.device)
+        else:
+            raise ValueError(f"Unkonwn drop order: {ord}.")
+        return _hg
+
+    def drop_hyperedges_of_group(self, group_name: str, drop_rate: float, ord="uniform"):
+        r"""Randomly drop hyperedges from the specified hyperedge group. This function will return a new hypergraph with non-dropped hyperedges.
+
+        Args:
+            ``group_name`` (``str``): The name of the hyperedge group.
+            ``drop_rate`` (``float``): The drop rate of hyperedges.
+            ``ord`` (``str``): The order of dropping edges. Currently, only ``'uniform'`` is supported. Defaults to ``uniform``.
+        """
+        if ord == "uniform":
+            _raw_groups = {}
+            for name in self.group_names:
+                if name == group_name:
+                    _raw_groups[name] = {
+                        k: v for k, v in self._raw_groups[name].items() if random.random() > drop_rate
+                    }
+                else:
+                    _raw_groups[name] = self._raw_groups[name]
+            state_dict = {
+                "num_v": self.num_v,
+                "raw_groups": _raw_groups,
+            }
+            _hg = Hypergraph.from_state_dict(state_dict)
+            _hg = _hg.to(self.device)
+        else:
+            raise ValueError(f"Unkonwn drop order: {ord}.")
+        return _hg
 
     # =====================================================================================
     # properties for representation
@@ -1132,7 +1182,7 @@ class Hypergraph(BaseHypergraph):
             self.group_cache[group_name]["L_HGNN"] = _tmp.coalesce()
         return self.group_cache[group_name]["L_HGNN"]
 
-    def smoothing_with_HGNN(self, X: torch.Tensor) -> torch.Tensor:
+    def smoothing_with_HGNN(self, X: torch.Tensor, drop_rate: float = 0.0) -> torch.Tensor:
         r"""Return the smoothed feature matrix with the HGNN Laplacian matrix :math:`\mathcal{L}_{HGNN}`.
 
             .. math::
@@ -1140,25 +1190,35 @@ class Hypergraph(BaseHypergraph):
             
         Args:
             ``X`` (``torch.Tensor``): The feature matrix. Size :math:`(|\mathcal{V}|, C)`.
-        """
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
+    """
         if self.device != X.device:
             X = X.to(self.device)
-        return torch.sparse.mm(self.L_HGNN, X)
+        if drop_rate > 0.0:
+            L_HGNN = sparse_dropout(self.L_HGNN, drop_rate)
+        else:
+            L_HGNN = self.L_HGNN
+        return L_HGNN.mm(X)
 
-    def smoothing_with_HGNN_of_group(self, X: torch.Tensor, group_name: str) -> torch.Tensor:
+    def smoothing_with_HGNN_of_group(self, group_name: str, X: torch.Tensor, drop_rate: float = 0.0) -> torch.Tensor:
         r"""Return the smoothed feature matrix with the HGNN Laplacian matrix :math:`\mathcal{L}_{HGNN}`.
 
             .. math::
                 \mathbf{X} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X} 
             
         Args:
-            ``X`` (``torch.Tensor``): The feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``group_name`` (``str``): The name of the specified hyperedge group.
+            ``X`` (``torch.Tensor``): The feature matrix. Size :math:`(|\mathcal{V}|, C)`.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.device != X.device:
             X = X.to(self.device)
-        return torch.sparse.mm(self.L_HGNN_of_group(group_name), X)
+        if drop_rate > 0.0:
+            L_HGNN = sparse_dropout(self.L_HGNN_of_group(group_name), drop_rate)
+        else:
+            L_HGNN = self.L_HGNN_of_group(group_name)
+        return L_HGNN.mm(X)
 
     # =====================================================================================
     # spatial-based convolution/message-passing

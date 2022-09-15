@@ -1,32 +1,28 @@
 import torch
 
 
-def sparse_dropout(sp_mat: torch.Tensor, drop_rate: float, fill_value: float = 0.0) -> torch.Tensor:
-    r"""Dropout function for sparse matrix.
+def sparse_dropout(sp_mat: torch.Tensor, p: float, fill_value: float = 0.0) -> torch.Tensor:
+    r"""Dropout function for sparse matrix. This function will return a new sparse matrix with the same shape as the input sparse matrix, but with some elements dropped out.
     
     Args:
         ``sp_mat`` (``torch.Tensor``): The sparse matrix with format ``torch.sparse_coo_tensor``.
-        ``drop_rate`` (``float``): Dropout rate.
+        ``p`` (``float``): Probability of an element to be dropped. 
         ``fill_value`` (``float``): The fill value for dropped elements. Defaults to ``0.0``.
     """
+    device = sp_mat.device
     sp_mat = sp_mat.coalesce()
-    assert 0 <= drop_rate <= 1
-    if drop_rate == 0:
+    assert 0 <= p <= 1
+    if p == 0:
         return sp_mat
-    p = torch.ones(sp_mat._nnz()) * drop_rate
-    drop_mask = torch.bernoulli(p).bool()
-    sp_mat._values()[drop_mask] = fill_value
-    return sp_mat
+    p = torch.ones(sp_mat._nnz(), device=device) * p
+    keep_mask = torch.bernoulli(1 - p).to(device)
+    fill_values = torch.logical_not(keep_mask) * fill_value
+    new_sp_mat = torch.sparse_coo_tensor(
+        sp_mat._indices(),
+        sp_mat._values() * keep_mask + fill_values,
+        size=sp_mat.size(),
+        device=sp_mat.device,
+        dtype=sp_mat.dtype,
+    )
+    return new_sp_mat
 
-
-def sparse_mul(*sp_mats: torch.Tensor) -> torch.Tensor:
-    r"""Multiply sparse matrices. The input can be a series of sparse matrices.
-    
-    Args:
-        ``*sp_mats`` (``torch.Tensor``): The sparse matrices with format ``torch.sparse_coo_tensor``.
-    """
-    assert len(sp_mats) >= 2
-    sp_mat = sp_mats[0]
-    for i in range(1, len(sp_mats)):
-        sp_mat = torch.sparse.mm(sp_mat, sp_mats[i])
-    return sp_mat

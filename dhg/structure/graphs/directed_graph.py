@@ -300,7 +300,7 @@ class DiGraph(BaseGraph):
         self._raw_e_dict = {(dst, src): w for (src, dst), w in self._raw_e_dict.items()}
 
     def drop_edges(self, drop_rate: float, ord: str = "uniform"):
-        r"""Drop edges from the directed graph. This function will return a new directed graph with non-dropped edges.
+        r"""Randomly drop edges from the directed graph. This function will return a new directed graph with non-dropped edges.
 
         Args:
             ``drop_rate`` (``float``): The drop rate of edges.
@@ -536,7 +536,12 @@ class DiGraph(BaseGraph):
     # spatial-based convolution/message-passing functions
     # general message passing
     def v2v(
-        self, X: torch.Tensor, aggr: str = "mean", e_weight: Optional[torch.Tensor] = None, direction: str = "dst2src",
+        self,
+        X: torch.Tensor,
+        aggr: str = "mean",
+        e_weight: Optional[torch.Tensor] = None,
+        direction: str = "dst2src",
+        drop_rate: float = 0.0,
     ) -> torch.Tensor:
         r"""Message passing from vertex to vertex on the directed graph structure.
 
@@ -545,6 +550,7 @@ class DiGraph(BaseGraph):
             ``aggr`` (``str``, optional): Aggregation function for neighbor messages, which can be ``'mean'``, ``'sum'``, or ``'softmax_then_sum'``. Default: ``'mean'``.
             ``e_weight`` (``torch.Tensor``, optional): The edge weight vector. Size: :math:`(|\mathcal{E}|,)`. Defaults to ``None``.
             ``direction`` (``str``, optional): The direction of message passing. Can be ``'src2dst'`` or ``'dst2src'``. Default: ``'dst2src'``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in adjacency matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum",], "aggr must be one of ['mean', 'sum', 'softmax_then_sum']"
         assert direction in ["src2dst", "dst2src",], "message passing direction must be one of ['src2dst', 'dst2src']"
@@ -552,14 +558,18 @@ class DiGraph(BaseGraph):
             self.to(X.device)
         if direction == "dst2src":
             if e_weight is None:
+                if drop_rate > 0.0:
+                    P = sparse_dropout(self.A, drop_rate)
+                else:
+                    P = self.A
                 # message passing
                 if aggr == "mean":
-                    X = torch.sparse.mm(self.A, X)
+                    X = torch.sparse.mm(P, X)
                     X = torch.sparse.mm(self.D_v_out_neg_1, X)
                 elif aggr == "sum":
-                    X = torch.sparse.mm(self.A, X)
+                    X = torch.sparse.mm(P, X)
                 elif aggr == "softmax_then_sum":
-                    P = torch.sparse.softmax(self.A, dim=1)
+                    P = torch.sparse.softmax(P, dim=1)
                     X = torch.sparse.mm(P, X)
                 else:
                     pass
@@ -569,6 +579,8 @@ class DiGraph(BaseGraph):
                     e_weight.shape[0] == self.e_weight.shape[0]
                 ), "The size of e_weight must be equal to the size of self.e_weight."
                 P = torch.sparse_coo_tensor(self.A._indices(), e_weight, self.A.shape, device=self.device).coalesce()
+                if drop_rate > 0.0:
+                    P = sparse_dropout(P, drop_rate)
                 # message passing
                 if aggr == "mean":
                     X = torch.sparse.mm(P, X)
@@ -584,14 +596,18 @@ class DiGraph(BaseGraph):
                     pass
         else:  # direction == "src2dst":
             if e_weight is None:
+                if drop_rate > 0.0:
+                    P = sparse_dropout(self.A_T, drop_rate)
+                else:
+                    P = self.A_T
                 # message passing
                 if aggr == "mean":
-                    X = torch.sparse.mm(self.A_T, X)
+                    X = torch.sparse.mm(P, X)
                     X = torch.sparse.mm(self.D_v_in_neg_1, X)
                 elif aggr == "sum":
-                    X = torch.sparse.mm(self.A_T, X)
+                    X = torch.sparse.mm(P, X)
                 elif aggr == "softmax_then_sum":
-                    P = torch.sparse.softmax(self.A_T, dim=1)
+                    P = torch.sparse.softmax(P, dim=1)
                     X = torch.sparse.mm(P, X)
                 else:
                     pass
@@ -605,6 +621,8 @@ class DiGraph(BaseGraph):
                     .t()
                     .coalesce()
                 )
+                if drop_rate > 0.0:
+                    P = sparse_dropout(P, drop_rate)
                 # message passing
                 if aggr == "mean":
                     X = torch.sparse.mm(P, X)
