@@ -64,7 +64,7 @@ def precision(
     y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
-    res_list = pred_seq.sum(dim=1) / k
+    res_list = (pred_seq.sum(dim=1) / k).detach().cpu()
     if ret_batch:
         return res_list
     else:
@@ -99,7 +99,7 @@ def recall(
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     num_true = y_true.sum(dim=1)
-    res_list = pred_seq.sum(dim=1) / num_true
+    res_list = (pred_seq.sum(dim=1) / num_true).detach().cpu()
     if ret_batch:
         return res_list
     else:
@@ -140,7 +140,7 @@ def ap(
     if method == "pascal_voc":
         res = torch.flip(res, dims=(0,))
         res = torch.cummax(res, dim=0)[0]
-    return res.mean().item()
+    return res.detach().cpu().mean().item()
 
 
 def map(
@@ -193,7 +193,7 @@ def _dcg(matrix: torch.Tensor) -> torch.Tensor:
     assert matrix.dim() == 2, "The input must be a 2-D tensor."
     n, k = matrix.shape
     denom = torch.log2(torch.arange(k, device=matrix.device) + 2.0).view(1, -1).repeat(n, 1)
-    return (matrix / denom).sum(dim=-1)
+    return (matrix / denom).detach().cpu().sum(dim=-1)
 
 
 def ndcg(
@@ -225,7 +225,7 @@ def ndcg(
     pred_dcg = _dcg(pred_seq)
     ideal_dcg = _dcg(ideal_seq)
 
-    res_list = pred_dcg / ideal_dcg
+    res_list = (pred_dcg / ideal_dcg).detach().cpu()
     res_list[torch.isinf(res_list)] = 0
     if ret_batch:
         return res_list
@@ -260,7 +260,7 @@ def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None) -> f
 
     pred_seq = y_true[torch.argsort(y_pred, dim=-1, descending=True)][:k]
     pred_index = torch.nonzero(pred_seq).view(-1)
-    res = (1 / (pred_index + 1)).mean()
+    res = (1 / (pred_index + 1)).mean().detach().cpu()
     return res.mean().item()
 
 
