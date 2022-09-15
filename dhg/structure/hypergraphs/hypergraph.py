@@ -1062,7 +1062,7 @@ class Hypergraph(BaseHypergraph):
             ).coalesce()
         return self.cache["L_sym"]
 
-    def L_sym(self, group_name: str) -> torch.Tensor:
+    def L_sym_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the symmetric Laplacian matrix :math:`\mathcal{L}_{sym}` of the specified hyperedge group with ``torch.sparse_coo_tensor`` format.
         
         .. math::
@@ -1090,8 +1090,7 @@ class Hypergraph(BaseHypergraph):
             \mathcal{L}_{rw} = \mathbf{I} - \mathbf{D}_v^{-1} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top
         """
         if self.cache.get("L_rw") is None:
-            _mm = torch.sparse.mm
-            _tmp = _mm(_mm(_mm(_mm(self.D_v_neg_1, self.H), self.W_e), self.D_e_neg_1), self.H_T,)
+            _tmp = self.D_v_neg_1.mm(self.H).mm(self.W_e).mm(self.D_e_neg_1).mm(self.H_T)
             self.cache["L_rw"] = (
                 torch.sparse_coo_tensor(
                     torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _tmp._indices(),]),
@@ -1115,16 +1114,12 @@ class Hypergraph(BaseHypergraph):
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("L_rw") is None:
-            _mm = torch.sparse.mm
-            _tmp = _mm(
-                _mm(
-                    _mm(
-                        _mm(self.D_v_neg_1_of_group(group_name), self.H_of_group(group_name),),
-                        self.W_e_of_group(group_name),
-                    ),
-                    self.D_e_neg_1_of_group(group_name),
-                ),
-                self.H_T_of_group(group_name),
+            _tmp = (
+                self.D_v_neg_1_of_group(group_name)
+                .mm(self.H_of_group(group_name))
+                .mm(self.W_e_of_group(group_name),)
+                .mm(self.D_e_neg_1_of_group(group_name),)
+                .mm(self.H_T_of_group(group_name),)
             )
             self.group_cache[group_name]["L_rw"] = (
                 torch.sparse_coo_tensor(
@@ -1147,10 +1142,7 @@ class Hypergraph(BaseHypergraph):
             \mathcal{L}_{HGNN} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}}
         """
         if self.cache.get("L_HGNN") is None:
-            _mm = torch.sparse.mm
-            _tmp = _mm(
-                _mm(_mm(_mm(_mm(self.D_v_neg_1_2, self.H), self.W_e), self.D_e_neg_1), self.H_T,), self.D_v_neg_1_2,
-            )
+            _tmp = self.D_v_neg_1_2.mm(self.H).mm(self.W_e).mm(self.D_e_neg_1).mm(self.H_T,).mm(self.D_v_neg_1_2)
             self.cache["L_HGNN"] = _tmp.coalesce()
         return self.cache["L_HGNN"]
 
@@ -1165,19 +1157,13 @@ class Hypergraph(BaseHypergraph):
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("L_HGNN") is None:
-            _mm = torch.sparse.mm
-            _tmp = _mm(
-                _mm(
-                    _mm(
-                        _mm(
-                            _mm(self.D_v_neg_1_2_of_group(group_name), self.H_of_group(group_name),),
-                            self.W_e_of_group(group_name),
-                        ),
-                        self.D_e_neg_1_of_group(group_name),
-                    ),
-                    self.H_T_of_group(group_name),
-                ),
-                self.D_v_neg_1_2_of_group(group_name),
+            _tmp = (
+                self.D_v_neg_1_2_of_group(group_name)
+                .mm(self.H_of_group(group_name))
+                .mm(self.W_e_of_group(group_name))
+                .mm(self.D_e_neg_1_of_group(group_name),)
+                .mm(self.H_T_of_group(group_name),)
+                .mm(self.D_v_neg_1_2_of_group(group_name),)
             )
             self.group_cache[group_name]["L_HGNN"] = _tmp.coalesce()
         return self.group_cache[group_name]["L_HGNN"]
@@ -1224,7 +1210,7 @@ class Hypergraph(BaseHypergraph):
     # spatial-based convolution/message-passing
     ## general message passing functions
     def v2e_aggregation(
-        self, X: torch.Tensor, aggr: str = "mean", v2e_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", v2e_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0
     ):
         r"""Message aggretation step of ``vertices to hyperedges``.
 
@@ -1232,18 +1218,23 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum"]
         if self.device != X.device:
             self.to(X.device)
         if v2e_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.H_T, drop_rate)
+            else:
+                P = self.H_T
             if aggr == "mean":
-                X = torch.sparse.mm(self.H_T, X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_e_neg_1, X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.H_T, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.H_T, dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 raise ValueError(f"Unknown aggregation method {aggr}.")
@@ -1253,6 +1244,8 @@ class Hypergraph(BaseHypergraph):
                 v2e_weight.shape[0] == self.v2e_weight.shape[0]
             ), "The size of v2e_weight must be equal to the size of self.v2e_weight."
             P = torch.sparse_coo_tensor(self.H_T._indices(), v2e_weight, self.H_T.shape, device=self.device)
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -1269,7 +1262,12 @@ class Hypergraph(BaseHypergraph):
         return X
 
     def v2e_aggregation_of_group(
-        self, group_name: str, X: torch.Tensor, aggr: str = "mean", v2e_weight: Optional[torch.Tensor] = None,
+        self,
+        group_name: str,
+        X: torch.Tensor,
+        aggr: str = "mean",
+        v2e_weight: Optional[torch.Tensor] = None,
+        drop_rate: float = 0.0,
     ):
         r"""Message aggregation step of ``vertices to hyperedges`` in specified hyperedge group.
 
@@ -1278,19 +1276,24 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         assert aggr in ["mean", "sum", "softmax_then_sum"]
         if self.device != X.device:
             self.to(X.device)
         if v2e_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.H_T_of_group(group_name), drop_rate)
+            else:
+                P = self.H_T_of_group(group_name)
             if aggr == "mean":
-                X = torch.sparse.mm(self.H_T_of_group(group_name), X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_e_neg_1_of_group(group_name), X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.H_T_of_group(group_name), X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.H_T_of_group(group_name), dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 raise ValueError(f"Unknown aggregation method {aggr}.")
@@ -1305,6 +1308,8 @@ class Hypergraph(BaseHypergraph):
                 self.H_T_of_group(group_name).shape,
                 device=self.device,
             )
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -1364,6 +1369,7 @@ class Hypergraph(BaseHypergraph):
         aggr: str = "mean",
         v2e_weight: Optional[torch.Tensor] = None,
         e_weight: Optional[torch.Tensor] = None,
+        drop_rate: float = 0.0,
     ):
         r"""Message passing of ``vertices to hyperedges``. The combination of ``v2e_aggregation`` and ``v2e_update``.
 
@@ -1372,8 +1378,9 @@ class Hypergraph(BaseHypergraph):
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
             ``e_weight`` (``torch.Tensor``, optional): The hyperedge weight vector. If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
-        X = self.v2e_aggregation(X, aggr, v2e_weight)
+        X = self.v2e_aggregation(X, aggr, v2e_weight, drop_rate=drop_rate)
         X = self.v2e_update(X, e_weight)
         return X
 
@@ -1384,6 +1391,7 @@ class Hypergraph(BaseHypergraph):
         aggr: str = "mean",
         v2e_weight: Optional[torch.Tensor] = None,
         e_weight: Optional[torch.Tensor] = None,
+        drop_rate: float = 0.0,
     ):
         r"""Message passing of ``vertices to hyperedges`` in specified hyperedge group. The combination of ``e2v_aggregation_of_group`` and ``e2v_update_of_group``.
 
@@ -1393,14 +1401,15 @@ class Hypergraph(BaseHypergraph):
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
             ``e_weight`` (``torch.Tensor``, optional): The hyperedge weight vector. If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
-        X = self.v2e_aggregation_of_group(group_name, X, aggr, v2e_weight)
+        X = self.v2e_aggregation_of_group(group_name, X, aggr, v2e_weight, drop_rate=drop_rate)
         X = self.v2e_update_of_group(group_name, X, e_weight)
         return X
 
     def e2v_aggregation(
-        self, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0
     ):
         r"""Message aggregation step of ``hyperedges to vertices``.
 
@@ -1408,18 +1417,23 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Hyperedge feature matrix. Size :math:`(|\mathcal{E}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert aggr in ["mean", "sum", "softmax_then_sum"]
         if self.device != X.device:
             self.to(X.device)
         if e2v_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.H, drop_rate)
+            else:
+                P = self.H
             if aggr == "mean":
-                X = torch.sparse.mm(self.H, X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_v_neg_1, X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.H, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.H, dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 raise ValueError(f"Unknown aggregation method: {aggr}")
@@ -1429,6 +1443,8 @@ class Hypergraph(BaseHypergraph):
                 e2v_weight.shape[0] == self.e2v_weight.shape[0]
             ), "The size of e2v_weight must be equal to the size of self.e2v_weight."
             P = torch.sparse_coo_tensor(self.H._indices(), e2v_weight, self.H.shape, device=self.device)
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -1445,7 +1461,12 @@ class Hypergraph(BaseHypergraph):
         return X
 
     def e2v_aggregation_of_group(
-        self, group_name: str, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None,
+        self,
+        group_name: str,
+        X: torch.Tensor,
+        aggr: str = "mean",
+        e2v_weight: Optional[torch.Tensor] = None,
+        drop_rate: float = 0.0,
     ):
         r"""Message aggregation step of ``hyperedges to vertices`` in specified hyperedge group.
 
@@ -1454,19 +1475,24 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Hyperedge feature matrix. Size :math:`(|\mathcal{E}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         assert aggr in ["mean", "sum", "softmax_then_sum"]
         if self.device != X.device:
             self.to(X.device)
         if e2v_weight is None:
+            if drop_rate > 0.0:
+                P = sparse_dropout(self.H_of_group(group_name), drop_rate)
+            else:
+                P = self.H_of_group(group_name)
             if aggr == "mean":
-                X = torch.sparse.mm(self.H_of_group[group_name], X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_v_neg_1_of_group[group_name], X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.H_of_group[group_name], X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.H_of_group[group_name], dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 raise ValueError(f"Unknown aggregation method: {aggr}")
@@ -1481,6 +1507,8 @@ class Hypergraph(BaseHypergraph):
                 self.H_of_group[group_name].shape,
                 device=self.device,
             )
+            if drop_rate > 0.0:
+                P = sparse_dropout(P, drop_rate)
             # message passing
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
@@ -1519,11 +1547,7 @@ class Hypergraph(BaseHypergraph):
         return X
 
     def e2v(
-        self,
-        X: torch.Tensor,
-        aggr: str = "mean",
-        e2v_weight: Optional[torch.Tensor] = None,
-        v_weight: Optional[torch.Tensor] = None,
+        self, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None, drop_rate: float = 0.0,
     ):
         r"""Message passing of ``hyperedges to vertices``. The combination of ``e2v_aggregation`` and ``e2v_update``.
 
@@ -1531,13 +1555,19 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Hyperedge feature matrix. Size :math:`(|\mathcal{E}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
-        X = self.e2v_aggregation(X, aggr, e2v_weight)
+        X = self.e2v_aggregation(X, aggr, e2v_weight, drop_rate=drop_rate)
         X = self.e2v_update(X)
         return X
 
     def e2v_of_group(
-        self, group_name: str, X: torch.Tensor, aggr: str = "mean", e2v_weight: Optional[torch.Tensor] = None,
+        self,
+        group_name: str,
+        X: torch.Tensor,
+        aggr: str = "mean",
+        e2v_weight: Optional[torch.Tensor] = None,
+        drop_rate: float = 0.0,
     ):
         r"""Message passing of ``hyperedges to vertices`` in specified hyperedge group. The combination of ``e2v_aggregation_of_group`` and ``e2v_update_of_group``.
 
@@ -1546,9 +1576,10 @@ class Hypergraph(BaseHypergraph):
             ``X`` (``torch.Tensor``): Hyperedge feature matrix. Size :math:`(|\mathcal{E}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
-        X = self.e2v_aggregation_of_group(group_name, X, aggr, e2v_weight)
+        X = self.e2v_aggregation_of_group(group_name, X, aggr, e2v_weight, drop_rate=drop_rate)
         X = self.e2v_update_of_group(group_name, X)
         return X
 
@@ -1556,29 +1587,39 @@ class Hypergraph(BaseHypergraph):
         self,
         X: torch.Tensor,
         aggr: str = "mean",
+        drop_rate: float = 0.0,
         v2e_aggr: Optional[str] = None,
         v2e_weight: Optional[torch.Tensor] = None,
+        v2e_drop_rate: Optional[float] = None,
         e_weight: Optional[torch.Tensor] = None,
         e2v_aggr: Optional[str] = None,
         e2v_weight: Optional[torch.Tensor] = None,
+        e2v_drop_rate: Optional[float] = None,
     ):
         r"""Message passing of ``vertices to vertices``. The combination of ``v2e`` and ``e2v``.
 
         Args:
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, this ``aggr`` will be used to both ``v2e`` and ``e2v``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
             ``v2e_aggr`` (``str``, optional): The aggregation method for hyperedges to vertices. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, it will override the ``aggr`` in ``e2v``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``v2e_drop_rate`` (``float``, optional): Dropout rate for hyperedges to vertices. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. If specified, it will override the ``drop_rate`` in ``e2v``. Default: ``None``.
             ``e_weight`` (``torch.Tensor``, optional): The hyperedge weight vector. If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
             ``e2v_aggr`` (``str``, optional): The aggregation method for vertices to hyperedges. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, it will override the ``aggr`` in ``v2e``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``e2v_drop_rate`` (``float``, optional): Dropout rate for vertices to hyperedges. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. If specified, it will override the ``drop_rate`` in ``v2e``. Default: ``None``.
         """
         if v2e_aggr is None:
             v2e_aggr = aggr
         if e2v_aggr is None:
             e2v_aggr = aggr
-        X = self.v2e(X, v2e_aggr, v2e_weight, e_weight)
-        X = self.e2v(X, e2v_aggr, e2v_weight)
+        if v2e_drop_rate is None:
+            v2e_drop_rate = drop_rate
+        if e2v_drop_rate is None:
+            e2v_drop_rate = drop_rate
+        X = self.v2e(X, v2e_aggr, v2e_weight, e_weight, drop_rate=v2e_drop_rate)
+        X = self.e2v(X, e2v_aggr, e2v_weight, drop_rate=e2v_drop_rate)
         return X
 
     def v2v_of_group(
@@ -1586,11 +1627,14 @@ class Hypergraph(BaseHypergraph):
         group_name: str,
         X: torch.Tensor,
         aggr: str = "mean",
+        drop_rate: float = 0.0,
         v2e_aggr: Optional[str] = None,
         v2e_weight: Optional[torch.Tensor] = None,
+        v2e_drop_rate: Optional[float] = None,
         e_weight: Optional[torch.Tensor] = None,
         e2v_aggr: Optional[str] = None,
         e2v_weight: Optional[torch.Tensor] = None,
+        e2v_drop_rate: Optional[float] = None,
     ):
         r"""Message passing of ``vertices to vertices`` in specified hyperedge group. The combination of ``v2e_of_group`` and ``e2v_of_group``.
 
@@ -1598,17 +1642,24 @@ class Hypergraph(BaseHypergraph):
             ``group_name`` (``str``): The specified hyperedge group.
             ``X`` (``torch.Tensor``): Vertex feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``aggr`` (``str``): The aggregation method. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, this ``aggr`` will be used to both ``v2e_of_group`` and ``e2v_of_group``.
+            ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
             ``v2e_aggr`` (``str``, optional): The aggregation method for hyperedges to vertices. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, it will override the ``aggr`` in ``e2v_of_group``.
             ``v2e_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (vertices point to hyepredges). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``v2e_drop_rate`` (``float``, optional): Dropout rate for hyperedges to vertices. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. If specified, it will override the ``drop_rate`` in ``e2v_of_group``. Default: ``None``.
             ``e_weight`` (``torch.Tensor``, optional): The hyperedge weight vector. If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
             ``e2v_aggr`` (``str``, optional): The aggregation method for vertices to hyperedges. Can be ``'mean'``, ``'sum'`` and ``'softmax_then_sum'``. If specified, it will override the ``aggr`` in ``v2e_of_group``.
             ``e2v_weight`` (``torch.Tensor``, optional): The weight vector attached to connections (hyperedges point to vertices). If not specified, the function will use the weights specified in hypergraph construction. Defaults to ``None``.
+            ``e2v_drop_rate`` (``float``, optional): Dropout rate for vertices to hyperedges. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. If specified, it will override the ``drop_rate`` in ``v2e_of_group``. Default: ``None``.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if v2e_aggr is None:
             v2e_aggr = aggr
         if e2v_aggr is None:
             e2v_aggr = aggr
-        X = self.v2e_of_group(group_name, X, v2e_aggr, v2e_weight, e_weight)
-        X = self.e2v_of_group(group_name, X, e2v_aggr, e2v_weight)
+        if v2e_drop_rate is None:
+            v2e_drop_rate = drop_rate
+        if e2v_drop_rate is None:
+            e2v_drop_rate = drop_rate
+        X = self.v2e_of_group(group_name, X, v2e_aggr, v2e_weight, e_weight, drop_rate=v2e_drop_rate)
+        X = self.e2v_of_group(group_name, X, e2v_aggr, e2v_weight, drop_rate=e2v_drop_rate)
         return X
