@@ -36,6 +36,10 @@ Structure Helpers
 
 .. autofunction:: dhg.utils.adj_list_to_edge_list
 
+Sparse Operations
+-------------------------
+
+.. autofunction:: dhg.utils.sparse_dropout
 
 Dataset Wrapers
 -----------------------

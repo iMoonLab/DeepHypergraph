@@ -145,7 +145,6 @@ The distance between two points :math:`\mathbf{x}, \mathbf{y} \in \mathbb{P}^{n,
 .. math::
 
     d_{\mathbb{P}}^{k} (\mathbf{x}, \mathbf{y}) = (2 / \sqrt{K}) \tanh ^{-1}\left(\sqrt{k}\left\|-x \oplus_{k} y\right\|\right) .
-        % \operatorname{arcosh} \left(1+2 \frac{\|\mathbf{x}-\mathbf{y}\|^{2}}{ \left(1- \|\mathbf{x}\|^{2} \right) \left(1- \|\mathbf{y}\|^{2} \right)} \right)
 
 
 Denote point :math:`\mathbf{z} \in \mathcal{T}_{\mathrm{x}} \mathbb{P}^{n,k}` the tangent (Euclidean) space centered at any point :math:`\mathbf{x}` in the hyperbolic space. 
@@ -156,14 +155,12 @@ the logarithmic map :math:`\log_{\mathbf{x}}: \mathbb{P}^{n,k} \rightarrow \math
 
 .. math::
 
-    % \exp_{\mathbf{x}} (\mathbf{v}) = \mathbf{x} \oplus \left( \tanh \left(\frac{\lambda_{\mathbf{x}} \|\mathbf{v}\|}{2} \right) \frac{\mathbf{v}} {\|\mathbf{v}\|} \right) 
-        \exp _{\mathbf{x}}^{k}(\mathbf{z})=\mathbf{x} \oplus_{k}\left(\tanh \left(\sqrt{k} \frac{\lambda_{\mathbf{x}}^{k}\|\mathbf{z}\|}{2}\right) \frac{\mathbf{z}}{\sqrt{k}\|\mathbf{z}\|}\right), 
+    \exp _{\mathbf{x}}^{k}(\mathbf{z})=\mathbf{x} \oplus_{k}\left(\tanh \left(\sqrt{k} \frac{\lambda_{\mathbf{x}}^{k}\|\mathbf{z}\|}{2}\right) \frac{\mathbf{z}}{\sqrt{k}\|\mathbf{z}\|}\right), 
 
 and
 
 .. math::
 
-    % \log_{\mathbf{x}} (\mathbf{y}) = \frac{2} {\lambda_{\mathbf{x}}} \operatorname{arctanh}(\|-\mathbf{x} \oplus \mathbf{y}\|) \frac{-\mathbf{x} \oplus \mathbf{y}}{\|-\mathbf{x} \oplus \mathbf{y}\|}
     \log _{\mathbf{x}}^{k}(\mathbf{y})=\frac{2}{\sqrt{k} \lambda_{\mathbf{x}}^{k}} \tanh ^{-1}\left(\sqrt{k}\left\|-\mathbf{x} \oplus_{k} \mathbf{y}\right\|\right) \frac{-\mathbf{x} \oplus_{k} \mathbf{y}}{\left\|-\mathbf{x} \oplus_{k} \mathbf{y}\right\|} .
 
 It is noted that our initial data are on Euclidean space and need to be converted to embeddings on hyperbolic space, so first project the data on the previously obtained Euclidean space onto the hyperbolic manifold space 
@@ -177,7 +174,7 @@ then mapped onto the hyperbolic manifold space :math:`\mathbb{P}` using the foll
 
 .. math::
 
-    &\mathbf{x}^{0, \mathbb{P}} =\exp _{t}^{K}\left(\left(0, \mathbf{x}^{0, \mathrm{E}}\right)\right) \\
+    \mathbf{x}^{0, \mathbb{P}} &=\exp _{t}^{K}\left(\left(0, \mathbf{x}^{0, \mathrm{E}}\right)\right) \\
     &=\left(\sqrt{K} \cosh \left(\frac{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}{\sqrt{K}}\right), 
     \sqrt{K} \sinh \left(\frac{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}{\sqrt{K}}\right) \frac{\mathbf{x}^{0, \mathbb{E}}}{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}\right).
 
