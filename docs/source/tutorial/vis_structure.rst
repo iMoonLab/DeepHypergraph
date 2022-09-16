@@ -1,6 +1,10 @@
 Structure Visualization
 =============================
 
+.. hint:: 
+
+    - Author: Xinwei Zhang
+    - Proof: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
 
 Basic Usages
 --------------

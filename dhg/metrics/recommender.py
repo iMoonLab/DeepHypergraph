@@ -22,7 +22,7 @@ def available_recommender_metrics():
 
 
 def _format_inputs(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None
+    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ratio: Optional[float] = None
 ) -> Tuple[torch.Tensor, torch.Tensor, int]:
     r"""Format the inputs
     
@@ -30,6 +30,7 @@ def _format_inputs(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
     """
     assert (
         y_true.shape == y_pred.shape
@@ -42,7 +43,10 @@ def _format_inputs(
         y_pred = y_pred.unsqueeze(0)
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[1]
-    k = min(k, max_k) if k is not None else max_k
+    if ratio is not None:
+        k = int(np.ceil(max_k * ratio))
+    else:
+        k = min(k, max_k) if k is not None else max_k
     return y_true, y_pred, k
 
 
@@ -50,6 +54,7 @@ def precision(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Precision score for the recommender task.
@@ -58,6 +63,7 @@ def precision(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
     
     Examples:
@@ -68,7 +74,7 @@ def precision(
         >>> dm.recommender.precision(y_true, y_pred, k=2)
         0.5
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     res_list = (pred_seq.sum(dim=1) / k).detach().cpu()
@@ -82,6 +88,7 @@ def recall(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Recall score for the recommender task.
@@ -90,6 +97,7 @@ def recall(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
     
     Examples:
@@ -100,7 +108,7 @@ def recall(
         >>> dm.recommender.recall(y_true, y_pred, k=5)
         0.6666666666666666
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     num_true = y_true.sum(dim=1)
@@ -129,6 +137,7 @@ def ndcg(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the recommender task.
@@ -137,6 +146,7 @@ def ndcg(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
     
     Examples:
@@ -149,7 +159,7 @@ def ndcg(
         >>> dm.recommender.ndcg(y_true, y_pred, k=3)
         0.4123818874359131
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
 
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     ideal_seq = torch.sort(y_true, dim=-1, descending=True)[0][:, :k]
@@ -177,28 +187,68 @@ class UserItemRecommenderEvaluator(BaseEvaluator):
         >>> import dhg.metrics as dm
         >>> evaluator = dm.UserItemRecommenderEvaluator(
                 [
+                    {"ndcg": {"k": 2}},
+                    {"recall": {"k": 4}},
+                    {"precision": {"k": 2}},
                     "precision",
-                    "recall",
-                    "ndcg",
+                    {"precision": {"k": 6}},
                 ],
-                0
+                0,
             )
-        >>> y_true = torch.tensor([0, 1, 0, 0, 1, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 0, 1, 1], 
+                [0, 0, 1, 0, 1, 0], 
+                [0, 1, 1, 1, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.6, 0.7, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.validate_add_batch(y_true, y_pred)
-        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 1, 0, 1], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 1, 0, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.9, 0.4, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.validate_add_batch(y_true, y_pred)
         >>> evaluator.validate_epoch_res()
-        0.5
-        >>> y_true = torch.tensor([0, 1, 1, 1, 0, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        0.37104907135168713
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 0, 1, 1], 
+                [0, 0, 1, 0, 1, 0], 
+                [0, 1, 1, 1, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.6, 0.7, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.test_add_batch(y_true, y_pred)
-        >>> y_true = torch.tensor([1, 1, 0, 0, 1, 0])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 1, 0, 1], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 1, 0, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.9, 0.4, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.test_add_batch(y_true, y_pred)
         >>> evaluator.test_epoch_res()
-        {'precision': 0.5833333432674408, 'recall': 1.0, 'ndcg': 0.8878978490829468}
+        {
+            'ndcg -> k@2': 0.37104907135168713, 
+            'recall -> k@4': 0.638888900478681, 
+            'precision -> k@2': 0.3333333333333333, 
+            'precision': 0.5000000049670538, 
+            'precision -> k@6': 0.5000000049670538
+        }
     """
 
     def __init__(

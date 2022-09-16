@@ -19,7 +19,7 @@ DHG内的关联结构
     :header: "关联结构", "类", "类型", "基于谱域的操作", "基于空域的操作"
     :widths: 2 2 2 3 3
 
-    "图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
+    "图", ":py:class:`dhg.Graph`", "低阶关联", "| :math:`\mathcal{L}` , :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
     "有向图", ":py:class:`dhg.DiGraph`", "低阶关联", *未来工作*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`"

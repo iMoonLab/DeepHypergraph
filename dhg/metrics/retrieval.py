@@ -22,7 +22,7 @@ def _format_inputs(
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
         ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
     """
     assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
@@ -36,14 +36,18 @@ def _format_inputs(
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[1]
     if ratio is not None:
-        k = int(max_k * ratio)
+        k = int(np.ceil(max_k * ratio))
     else:
         k = min(k, max_k) if k is not None else max_k
     return y_true, y_pred, k
 
 
 def precision(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
+    y_true: torch.Tensor,
+    y_pred: torch.Tensor,
+    k: Optional[int] = None,
+    ratio: Optional[float] = None,
+    ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Precision score for the retrieval task.
 
@@ -51,6 +55,7 @@ def precision(
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
     
     Examples:
@@ -61,7 +66,7 @@ def precision(
         >>> dm.retrieval.precision(y_true, y_pred, k=2)
         0.5
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     res_list = (pred_seq.sum(dim=1) / k).detach().cpu()
@@ -107,7 +112,11 @@ def recall(
 
 
 def ap(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, method: str = "pascal_voc",
+    y_true: torch.Tensor,
+    y_pred: torch.Tensor,
+    k: Optional[int] = None,
+    ratio: Optional[float] = None,
+    method: str = "pascal_voc",
 ) -> Union[float, list]:
     r"""Calculate the Average Precision (AP) for the retrieval task.
 
@@ -115,6 +124,7 @@ def ap(
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
         ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``method`` (``str``): The method to compute the AP can be ``legacy`` or ``pascal_voc``. Defaults to ``pascal_voc``.
     
     Examples:
@@ -125,13 +135,17 @@ def ap(
         >>> dm.retrieval.ap(y_true, y_pred, method="legacy")
         0.8333333730697632
     """
+    assert ratio is None or (ratio > 0 and ratio <= 1), "The ratio must be in (0, 1]."
     assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
     assert y_true.shape == y_pred.shape, "The shape of y_true and y_pred must be the same."
     assert y_true.dim() == 1, "The input y_true must be 1-D."
     assert y_pred.dim() == 1, "The input y_pred must be 1-D."
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[0]
-    k = min(k, max_k) if k is not None else max_k
+    if ratio is not None:
+        k = int(np.ceil(max_k * ratio))
+    else:
+        k = min(k, max_k) if k is not None else max_k
 
     pred_seq = y_true[torch.argsort(y_pred, descending=True)]
     pred_index = torch.arange(1, len(y_true) + 1, device=y_true.device)[pred_seq > 0]
@@ -147,6 +161,7 @@ def map(
     y_true: torch.LongTensor,
     y_pred: torch.LongTensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     method: str = "pascal_voc",
     ret_batch: bool = False,
 ) -> Union[float, list]:
@@ -155,7 +170,8 @@ def map(
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``method`` (``str``): The specified method: ``legacy`` or ``pascal_voc``. Defaults to ``pascal_voc``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
     
@@ -166,18 +182,22 @@ def map(
                 [True, False, True, False, True],
                 [False, False, False, True, True],
                 [True, True, False, True, False],
+                [False, True, True, False, True],
             ])
         >>> y_pred = torch.tensor([
-                [0.2, 0.3, 0.5, 0.4, 0.3],
-                [0.8, 0.2, 0.3, 0.5, 0.4],
-                [0.2, 0.4, 0.5, 0.2, 0.8],
+                [0.2, 0.8, 0.5, 0.4, 0.3],
+                [0.8, 0.2, 0.3, 0.9, 0.4],
+                [0.2, 0.4, 0.5, 0.9, 0.8],
+                [0.8, 0.2, 0.9, 0.3, 0.7],
             ])
-        >>> dm.retrieval.map(y_true, y_pred, method="legacy")
-        0.587037056684494
+        >>> dm.retrieval.map(y_true, y_pred, k=2, method="legacy")
+        0.7055555880069733
+        >>> dm.retrieval.map(y_true, y_pred, k=2, method="pascal_voc")
+        0.7305555790662766
     """
     assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
-    res_list = [ap(y_true[i, :], y_pred[i, :], k) for i in range(y_true.shape[0])]
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
+    res_list = [ap(y_true[i, :], y_pred[i, :], k, method=method) for i in range(y_true.shape[0])]
     if ret_batch:
         return res_list
     else:
@@ -197,14 +217,19 @@ def _dcg(matrix: torch.Tensor) -> torch.Tensor:
 
 
 def ndcg(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
+    y_true: torch.Tensor,
+    y_pred: torch.Tensor,
+    k: Optional[int] = None,
+    ratio: Optional[float] = None,
+    ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the Normalized Discounted Cumulative Gain (NDCG) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
 
     Examples:
@@ -217,7 +242,7 @@ def ndcg(
         >>> dm.retrieval.ndcg(y_true, y_pred, k=3)
         0.4123818874359131
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
 
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     ideal_seq = torch.sort(y_true, dim=-1, descending=True)[0][:, :k]
@@ -225,7 +250,7 @@ def ndcg(
     pred_dcg = _dcg(pred_seq)
     ideal_dcg = _dcg(ideal_seq)
 
-    res_list = (pred_dcg / ideal_dcg).detach().cpu()
+    res_list = pred_dcg / ideal_dcg
     res_list[torch.isinf(res_list)] = 0
     if ret_batch:
         return res_list
@@ -233,13 +258,14 @@ def ndcg(
         return res_list.mean().item()
 
 
-def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None) -> float:
+def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ratio: Optional[float] = None,) -> float:
     r"""Calculate the Reciprocal Rank (RR) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)``.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
     
     Examples:
         >>> import torch
@@ -256,23 +282,31 @@ def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None) -> f
     assert y_pred.dim() == 1, "The input y_pred must be a 1-D tensor."
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[0]
-    k = min(k, max_k) if k is not None else max_k
+    if ratio is not None:
+        k = int(np.ceil(max_k * ratio))
+    else:
+        k = min(k, max_k) if k is not None else max_k
 
     pred_seq = y_true[torch.argsort(y_pred, dim=-1, descending=True)][:k]
     pred_index = torch.nonzero(pred_seq).view(-1)
-    res = (1 / (pred_index + 1)).mean().detach().cpu()
+    res = (1 / (pred_index + 1)).mean().cpu()
     return res.mean().item()
 
 
 def mrr(
-    y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, ret_batch: bool = False,
+    y_true: torch.Tensor,
+    y_pred: torch.Tensor,
+    k: Optional[int] = None,
+    ratio: Optional[float] = None,
+    ret_batch: bool = False,
 ) -> Union[float, list]:
     r"""Calculate the mean Reciprocal Rank (MRR) for the retrieval task.
 
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
 
     Examples:
@@ -285,7 +319,7 @@ def mrr(
         >>> dm.retrieval.mrr(y_true, y_pred, k=2)
         0.5
     """
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     res_list = [rr(y_true[i, :], y_pred[i, :], k) for i in range(y_true.shape[0])]
     if ret_batch:
         return res_list
@@ -297,6 +331,7 @@ def _pr_curve(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     method: str = "pascal_voc",
     n_points: int = 11,
 ) -> tuple:
@@ -305,9 +340,10 @@ def _pr_curve(
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor. Size :math:`(N_{target},)`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
-        ``method`` (``str``, optional): The method to compute the PR curve can be "legacy" or "pascal_voc". Default to "pascal_voc".
-        ``n_points`` (``int``): The number of points to compute the PR curve. Default to ``11``.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
+        ``method`` (``str``, optional): The method to compute the PR curve can be "legacy" or "pascal_voc". Defaults to "pascal_voc".
+        ``n_points`` (``int``): The number of points to compute the PR curve. Defaults to ``11``.
 
     Examples:
         >>> import torch
@@ -326,7 +362,10 @@ def _pr_curve(
     assert y_pred.dim() == 1, "The input y_pred must be 1-D."
     y_true, y_pred = y_true.detach().float(), y_pred.detach().float()
     max_k = y_true.shape[0]
-    k = min(k, max_k) if k is not None else max_k
+    if ratio is not None:
+        k = int(np.ceil(max_k * ratio))
+    else:
+        k = min(k, max_k) if k is not None else max_k
 
     pred_seq = y_true[torch.argsort(y_pred, descending=True)]
     pred_index = torch.arange(1, len(y_true) + 1, device=y_true.device)[pred_seq > 0]
@@ -347,6 +386,7 @@ def pr_curve(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     k: Optional[int] = None,
+    ratio: Optional[float] = None,
     method: str = "pascal_voc",
     n_points: int = 11,
     ret_batch: bool = False,
@@ -356,27 +396,45 @@ def pr_curve(
     Args:
         ``y_true`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
         ``y_pred`` (``torch.Tensor``): A 1-D tensor or 2-D tensor. Size :math:`(N_{target},)` or :math:`(N_{samples}, N_{target})`.
-        ``k`` (``int``, optional): The specified top-k value. Default to :math:`N_{target}`.
-        ``method`` (``str``, optional): The method to compute the PR curve can be "legacy" or "pascal_voc". Default to "pascal_voc".
-        ``n_points`` (``int``): The number of points to compute the PR curve. Default to ``11``.
+        ``k`` (``int``, optional): The specified top-k value. Defaults to :math:`N_{target}`.
+        ``ratio`` (``float``, optional): The specified ratio of top-k value. If ``ratio`` is not ``None``, ``k`` will be ignored. Defaults to ``None``.
+        ``method`` (``str``, optional): The method to compute the PR curve can be ``"legacy"`` or ``"pascal_voc"``. Defaults to ``"pascal_voc"``.
+        ``n_points`` (``int``): The number of points to compute the PR curve. Defaults to ``11``.
         ``ret_batch`` (``bool``): Whether to return the raw score list. Defaults to ``False``.
 
     Examples:
         >>> import torch
         >>> import dhg.metrics as dm
-        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 0, 1, 0, 1, 0])
-        >>> y_pred = torch.tensor([0.23, 0.76, 0.01, 0.91, 0.13, 0.45, 0.12, 0.03, 0.38, 0.11])
-        >>> precision_coor, recall_coor = dm.retrieval.pr_curve(y_true, y_pred)
+        >>> y_true = torch.tensor(
+                [
+                    [0, 1, 0, 1, 0, 0, 1, 0, 1, 0], 
+                    [1, 0, 1, 0, 0, 1, 0, 1, 0, 0], 
+                    [0, 1, 0, 0, 1, 0, 0, 0, 1, 1],
+                ]
+            )
+        >>> y_pred = torch.tensor(
+                [
+                    [0.23, 0.76, 0.01, 0.91, 0.13, 0.45, 0.12, 0.03, 0.38, 0.11],
+                    [0.33, 0.47, 0.21, 0.87, 0.23, 0.65, 0.22, 0.13, 0.58, 0.21],
+                    [0.43, 0.57, 0.31, 0.77, 0.33, 0.85, 0.32, 0.23, 0.78, 0.31],
+                ]
+            )
+        >>> precision_coor, recall_coor = dm.retrieval.pr_curve(y_true, y_pred, method="legacy")
         >>> precision_coor
-        [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.75, 0.75, 0.75, 0.5714285969734192]
+        [0.6666, 0.6666, 0.6666, 0.6666, 0.6333, 0.6333, 0.6333, 0.5416, 0.5416, 0.5416, 0.4719]
+        >>> recall_coor
+        [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        >>> precision_coor, recall_coor = dm.retrieval.pr_curve(y_true, y_pred, method="pascal_voc")
+        >>> precision_coor
+        [0.6666, 0.6666, 0.6666, 0.6666, 0.6333, 0.6333, 0.6333, 0.5500, 0.5500, 0.5500, 0.4719]
         >>> recall_coor
         [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     """
     assert method in ("legacy", "pascal_voc",), "The method must be either legacy or pascal_voc."
-    y_true, y_pred, k = _format_inputs(y_true, y_pred, k)
+    y_true, y_pred, k = _format_inputs(y_true, y_pred, k, ratio=ratio)
     precision_coor_list, recall_coor_list = [], []
     for i in range(y_true.shape[0]):
-        precision_coor, recall_coor = _pr_curve(y_true[i, :], y_pred[i, :], k, method, n_points)
+        precision_coor, recall_coor = _pr_curve(y_true[i, :], y_pred[i, :], k=k, method=method, n_points=n_points)
         precision_coor_list.append(precision_coor)
         recall_coor_list.append(recall_coor)
     if ret_batch:
@@ -399,28 +457,83 @@ class RetrievalEvaluator(BaseEvaluator):
         >>> import dhg.metrics as dm
         >>> evaluator = dm.RetrievalEvaluator(
                 [
-                    "precision",
-                    "recall",
-                    "ndcg",
+                    {"recall": {"k": 2}},
+                    {"recall": {"k": 4}},
+                    {"recall": {"ratio": 0.1}},
+                    {"precision": {"k": 4}},
+                    {"ndcg": {"k": 4}},
+                    "pr_curve",
+                    {"pr_curve": {"k": 4, "method": "legacy"}},
+                    {"pr_curve": {"k": 4, "method": "pascal_voc", "n_points": 21}},
                 ],
-                0
+                0,
             )
-        >>> y_true = torch.tensor([0, 1, 0, 0, 1, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 0, 1, 1], 
+                [0, 0, 1, 0, 1, 0], 
+                [0, 1, 1, 1, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.6, 0.7, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.validate_add_batch(y_true, y_pred)
-        >>> y_true = torch.tensor([0, 1, 0, 1, 0, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 1, 0, 1], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 1, 0, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.9, 0.4, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.validate_add_batch(y_true, y_pred)
         >>> evaluator.validate_epoch_res()
-        0.5
-        >>> y_true = torch.tensor([0, 1, 1, 1, 0, 1])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.6, 0.7, 0.4, 0.5])
+        0.2222222238779068
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 0, 1, 1], 
+                [0, 0, 1, 0, 1, 0], 
+                [0, 1, 1, 1, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.6, 0.7, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.test_add_batch(y_true, y_pred)
-        >>> y_true = torch.tensor([1, 1, 0, 0, 1, 0])
-        >>> y_pred = torch.tensor([0.8, 0.9, 0.9, 0.4, 0.4, 0.5])
+        >>> y_true = torch.tensor([
+                [0, 1, 0, 1, 0, 1], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 1, 0, 0, 1],
+            ])
+        >>> y_pred = torch.tensor([
+                [0.8, 0.9, 0.9, 0.4, 0.4, 0.5], 
+                [0.2, 0.6, 0.3, 0.3, 0.4, 0.6], 
+                [0.7, 0.4, 0.3, 0.2, 0.8, 0.4],
+            ])
         >>> evaluator.test_add_batch(y_true, y_pred)
         >>> evaluator.test_epoch_res()
-        {'precision': 0.5833333432674408, 'recall': 1.0, 'ndcg': 0.8878978490829468}
+        {
+            'recall -> k@2': 0.2222222238779068, 
+            'recall -> k@4': 0.6388888955116272, 
+            'recall -> ratio@0.1000': 0.1666666716337204, 
+            'precision -> k@4': 0.4583333432674408, 
+            'ndcg -> k@4': 0.5461218953132629, 
+            'pr_curve': [
+                [0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5611111223697662], 
+                [0.0, 0.09999999999999999, 0.19999999999999998, 0.30000000000000004, 0.39999999999999997, 0.5, 0.6000000000000001, 0.7000000000000001, 0.7999999999999999, 0.9, 1.0]
+            ], 
+            'pr_curve -> k@4 | method@legacy': [
+                [0.6944444477558136, 0.6944444477558136, 0.6944444477558136, 0.6944444477558136, 0.7222222238779068, 0.4833333392937978, 0.4833333392937978, 0.5000000099341074, 0.5000000099341074, 0.5000000099341074, 0.5611111223697662], 
+                [0.0, 0.09999999999999999, 0.19999999999999998, 0.30000000000000004, 0.39999999999999997, 0.5, 0.6000000000000001, 0.7000000000000001, 0.7999999999999999, 0.9, 1.0]
+            ], 
+            'pr_curve -> k@4 | method@pascal_voc | n_points@21': [
+                [0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.7944444517294565, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5888889034589132, 0.5611111223697662], 
+                [0.0, 0.049999999999999996, 0.09999999999999999, 0.15000000000000002, 0.19999999999999998, 0.25, 0.30000000000000004, 0.35000000000000003, 0.39999999999999997, 0.45, 0.5, 0.5499999999999999, 0.6000000000000001, 0.65, 0.7000000000000001, 0.75, 0.7999999999999999, 0.85, 0.9, 0.9500000000000001, 1.0]
+            ]
+        }
     """
 
     def __init__(

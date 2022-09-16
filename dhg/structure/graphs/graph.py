@@ -438,7 +438,7 @@ class Graph(BaseGraph):
         Sparse Matrices:
 
         .. math::
-            \mathbf{A}, \mathcal{L}_{sym}, \mathcal{L}_{rw}, \mathcal{L}_{GCN}
+            \mathbf{A}, \mathcal{L}, \mathcal{L}_{sym}, \mathcal{L}_{rw}, \mathcal{L}_{GCN}
         
         Sparse Diagonal Matrices:
 
@@ -452,6 +452,7 @@ class Graph(BaseGraph):
         """
         return [
             "A",
+            "L",
             "L_sym",
             "L_rw",
             "L_GCN",
@@ -552,6 +553,19 @@ class Graph(BaseGraph):
 
     def smoothing(self, X: torch.Tensor, L: torch.Tensor, lamb: float) -> torch.Tensor:
         return super().smoothing(X, L, lamb)
+
+    @property
+    def L(self) -> torch.Tensor:
+        r"""Return the Laplacian matrix :math:`\mathbf{L}` of the sample graph with ``torch.sparse_coo_tensor`` format. Size :math:`(|\mathcal{V}|, |\mathcal{V}|)`.
+        
+        .. math::
+            \mathbf{L} = \mathbf{D}_v - \mathbf{A}
+        """
+        if self.cache.get("L") is None:
+            _tmp_g = self.clone()
+            _tmp_g.remove_selfloop()
+            self.cache["L"] = _tmp_g.D_v - _tmp_g.A
+        return self.cache["L"]
 
     @property
     def L_sym(self) -> torch.Tensor:

@@ -26,7 +26,10 @@ class GraphVertexClassificationEvaluator(VertexClassificationEvaluator):
         >>> evaluator.validate(y_true, y_pred)
         0.5
         >>> evaluator.test(y_true, y_pred)
-        {'accuracy': 0.5, 'f1_score -> macro': 0.5222222222222221}
+        {
+            'accuracy': 0.5, 
+            'f1_score -> average@macro': 0.5222222222222221
+        }
     """
 
     def __init__(

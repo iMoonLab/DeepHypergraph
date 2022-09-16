@@ -97,12 +97,16 @@ DHG中所有的评测器都可以使用与如下代码一样的参数构建：
     >>> evaluator.validate(y_true, y_pred)
     0.6000000238418579
     >>> evaluator.test(y_true, y_pred)
-    {'accuracy': 0.6000000238418579, 
-     'f1_score -> average@micro': 0.6, 
-     'f1_score -> average@macro': 0.43333333333333335, 
-     'confusion_matrix': array([[2, 0, 0],
-                                [1, 1, 0],
-                                [0, 1, 0]])}
+    {
+        'accuracy': 0.6000000238418579, 
+        'f1_score -> average@micro': 0.6, 
+        'f1_score -> average@macro': 0.43333333333333335, 
+        'confusion_matrix': array([
+            [2, 0, 0],
+            [1, 1, 0],
+            [0, 1, 0]
+        ])
+    }
     >>> y_pred = torch.tensor([[0.7, 0.1, 0.2],
                                 [0.1, 0.8, 0.1],
                                 [0.7, 0.1, 0.2],
@@ -111,12 +115,16 @@ DHG中所有的评测器都可以使用与如下代码一样的参数构建：
     >>> evaluator.validate(y_true, y_pred)
     0.6000000238418579
     >>> evaluator.test(y_true, y_pred)
-    {'accuracy': 0.6000000238418579, 
-     'f1_score -> average@micro': 0.6, 
-     'f1_score -> average@macro': 0.43333333333333335, 
-     'confusion_matrix': array([[2, 0, 0],
-                                [1, 1, 0],
-                                [0, 1, 0]])}
+    {
+        'accuracy': 0.6000000238418579, 
+        'f1_score -> average@micro': 0.6, 
+        'f1_score -> average@macro': 0.43333333333333335, 
+        'confusion_matrix': array([
+            [2, 0, 0],
+            [1, 1, 0],
+            [0, 1, 0]
+        ])
+    }
 
 
 .. _zh_tutorial_evaluation_abe:
@@ -170,5 +178,8 @@ DHG中所有的评测器都可以使用与如下代码一样的参数构建：
                                      [0.3, 0.5, 0.7, 0.2, 0.1, 0.5]])
     >>> evaluator.test_add_batch(batch_y_true, batch_y_pred)
     >>> evaluator.test_epoch_res()
-    {'precision -> k@20': 0.4166666716337204, 'recall -> k@20': 1.0, 'ndcg -> k@20': 0.816944420337677}
-
+    {
+        'precision -> k@20': 0.4166666716337204, 
+        'recall -> k@20': 1.0, 
+        'ndcg -> k@20': 0.816944420337677
+    }

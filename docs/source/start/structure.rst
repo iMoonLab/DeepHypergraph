@@ -17,7 +17,7 @@ Currently, the **DHG** has implemented the following structures and attached ope
     :header: "Structure", "Class", "Type", "Spectral-Based Operations", "Spatial-Based Operations"
     :widths: 2 2 2 3 3
 
-    "| Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
+    "| Graph", ":py:class:`dhg.Graph`", "Low-Order", "| :math:`\mathcal{L}` , :math:`\mathcal{L}_{sym}` , :math:`\mathcal{L}_{rw}`
     | :math:`\mathcal{L}_{GCN}`", ":math:`v \rightarrow v`"
     "| Directed Graph", ":py:class:`dhg.DiGraph`", "Low-Order", *To Be Added*, "| :math:`v_{src} \rightarrow v_{dst}`
     | :math:`v_{dst} \rightarrow v_{src}`"
