@@ -22,7 +22,7 @@ class MovieLens1M(BaseData):
         The first item of each line in the ``adj_list`` is the user id, and the rest is the item id.
 
     Args:
-        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
     """
     def __init__(self, data_root: Optional[str] = None) -> None:
         super().__init__("movielens_1m", data_root)

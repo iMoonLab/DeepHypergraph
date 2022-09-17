@@ -12,6 +12,7 @@ from .structure import (
 )
 from .dataset_wrapers import UserItemDataset
 from .sparse import sparse_dropout
+from .dataset_split import split_by_num, split_by_ratio, split_by_num_for_UI_bigraph, split_by_ratio_for_UI_bigraph
 
 __all__ = [
     "C",
@@ -29,4 +30,8 @@ __all__ = [
     "edge_list_to_adj_dict",
     "adj_list_to_edge_list",
     "sparse_dropout",
+    "split_by_num",
+    "split_by_ratio",
+    "split_by_num_for_UI_bigraph",
+    "split_by_ratio_for_UI_bigraph",
 ]

@@ -24,7 +24,7 @@ class CocitationCora(BaseData):
     - ``test_mask``: The test mask. ``torch.BoolTensor`` with size :math:`(2,708, )`.
 
     Args:
-        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
     """
 
     def __init__(self, data_root: Optional[str] = None) -> None:
@@ -84,7 +84,7 @@ class CocitationCiteseer(BaseData):
     - ``test_mask``: The test mask. ``torch.BoolTensor`` with size :math:`(3,327, )`.
 
     Args:
-        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
     """
 
     def __init__(self, data_root: Optional[str] = None) -> None:
@@ -144,7 +144,7 @@ class CocitationPubmed(BaseData):
     - ``test_mask``: The test mask. ``torch.BoolTensor`` with size :math:`(19,717, )`.
 
     Args:
-        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
     """
 
     def __init__(self, data_root: Optional[str] = None) -> None:

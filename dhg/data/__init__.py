@@ -7,12 +7,16 @@ from .gowalla import Gowalla
 from .amazon import AmazonBook
 from .coauthorship import CoauthorshipCora, CoauthorshipDBLP
 from .cocitation import CocitationCora, CocitationCiteseer, CocitationPubmed
+from .blogcatalog import BlogCatalog
+from .flickr import Flickr
 
 __all__ = [
     "BaseData",
     "Cora",
     "Citeseer",
     "Pubmed",
+    "BlogCatalog",
+    "Flickr",
     "Cooking200",
     "MovieLens1M",
     "Yelp2018",
