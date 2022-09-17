@@ -43,10 +43,10 @@ def split_by_num(
         >>> train_num, val_num, test_num = 10, 2, 5
         >>> train_mask, val_mask, test_mask = split_by_num(num_v, v_label, train_num, val_num, test_num)
         >>> train_mask.sum(), val_mask.sum(), test_mask.sum()
-        (tensor(90), tensor(6), tensor(15))
+        (tensor(30), tensor(6), tensor(15))
         >>> train_mask, val_mask, test_mask = split_by_num(num_v, v_label, train_num, val_num)
         >>> train_mask.sum(), val_mask.sum(), test_mask.sum()
-        (tensor(90), tensor(6), tensor(64))
+        (tensor(30), tensor(6), tensor(64))
     """
     if isinstance(v_label, list):
         v_label = np.array(v_label)
