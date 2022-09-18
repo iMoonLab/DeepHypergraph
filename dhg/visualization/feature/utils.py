@@ -6,9 +6,16 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
+import matplotlib.animation as animation
 
 eps = 1e-5
 min_norm = 1e-15
+
+
+def on_key_press(event):
+    print(event.key)
+    if event.key == "escape" or event.key == "q":
+        plt.close(event.canvas.figure)
 
 
 def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap="viridis"):
@@ -22,18 +29,20 @@ def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap=
     embeddings = normalize(embeddings)
     x, y, z = embeddings[:, 0], embeddings[:, 1], embeddings[:, 2]
     fig = plt.figure(figsize=(8, 8))
-    ax = fig.gca(projection="3d")
-    plt.ion()
-    for i in range(30000):
-        plt.clf()
-        fig = plt.gcf()
-        ax = fig.gca(projection="3d")
+    ax = fig.add_subplot(111, projection="3d")
+
+    def init():
         if colors is not None:
             ax.scatter(x, y, z, c=colors, cmap=cmap)
         else:
             ax.scatter(x, y, z, cmap=cmap)
+        return fig
+
+    def animate(i):
         ax.view_init(elev=20, azim=i % 360)
-        plt.pause(0.001)
+
+    ani = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20, blit=False)
+    return ani
 
 
 def plot_2d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None, cmap="viridis"):

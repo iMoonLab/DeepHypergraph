@@ -45,8 +45,6 @@ Feature Visualization in Poincare Ball
 Make Animations
 ~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: dhg.visualization.make_animation
-
 .. autofunction:: dhg.visualization.animation_of_3d_euclidean_space
 
 .. autofunction:: dhg.visualization.animation_of_3d_poincare_ball
