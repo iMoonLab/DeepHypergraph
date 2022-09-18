@@ -12,12 +12,6 @@ eps = 1e-5
 min_norm = 1e-15
 
 
-def on_key_press(event):
-    print(event.key)
-    if event.key == "escape" or event.key == "q":
-        plt.close(event.canvas.figure)
-
-
 def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap="viridis"):
     r"""Make an animation of embeddings.
 
