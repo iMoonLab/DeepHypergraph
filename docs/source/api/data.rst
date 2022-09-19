@@ -25,6 +25,24 @@ Graph Datasets
     dhg.data.Facebook
 
 
+Bipartite Graph Datasets 
+--------------------------------
+
+.. autosummary::
+    :toctree: ../generated/
+    :nosignatures:
+    :template: dataset_template.rst
+
+    dhg.data.MovieLens1M
+    dhg.data.AmazonBook
+    dhg.data.Yelp2018
+    dhg.data.Gowalla
+    dhg.data.TencentBiGraph
+    dhg.data.CoraBiGraph
+    dhg.data.PubmedBiGraph
+    dhg.data.CiteseerBiGraph
+
+
 Hypergraph Datasets
 -----------------------
 
@@ -39,20 +57,6 @@ Hypergraph Datasets
     dhg.data.CocitationCora
     dhg.data.CocitationCiteseer
     dhg.data.CocitationPubmed
-
-
-Bipartite Graph Datasets 
---------------------------------
-
-.. autosummary::
-    :toctree: ../generated/
-    :nosignatures:
-    :template: dataset_template.rst
-
-    dhg.data.MovieLens1M
-    dhg.data.AmazonBook
-    dhg.data.Yelp2018
-    dhg.data.Gowalla
 
 
 **Welcome to contribute datasets!**

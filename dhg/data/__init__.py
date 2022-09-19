@@ -1,5 +1,4 @@
 from .base import BaseData
-from .planetoid import Cora, Citeseer, Pubmed
 from .cooking_200 import Cooking200
 from .movielens import MovieLens1M
 from .yelp import Yelp2018
@@ -11,6 +10,10 @@ from .blogcatalog import BlogCatalog
 from .flickr import Flickr
 from .github import Github
 from .facebook import Facebook
+from .tencent import TencentBiGraph
+from .cora import Cora, CoraBiGraph
+from .citeseer import Citeseer, CiteseerBiGraph
+from .pubmed import Pubmed, PubmedBiGraph
 
 __all__ = [
     "BaseData",
@@ -26,6 +29,10 @@ __all__ = [
     "Yelp2018",
     "Gowalla",
     "AmazonBook",
+    "TencentBiGraph",
+    "CoraBiGraph",
+    "CiteseerBiGraph",
+    "PubmedBiGraph",
     "CoauthorshipCora",
     "CoauthorshipDBLP",
     "CocitationCora",
