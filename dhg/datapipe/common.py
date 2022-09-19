@@ -27,6 +27,9 @@ def to_tensor(
     elif isinstance(X, scipy.sparse.csr_matrix):
         X = X.todense()
         X = torch.tensor(X)
+    elif isinstance(X, scipy.sparse.coo_matrix):
+        X = X.todense()
+        X = torch.tensor(X)
     elif isinstance(X, np.ndarray):
         X = torch.tensor(X)
     else:

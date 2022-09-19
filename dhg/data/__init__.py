@@ -9,6 +9,8 @@ from .coauthorship import CoauthorshipCora, CoauthorshipDBLP
 from .cocitation import CocitationCora, CocitationCiteseer, CocitationPubmed
 from .blogcatalog import BlogCatalog
 from .flickr import Flickr
+from .github import Github
+from .facebook import Facebook
 
 __all__ = [
     "BaseData",
@@ -17,6 +19,8 @@ __all__ = [
     "Pubmed",
     "BlogCatalog",
     "Flickr",
+    "Github",
+    "Facebook",
     "Cooking200",
     "MovieLens1M",
     "Yelp2018",

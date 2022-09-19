@@ -45,6 +45,7 @@ class BaseGraph:
         extra_selfloop: bool = False,
         device: torch.device = torch.device("cpu"),
     ):
+        assert isinstance(num_v, int) and num_v > 0, "num_v should be a positive integer"
         self.clear()
         self.device = device
         self._num_v = num_v
@@ -374,6 +375,7 @@ class BaseHypergraph:
         v_weight: Optional[List[float]] = None,
         device: torch.device = torch.device("cpu"),
     ):
+        assert isinstance(num_v, int) and num_v > 0, "num_v should be a positive integer"
         self.clear()
         self._num_v = num_v
         self.device = device

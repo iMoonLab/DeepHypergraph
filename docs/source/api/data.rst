@@ -21,6 +21,8 @@ Graph Datasets
     dhg.data.Citeseer
     dhg.data.BlogCatalog
     dhg.data.Flickr
+    dhg.data.Github
+    dhg.data.Facebook
 
 
 Hypergraph Datasets
