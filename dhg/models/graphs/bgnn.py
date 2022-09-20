@@ -70,6 +70,7 @@ class BGNN_Adv(nn.Module):
         lbl_real = torch.ones(X_true.shape[0]).to(device)
         lbl_fake = torch.zeros(X_true.shape[0]).to(device)
 
+        netG.train(), netD.train()
         for _ in range(max_epoch):
             X_real = X_true
             X_fake = mp_func(netG(X_other))
@@ -209,6 +210,7 @@ class BGNN_MLP(nn.Module):
 
         X_true, X_other = X_true.to(device), X_other.to(device)
 
+        netG.train(), netD.train()
         for _ in range(max_epoch):
             X_real = X_true
             X_fake = netD(mp_func(netG(X_other)))
