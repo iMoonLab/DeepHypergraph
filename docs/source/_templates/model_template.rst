@@ -7,4 +7,4 @@
 
 .. autoclass:: {{ name }}
     :show-inheritance:
-    :members: forward
+    :members: forward, train_with_cascaded

@@ -17,6 +17,7 @@ Models on Graph
 
 Models on Bipartite Graph
 -----------------------------
+
 .. autosummary::
    :toctree: ../generated/
    :nosignatures:

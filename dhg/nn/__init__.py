@@ -1,4 +1,4 @@
-from .convs.common import MLP, MultiHeadWrapper
+from .convs.common import MLP, MultiHeadWrapper, Discriminator
 from .convs.graphs import GCNConv, GATConv, GraphSAGEConv, GINConv
 from .convs.hypergraphs import (
     HGNNConv,
@@ -17,6 +17,7 @@ from .regularization import EmbeddingRegularization
 __all__ = [
     "MLP",
     "MultiHeadWrapper",
+    "Discriminator",
     "GCNConv",
     "GATConv",
     "GraphSAGEConv",

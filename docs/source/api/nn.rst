@@ -13,6 +13,7 @@ Common Layers
 
    dhg.nn.MLP
    dhg.nn.MultiHeadWrapper
+   dhg.nn.Discriminator
 
 
 Layers on Graph

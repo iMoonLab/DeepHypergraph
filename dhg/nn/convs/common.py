@@ -106,3 +106,33 @@ class MultiHeadWrapper(nn.Module):
             else:
                 raise ValueError("Unknown readout type")
 
+
+class Discriminator(nn.Module):
+    r"""The Discriminator for Generative Adversarial Networks (GANs).
+
+    Args:
+        ``in_channels`` (``int``): The number of input channels.
+        ``hid_channels`` (``int``): The number of hidden channels.
+        ``out_channels`` (``int``): The number of output channels.
+        ``drop_rate`` (``float``): Dropout ratio. Defaults to ``0.5``.
+    """
+
+    def __init__(self, in_channels: int, hid_channels: int, out_channels: int, drop_rate: float = 0.5):
+
+        super(Discriminator, self).__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(in_channels, hid_channels),
+            nn.LeakyReLU(),
+            nn.Dropout(p=drop_rate),
+            nn.Linear(hid_channels, out_channels),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, X):
+        """The forward function.
+        
+        Args:
+            ``X`` (``torch.Tensor``): The input tensor.
+        """
+        X = self.layers(X)
+        return X
