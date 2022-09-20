@@ -25,6 +25,7 @@ Models on Bipartite Graph
    dhg.models.NGCF
    dhg.models.LightGCN
    dhg.models.BGNN_Adv
+   dhg.models.BGNN_MLP
 
 
 Models on Hypergraph

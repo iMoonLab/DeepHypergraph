@@ -714,12 +714,12 @@ class BiGraph(BaseGraph):
                 P = self.B
             # message passing
             if aggr == "mean":
-                X = torch.sparse.mm(self.B, X)
+                X = torch.sparse.mm(P, X)
                 X = torch.sparse.mm(self.D_u_neg_1, X)
             elif aggr == "sum":
-                X = torch.sparse.mm(self.B, X)
+                X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.softmax(self.B, dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 pass
