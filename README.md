@@ -6,7 +6,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/dhg?color=purple)](https://pypi.org/project/dhg/)
 [![Website Build Status](https://github.com/yifanfeng97/dhg-page-source/actions/workflows/website.yml/badge.svg)](https://deephypergraph.com/)
 [![Documentation Status](https://readthedocs.org/projects/deephypergraph/badge/?version=latest)](https://deephypergraph.readthedocs.io/en/latest/?badge=latest)
-[![PyPI downloads](https://img.shields.io/pypi/dm/dhg.svg)](https://pypistats.org/packages/dhg)
+[![Downloads](https://pepy.tech/badge/dhg)](https://pepy.tech/project/dhg)
 [![Visits Badge](https://visitor-badge.glitch.me/badge?page_id=iMoonLab.DeepHypergraph)](https://visitor-badge.glitch.me/)
 [![license](https://img.shields.io/github/license/imoonlab/DeepHypergraph)](LICENSE)
 <!-- [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black) -->
