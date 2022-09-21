@@ -15,6 +15,8 @@ Transforms
 
 .. autofunction:: dhg.datapipe.norm_ft
 
+.. autofunction:: dhg.datapipe.min_max_scaler
+
 .. autofunction:: dhg.datapipe.to_tensor 
 
 .. autofunction:: dhg.datapipe.to_bool_tensor 

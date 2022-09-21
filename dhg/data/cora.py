@@ -79,7 +79,7 @@ class CoraBiGraph(BaseData):
     - ``num_v_vertices``: The number of vertices in set :math:`V` : :math:`789`.
     - ``num_edges``: The number of edges: :math:`2,314`.
     - ``dim_u_features``: The dimension of features in set :math:`U` : :math:`1,433`.
-    - ``dim_v_features``: The dimension of features: :math:`1,433`.
+    - ``dim_v_features``: The dimension of features in set :math:`V` : :math:`1,433`.
     - ``u_features``: The vertex feature matrix in set :math:`U`. ``torch.Tensor`` with size :math:`(1,312 \times 1,433)`.
     - ``v_features``: The vertex feature matrix in set :math:`V` . ``torch.Tensor`` with size :math:`(789 \times 1,433)`.
     - ``edge_list``: The edge list. ``List`` with length :math:`(2,314 \times 2)`.

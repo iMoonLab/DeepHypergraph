@@ -24,7 +24,7 @@ class TencentBiGraph(BaseData):
     - ``num_v_vertices``: The number of vertices in set :math:`V` : :math:`90,044`.
     - ``num_edges``: The number of edges: :math:`144,501`.
     - ``dim_u_features``: The dimension of features in set :math:`U` : :math:`8`.
-    - ``dim_v_features``: The dimension of features: :math:`16`.
+    - ``dim_v_features``: The dimension of features in set :math:`V` : :math:`16`.
     - ``u_features``: The vertex feature matrix in set :math:`U`. ``torch.Tensor`` with size :math:`(619,030 \times 8)`.
     - ``v_features``: The vertex feature matrix in set :math:`V` . ``torch.Tensor`` with size :math:`(90,044 \times 16)`.
     - ``edge_list``: The edge list. ``List`` with length :math:`(991,713 \times 2)`.

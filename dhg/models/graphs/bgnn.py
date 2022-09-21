@@ -42,10 +42,10 @@ class BGNN_Adv(nn.Module):
         for _idx in range(self.layer_depth):
             if _idx % 2 == 0:
                 _tmp = self.layers[_idx](last_X_v)
-                last_X_u = g.v2u(_tmp, aggr="sum")
+                last_X_u = torch.tanh(g.v2u(_tmp, aggr="sum"))
             else:
                 _tmp = self.layers[_idx](last_X_u)
-                last_X_v = g.u2v(_tmp, aggr="sum")
+                last_X_v = torch.tanh(g.u2v(_tmp, aggr="sum"))
         return last_X_u
 
     def train_one_layer(
@@ -63,36 +63,36 @@ class BGNN_Adv(nn.Module):
         netG = layer.to(device)
         netD = Discriminator(X_true.shape[1], 16, 1, drop_rate=drop_rate).to(device)
 
-        optimG = optim.Adam(netG.parameters(), lr=lr, weight_decay=weight_decay)
-        optimD = optim.Adam(netD.parameters(), lr=lr, weight_decay=weight_decay)
+        optimizer_G = optim.Adam(netG.parameters(), lr=lr, weight_decay=weight_decay)
+        optimizer_D = optim.Adam(netD.parameters(), lr=lr, weight_decay=weight_decay)
 
-        X_true, X_other = X_true.to(device), X_other.to(device)
-        lbl_real = torch.ones(X_true.shape[0]).to(device)
-        lbl_fake = torch.zeros(X_true.shape[0]).to(device)
+        X_true, X_other = X_true.detach().to(device), X_other.detach().to(device)
+        lbl_real = torch.ones(X_true.shape[0], 1, requires_grad=False).to(device)
+        lbl_fake = torch.zeros(X_true.shape[0], 1, requires_grad=False).to(device)
 
         netG.train(), netD.train()
         for _ in range(max_epoch):
             X_real = X_true
-            X_fake = mp_func(netG(X_other))
+            X_fake = torch.tanh(mp_func(netG(X_other)))
 
             # step 1: train Discriminator
-            optimD.zero_grad()
+            optimizer_D.zero_grad()
 
             pred_real = netD(X_real)
             pred_fake = netD(X_fake.detach())
 
-            lossD = F.binary_cross_entropy(pred_real, lbl_real) + F.binary_cross_entropy(pred_fake, lbl_fake)
-            lossD.backward()
-            optimD.step()
+            loss_D = F.binary_cross_entropy(pred_real, lbl_real) + F.binary_cross_entropy(pred_fake, lbl_fake)
+            loss_D.backward()
+            optimizer_D.step()
 
             # step 2: train Generator
-            optimG.zero_grad()
+            optimizer_G.zero_grad()
 
             pred_fake = netD(X_fake)
 
-            lossG = F.binary_cross_entropy(pred_fake, lbl_real)
-            lossG.backward()
-            optimG.step()
+            loss_G = F.binary_cross_entropy(pred_fake, lbl_real)
+            loss_G.backward()
+            optimizer_G.step()
 
     def train_with_cascaded(
         self,
@@ -117,7 +117,8 @@ class BGNN_Adv(nn.Module):
             ``drop_rate`` (``float``): The dropout rate. Default: ``0.5``.
             ``device`` (``str``): The device to use. Default: ``"cpu"``.
         """
-        last_X_u, last_X_v = X_u, X_v
+        self = self.to(device)
+        last_X_u, last_X_v = X_u.to(device), X_v.to(device)
         for _idx in range(self.layer_depth):
             if _idx % 2 == 0:
                 self.train_one_layer(
@@ -131,7 +132,8 @@ class BGNN_Adv(nn.Module):
                     drop_rate,
                     device,
                 )
-                last_X_u = g.v2u(self.layers[_idx](last_X_v), aggr="sum")
+                with torch.no_grad():
+                    last_X_u = torch.tanh(g.v2u(self.layers[_idx](last_X_v), aggr="sum"))
             else:
                 self.train_one_layer(
                     last_X_v,
@@ -144,7 +146,8 @@ class BGNN_Adv(nn.Module):
                     drop_rate,
                     device,
                 )
-                last_X_v = g.u2v(self.layers[_idx](last_X_u), aggr="sum")
+                with torch.no_grad():
+                    last_X_v = torch.tanh(g.u2v(self.layers[_idx](last_X_u), aggr="sum"))
         return last_X_u
 
 
@@ -155,10 +158,14 @@ class BGNN_MLP(nn.Module):
         ``u_dim`` (``int``): The dimension of the vertex feature in set :math:`U`.
         ``v_dim`` (``int``): The dimension of the vertex feature in set :math:`V`.
         ``hid_dim`` (``int``): The dimension of the hidden layer.
-        ``layer_depth`` (``int``): The depth of layers.
+        ``decoder_hid_dim`` (``int``): The dimension of the hidden layer in the decoder.
+        ``drop_rate`` (``float``): The dropout rate. Default: ``0.5``.
+        ``layer_depth`` (``int``): The depth of layers. Default: ``3``.
     """
 
-    def __init__(self, u_dim: int, v_dim: int, hid_dim: int, layer_depth: int = 3,) -> None:
+    def __init__(
+        self, u_dim: int, v_dim: int, hid_dim: int, decoder_hid_dim: int, drop_rate: float = 0.5, layer_depth: int = 3,
+    ) -> None:
 
         super().__init__()
         self.layer_depth = layer_depth
@@ -168,10 +175,10 @@ class BGNN_MLP(nn.Module):
         for _idx in range(layer_depth):
             if _idx % 2 == 0:
                 self.layers.append(nn.Linear(v_dim, hid_dim))
-                self.decoders.append(nn.Linear(hid_dim, u_dim))
+                self.decoders.append(Decoder(hid_dim, decoder_hid_dim, u_dim, drop_rate=drop_rate))
             else:
                 self.layers.append(nn.Linear(u_dim, hid_dim))
-                self.decoders.append(nn.Linear(hid_dim, v_dim))
+                self.decoders.append(Decoder(hid_dim, decoder_hid_dim, v_dim, drop_rate=drop_rate))
 
     def forward(self, X_u: torch.Tensor, X_v: torch.Tensor, g: BiGraph) -> Tuple[torch.Tensor, torch.Tensor]:
         r"""The forward function.
@@ -185,10 +192,10 @@ class BGNN_MLP(nn.Module):
         for _idx in range(self.layer_depth):
             if _idx % 2 == 0:
                 _tmp = self.layers[_idx](last_X_v)
-                last_X_u = g.v2u(_tmp, aggr="sum")
+                last_X_u = self.decoders[_idx](torch.tanh(g.v2u(_tmp, aggr="sum")))
             else:
                 _tmp = self.layers[_idx](last_X_u)
-                last_X_v = g.u2v(_tmp, aggr="sum")
+                last_X_v = self.decoders[_idx](torch.tanh(g.u2v(_tmp, aggr="sum")))
         return last_X_u
 
     def train_one_layer(
@@ -208,12 +215,12 @@ class BGNN_MLP(nn.Module):
 
         optimizer = optim.Adam([*netG.parameters(), *netD.parameters()], lr=lr, weight_decay=weight_decay)
 
-        X_true, X_other = X_true.to(device), X_other.to(device)
+        X_true, X_other = X_true.detach().to(device), X_other.detach().to(device)
 
         netG.train(), netD.train()
         for _ in range(max_epoch):
             X_real = X_true
-            X_fake = netD(mp_func(netG(X_other)))
+            X_fake = netD(torch.tanh(mp_func(netG(X_other))))
 
             optimizer.zero_grad()
             loss = F.mse_loss(X_fake, X_real)
@@ -241,7 +248,8 @@ class BGNN_MLP(nn.Module):
             ``max_epoch`` (``int``): The maximum number of epochs.
             ``device`` (``str``): The device to use. Default: ``"cpu"``.
         """
-        last_X_u, last_X_v = X_u, X_v
+        self = self.to(device)
+        last_X_u, last_X_v = X_u.to(device), X_v.to(device)
         for _idx in range(self.layer_depth):
             if _idx % 2 == 0:
                 self.train_one_layer(
@@ -249,34 +257,40 @@ class BGNN_MLP(nn.Module):
                     last_X_v,
                     lambda x: g.v2u(x, aggr="sum"),
                     self.layers[_idx],
+                    self.decoders[_idx],
                     lr,
                     weight_decay,
                     max_epoch,
                     device,
                 )
-                last_X_u = g.v2u(self.layers[_idx](last_X_v), aggr="sum")
+                with torch.no_grad():
+                    self.decoders[_idx].eval()
+                    last_X_u = self.decoders[_idx](torch.tanh(g.v2u(self.layers[_idx](last_X_v), aggr="sum")))
             else:
                 self.train_one_layer(
                     last_X_v,
                     last_X_u,
                     lambda x: g.u2v(x, aggr="sum"),
                     self.layers[_idx],
+                    self.decoders[_idx],
                     lr,
                     weight_decay,
                     max_epoch,
                     device,
                 )
-                last_X_v = g.u2v(self.layers[_idx](last_X_u), aggr="sum")
+                with torch.no_grad():
+                    self.decoders[_idx].eval()
+                    last_X_v = self.decoders[_idx](torch.tanh(g.u2v(self.layers[_idx](last_X_u), aggr="sum")))
         return last_X_u
 
 
 class Decoder(nn.Module):
     def __init__(self, in_channels: int, hid_channels: int, out_channels: int, drop_rate: float = 0.5):
-        super(Decoder, self).__init__()
+        super().__init__()
         self.layers = nn.Sequential(
             nn.Linear(in_channels, hid_channels),
             nn.ReLU(),
-            nn.Dropout(p=drop_rate, inplace=True),
+            nn.Dropout(p=drop_rate),
             nn.Linear(hid_channels, out_channels),
             nn.Tanh(),
         )

@@ -77,7 +77,7 @@ class CiteseerBiGraph(BaseData):
     - ``num_v_vertices``: The number of vertices in set :math:`V` : :math:`742`.
     - ``num_edges``: The number of edges: :math:`1,665`.
     - ``dim_u_features``: The dimension of features in set :math:`U` : :math:`3,703`.
-    - ``dim_v_features``: The dimension of features: :math:`3,703`.
+    - ``dim_v_features``: The dimension of features in set :math:`V` : :math:`3,703`.
     - ``u_features``: The vertex feature matrix in set :math:`U`. ``torch.Tensor`` with size :math:`(1,237 \times 3,703)`.
     - ``v_features``: The vertex feature matrix in set :math:`V` . ``torch.Tensor`` with size :math:`(742 \times 3,703)`.
     - ``edge_list``: The edge list. ``List`` with length :math:`(1,665 \times 2)`.

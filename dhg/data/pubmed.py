@@ -77,7 +77,7 @@ class PubmedBiGraph(BaseData):
     - ``num_v_vertices``: The number of vertices in set :math:`V` : :math:`3,435`.
     - ``num_edges``: The number of edges: :math:`18,782`.
     - ``dim_u_features``: The dimension of features in set :math:`U` : :math:`400`.
-    - ``dim_v_features``: The dimension of features: :math:`500`.
+    - ``dim_v_features``: The dimension of features in set :math:`V` : :math:`500`.
     - ``u_features``: The vertex feature matrix in set :math:`U`. ``torch.Tensor`` with size :math:`(13,424 \times 400)`.
     - ``v_features``: The vertex feature matrix in set :math:`V` . ``torch.Tensor`` with size :math:`(3,435 \times 500)`.
     - ``edge_list``: The edge list. ``List`` with length :math:`(2,314 \times 2)`.
