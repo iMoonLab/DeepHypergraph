@@ -7,6 +7,7 @@ from .hypergraphs.hypergraph import (
     uniform_hypergraph_Gnm,
     hypergraph_Gnm,
 )
+from .feature import normal_features
 
 __all__ = [
     "seed",
@@ -22,4 +23,5 @@ __all__ = [
     "uniform_hypergraph_Gnp",
     "uniform_hypergraph_Gnm",
     "hypergraph_Gnm",
+    "normal_features",
 ]

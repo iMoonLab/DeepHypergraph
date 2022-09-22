@@ -14,8 +14,8 @@ class BaseData:
         self._content = {
             'item': {
                 'upon': [
-                    {'filename': 'part1.pkl', 'md5': '', bk_url: None},
-                    {'filename': 'part2.pkl', 'md5': '', bk_url: None},
+                    {'filename': 'part1.pkl', 'md5': 'xxxxx',},
+                    {'filename': 'part2.pkl', 'md5': 'xxxxx',},
                 ],
                 'loader': loader_function,
                 'preprocess': [datapipe1, datapipe2],
@@ -38,7 +38,11 @@ class BaseData:
         self._raw = {}
 
     def __repr__(self) -> str:
-        return f"{self.name} dataset:\n" + "\n".join(f"  ->  {k}" for k in self.content)
+        return (
+            f"This is {self.name} dataset:\n"
+            + "\n".join(f"  ->  {k}" for k in self.content)
+            + "\nPlease try `data['name']` to get the specified data."
+        )
 
     @property
     def content(self):
@@ -85,9 +89,7 @@ class BaseData:
                 if len(upon) == 0:
                     return None
                 self.fetch_files(cur_cfg["upon"])
-                file_path_list = [
-                    self.data_root / u["filename"] for u in cur_cfg["upon"]
-                ]
+                file_path_list = [self.data_root / u["filename"] for u in cur_cfg["upon"]]
                 if len(file_path_list) == 1:
                     self._raw[key] = cur_cfg["loader"](file_path_list[0])
                 else:

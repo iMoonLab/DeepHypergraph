@@ -1,9 +1,12 @@
 from .base import BaseData
 from .cooking_200 import Cooking200
 from .movielens import MovieLens1M
-from .yelp import Yelp2018
+from .yelp import Yelp2018, YelpRestaurant
 from .gowalla import Gowalla
 from .amazon import AmazonBook
+from .walmart import WalmartTrips
+from .white_house import HouseCommittees
+from .news import News20
 from .coauthorship import CoauthorshipCora, CoauthorshipDBLP
 from .cocitation import CocitationCora, CocitationCiteseer, CocitationPubmed
 from .blogcatalog import BlogCatalog
@@ -38,4 +41,8 @@ __all__ = [
     "CocitationCora",
     "CocitationCiteseer",
     "CocitationPubmed",
+    "YelpRestaurant",
+    "WalmartTrips",
+    "HouseCommittees",
+    "News20",
 ]

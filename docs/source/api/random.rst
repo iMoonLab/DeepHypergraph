@@ -8,8 +8,12 @@ Random Seed
 
 .. autofunction:: dhg.random.set_seed
 
+Generating Features
+-------------------
 
-Generate Graph
+.. autofunction:: dhg.random.normal_features
+
+Generating Graph
 ---------------------------------
 
 .. autofunction:: dhg.random.graph_Gnp 
@@ -19,7 +23,7 @@ Generate Graph
 .. autofunction:: dhg.random.graph_Gnm 
 
 
-Generate Directed Graph
+Generating Directed Graph
 ---------------------------------
 
 .. autofunction:: dhg.random.digraph_Gnp 
@@ -29,7 +33,7 @@ Generate Directed Graph
 .. autofunction:: dhg.random.digraph_Gnm 
 
 
-Generate Bipartite Graph
+Generating Bipartite Graph
 ---------------------------------
 
 .. autofunction:: dhg.random.bigraph_Gnp 
@@ -37,7 +41,7 @@ Generate Bipartite Graph
 .. autofunction:: dhg.random.bigraph_Gnm 
 
 
-Generate Hypergraph
+Generating Hypergraph
 ------------------------------------
 
 .. autofunction:: dhg.random.uniform_hypergraph_Gnp 

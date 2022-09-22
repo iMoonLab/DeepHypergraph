@@ -57,6 +57,10 @@ Hypergraph Datasets
     dhg.data.CocitationCora
     dhg.data.CocitationCiteseer
     dhg.data.CocitationPubmed
+    dhg.data.YelpRestaurant
+    dhg.data.WalmartTrips
+    dhg.data.HouseCommittees
+    dhg.data.News20
 
 
 **Welcome to contribute datasets!**
