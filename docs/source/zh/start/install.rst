@@ -10,8 +10,21 @@
 - Python >= 3.8
 - Pytorch >=1.11
 
-您可以使用 ``pip`` 指令直接安装 **DHG** 包：
+
+目前， **DHG** 的最新稳定版本 **0.9.1** 已经发布，可以使用 ``pip`` 指令直接安装：
 
 .. code-block:: bash
 
     pip install dhg
+
+如果您想尝试最新的日构建版本(nightly version) **0.9.2** ，可以使用以下指令安装：
+
+.. code-block:: bash
+
+    pip install git+https://github.com/iMoonLab/DeepHypergraph.git
+
+.. note:: 
+    
+    Nightly version 通常会比稳定版本更新，因为它包含了最新的功能和SOTA方法、数据集。但是，nightly version 也可能会有一些bug，因此不建议在生产环境中使用。
+    如果您发现了bug，请在 `GitHub <https://github.com/iMoonLab/DeepHypergraph/issues>`_ 上提交issue。
+    

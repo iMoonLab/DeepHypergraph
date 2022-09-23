@@ -10,10 +10,12 @@ Basic Usages
 ---------------
 DHG provides an interface to visualize the distribution of feaures:
 
-1. Load data of features and lable by specifying the corresponding path;
-2. Specify parameters (*i.e.*, `the dimensionality of the visualisation`, `the storage path` and `the method of dimensionality reduction`);
-3. Call our funtion to show or save the figure . 
+1. Input the features and lable (optional);
+2. Specify parameters (*i.e.*, `the dimensionality of the visualisation`, `point size`, `color` and `the method of dimensionality reduction`);
+3. Call ``plt.show()`` funtion to show the figure/animation. 
 
+   
+.. note:: The ``plt`` is short for ``matplotlib.pyplot`` module.
 
 
 Visualization of Features in Euclidean Space
@@ -27,6 +29,16 @@ Visualization of Features in Euclidean Space
 
 .. code-block:: python
 
+    >>> import dhg
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> import dhg.visualization as vis
+    >>> lbl = (np.random.rand(200)*10).astype(int)
+    >>> ft = dhg.random.normal_features(lbl)
+    >>> vis.draw_in_euclidean_space(ft, lbl)
+    >>> plt.show()
+
+..
     >>> import numpy as np
     >>> from dhg.visualization.feature import draw_in_euclidean_space
     >>> ile_dir = "data/modelnet40/test_img_feat_4.npy"
@@ -51,6 +63,16 @@ Visualization of Features in Poincare Space
 
 .. code-block:: python
 
+    >>> import dhg
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> import dhg.visualization as vis
+    >>> lbl = (np.random.rand(200)*10).astype(int)
+    >>> ft = dhg.random.normal_features(lbl)
+    >>> vis.draw_in_poincare_space(ft, lbl)
+    >>> plt.show()
+
+..
     >>> import numpy as np
     >>> from dhg.visualization.feature import draw_in_poincare_space
     >>> file_dir = "data/modelnet40/test_img_feat_4.npy" #This varies depending on the situation
@@ -68,20 +90,29 @@ Visualization of Features in Poincare Space
 Make Animation
 -------------------------
 
-Furthermore, we also offer interfaces for the visual presentation of 
-rotation on three-dimensional visualisations with the option of `Rotation` in Euclidean and Poincare Space. 
+We provide functions to make 3D rotation animation for feature visualization.
 
 Rotating Visualization of Features in Euclidean Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. .. image:: ../_static/img/vis_ft_euclidean.png
-..     :align: center
-..     :alt: Rotating Visualization of Features in Euclidean Space
-..     :height: 400px
+.. image:: ../_static/img/vis_ft_euclidean_ani.png
+    :align: center
+    :alt: Rotating Visualization of Features in Euclidean Space
+    :height: 400px
 
 
 .. code-block:: python
 
+    >>> import dhg
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> import dhg.visualization as vis
+    >>> lbl = (np.random.rand(200)*10).astype(int)
+    >>> ft = dhg.random.normal_features(lbl)
+    >>> vis.animation_of_3d_euclidean_space(ft, lbl)
+    >>> plt.show()
+
+.. 
     >>> import numpy as np
     >>> from dhg.visualization.feature import animation_of_3d_euclidean_ball
     >>> ile_dir = "data/modelnet40/test_img_feat_4.npy"
@@ -98,14 +129,24 @@ Rotating Visualization of Features in Euclidean Space
 Rotating Visualization of Features in Poincare Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. .. image:: ../_static/img/vis_ft_euclidean.png
-..     :align: center
-..     :alt: Rotating Visualization of Features in Poincare Space
-..     :height: 400px
+.. image:: ../_static/img/vis_ft_poincare_ani.png
+    :align: center
+    :alt: Rotating Visualization of Features in Poincare Space
+    :height: 400px
 
 
 .. code-block:: python
 
+    >>> import dhg
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> import dhg.visualization as vis
+    >>> lbl = (np.random.rand(200)*10).astype(int)
+    >>> ft = dhg.random.normal_features(lbl)
+    >>> vis.animation_of_3d_poincare_ball(ft, lbl)
+    >>> plt.show()
+
+..
     >>> import numpy as np
     >>> from dhg.visualization.feature import animation_of_3d_poincare_ball
     >>> file_dir = "data/modelnet40/test_img_feat_4.npy" #This varies depending on the situation
