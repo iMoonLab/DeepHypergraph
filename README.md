@@ -86,6 +86,46 @@ If you find any bugs, please report it to us in [GitHub Issues](https://github.c
 
 ## Quick Start
 
+### Visualization
+
+You can draw the graph, hypergraph, directed graph, and bipartite graph with DHG's visualization tool. More details see the [Tutorial](https://deephypergraph.readthedocs.io/en/latest/tutorial/vis_structure.html)
+
+<center>
+<img src="docs/source/_static/img/vis_graph.png" height="300">
+<img src="docs/source/_static/img/vis_hypergraph.png" height="300">
+</center>
+
+```python
+import matplotlib.pyplot as plt
+import dhg
+# draw a graph
+g = dhg.random.graph_Gnm(10, 12)
+g.draw()
+# draw a hypergraph
+hg = dhg.random.hypergraph_Gnm(10, 8)
+hg.draw()
+# show figures
+plt.show()
+```
+
+<center>
+<img src="docs/source/_static/img/vis_digraph.png" height="300">
+<img src="docs/source/_static/img/vis_bigraph.png" height="300">
+</center>
+
+```python
+import matplotlib.pyplot as plt
+import dhg
+# draw a directed graph
+g = dhg.random.digraph_Gnm(12, 18)
+g.draw()
+# draw a bipartite graph
+g = dhg.random.bigraph_Gnm(30, 40, 20)
+g.draw()
+# show figures
+plt.show()
+```
+
 ### Learning on Low-Order Structures
 
 On graph structures, you can smooth a given vertex features with GCN's Laplacian matrix by:
