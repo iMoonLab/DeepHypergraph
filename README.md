@@ -90,11 +90,10 @@ If you find any bugs, please report it to us in [GitHub Issues](https://github.c
 
 You can draw the graph, hypergraph, directed graph, and bipartite graph with DHG's visualization tool. More details see the [Tutorial](https://deephypergraph.readthedocs.io/en/latest/tutorial/vis_structure.html)
 
-<!-- <center>
-<img src="docs/source/_static/img/vis_graph.png" width="300"><img src="docs/source/_static/img/vis_hypergraph.png" width="300">
-</center> -->
+<center class="half">
+<img src="docs/source/_static/img/vis_graph.png" width="40%"/><img src="docs/source/_static/img/vis_hypergraph.png" width="40%"/>
+</center>
 
-![graph visualization](docs/source/_static/img/vis_graph.png)![hypergraph visualization](docs/source/_static/img/vis_hypergraph.png)
 
 ```python
 import matplotlib.pyplot as plt
@@ -110,7 +109,7 @@ plt.show()
 ```
 
 <center>
-<img src="docs/source/_static/img/vis_digraph.png" width="300"><img src="docs/source/_static/img/vis_bigraph.png" width="300">
+<img src="docs/source/_static/img/vis_digraph.png" width="300"/><img src="docs/source/_static/img/vis_bigraph.png" width="300"/>
 </center>
 
 ```python
