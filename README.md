@@ -15,14 +15,12 @@
 
 **[Website](https://deephypergraph.com/)** | **[Documentation](https://deephypergraph.readthedocs.io/)** | **[Tutorials](https://deephypergraph.readthedocs.io/en/latest/tutorial/overview.html)** | **[中文文档](https://deephypergraph.readthedocs.io/en/latest/zh/overview.html)** | **[Official Examples](https://deephypergraph.readthedocs.io/en/latest/examples/vertex_cls/index.html)** | **[Discussions](https://github.com/iMoonLab/DeepHypergraph/discussions)**
 
-<p align="center">
-The v0.9.2 will be released soon, which will include many structure visualizations!<br>
-我们很快将发布v0.9.2版本，其中包含了各种关联结构的可视化！
-</p>
 
 ## News
-- 2022-08-25 -> DHG's first version v0.9.1 is now available! 
-- 2022-08-25 -> DHG的第一个版本 v0.9.1 正式发布！
+- 2022-09-25 -> **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
+- 2022-09-25 -> **v0.9.2** 正式发布！ 包含更多数据集、最新模型和可视化功能！
+- 2022-08-25 -> DHG's first version **v0.9.1** is now available! 
+- 2022-08-25 -> DHG的第一个版本 **v0.9.1** 正式发布！
 
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
@@ -71,13 +69,13 @@ The Optuna library endows DHG with the Auto-ML ability. DHG supports automatical
 ## Installation
 
 
-Current, the stable version of **DHG** is 0.9.1. You can install it with ``pip`` as follows:
+Current, the stable version of **DHG** is 0.9.2. You can install it with ``pip`` as follows:
 
 ```python
 pip install dhg
 ```
 
-You can also try the nightly version (0.9.2) of **DHG** library with ``pip`` as follows:
+You can also try the nightly version (0.9.3) of **DHG** library with ``pip`` as follows:
 
 ```python
 pip install git+https://github.com/iMoonLab/DeepHypergraph.git
@@ -269,7 +267,13 @@ Currently, we have added the following datasets:
 
 - **[Citeseer](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Citeseer.html#dhg.data.Citeseer)**: A citation network dataset for vertex classification task.
 
-- **[Cooking200](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Cooking200.html#dhg.data.Cooking200)**: A cooking recipe dataset for vertex classification task.
+- **[BlogCatalog](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.BlogCatalog.html#dhg.data.BlogCatalog)**: A social network dataset for vertex classification task.
+
+- **[Flickr](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Flickr.html#dhg.data.Flickr)**: A social network dataset for vertex classification task.
+
+- **[Github](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Github.html#dhg.data.Github)**: A collaboration network dataset for vertex classification task.
+
+- **[Facebook](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Facebook.html#dhg.data.Facebook)**: A social network dataset for vertex classification task.
 
 - **[MovieLens1M](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.MovieLens1M.html#dhg.data.MovieLens1M)**: A movie dataset for user-item recommendation task.
 
@@ -278,6 +282,34 @@ Currently, we have added the following datasets:
 - **[Yelp2018](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Yelp2018.html#dhg.data.Yelp2018)**: A restaurant review dataset for user-item recommendation task.
 
 - **[Gowalla](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Gowalla.html#dhg.data.Gowalla)**: A location's feedback dataset for user-item recommendation task.
+
+- **[TecentBiGraph](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.TencentBiGraph.html#dhg.data.TencentBiGraph)**: A social network dataset for vertex classification task.
+
+- **[CoraBiGraph](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CoraBiGraph.html#dhg.data.CoraBiGraph)**: A citation network dataset for vertex classification task.
+
+- **[PubmedBiGraph](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.PubmedBiGraph.html#dhg.data.PubmedBiGraph)**: A citation network dataset for vertex classification task.
+
+- **[CiteseerBiGraph](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CiteseerBiGraph.html#dhg.data.CiteseerBiGraph)**: A citation network dataset for vertex classification task.
+
+- **[Cooking200](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Cooking200.html#dhg.data.Cooking200)**: A cooking recipe dataset for vertex classification task.
+
+- **[CoauthorshipCora](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CoauthorshipCora.html#dhg.data.CoauthorshipCora)**: A citation network dataset for vertex classification task.
+
+- **[CoauthorshipDBLP](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CoauthorshipDBLP.html#dhg.data.CoauthorshipDBLP)**: A citation network dataset for vertex classification task.
+
+- **[CocitationCora](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationCora.html#dhg.data.CocitationCora)**: A citation network dataset for vertex classification task.
+
+- **[CocitationPubmed](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationCiteseer.html#dhg.data.CocitationCiteseer)**: A citation network dataset for vertex classification task.
+
+- **[CocitationCiteseer](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationPubmed.html#dhg.data.CocitationPubmed)**: A citation network dataset for vertex classification task.
+
+- **[YelpRestaurant](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.YelpRestaurant.html#dhg.data.YelpRestaurant)**: A restaurant-review network dataset for vertex classification task.
+
+- **[WalmartTrips](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.WalmartTrips.html#dhg.data.WalmartTrips)**: A user-product network dataset for vertex classification task.
+
+- **[HouseCommittees](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.HouseCommittees.html#dhg.data.HouseCommittees)**: A committee network dataset for vertex classification task.
+
+- **[News20](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.News20.html#dhg.data.News20)**: A newspaper network dataset for vertex classification task.
 
 ## Metrics
 
@@ -327,6 +359,10 @@ Currently, we have added the following datasets:
 
 - **[LightGCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.LightGCN.html#dhg.models.LightGCN)** model of [LightGCN: Lightweight Graph Convolutional Networks](https://arxiv.org/pdf/2002.02126) paper (SIGIR 2020).
 
+- **[BGNN-Adv](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.BGNN_Adv.html#dhg.models.BGNN_Adv)** model of [Cascade-BGNN: Toward Efficient Self-supervised Representation Learning on Large-scale Bipartite Graphs](https://arxiv.org/pdf/1906.11994.pdf) paper (TNNLS 2020).
+
+- **[BGNN-MLP](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.BGNN_MLP.html#dhg.models.BGNN_MLP)** model of [Cascade-BGNN: Toward Efficient Self-supervised Representation Learning on Large-scale Bipartite Graphs](https://arxiv.org/pdf/1906.11994.pdf) paper (TNNLS 2020).
+
 
 ### On High-Order Structures
 
@@ -336,9 +372,17 @@ Currently, we have added the following datasets:
 
 - **[HyperGCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HyperGCN.html#dhg.models.HyperGCN)** model of [HyperGCN: A New Method of Training Graph Convolutional Networks on Hypergraphs](https://papers.nips.cc/paper/2019/file/1efa39bcaec6f3900149160693694536-Paper.pdf) paper (NeurIPS 2019).
 
+- **[DHCF](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.DHCF.html#dhg.models.DHCF)** model of [Dual Channel Hypergraph Collaborative Filtering](https://dl.acm.org/doi/10.1145/3394486.3403253) paper (KDD 2020).
+
 - **[HNHN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.HNHN.html#dhg.models.HNHN)** model of [HNHN: Hypergraph Networks with Hyperedge Neurons](https://arxiv.org/pdf/2006.12278.pdf) paper (ICML 2020).
 
-- **[DHCF](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.DHCF.html#dhg.models.DHCF)** model of [Dual Channel Hypergraph Collaborative Filtering](https://dl.acm.org/doi/10.1145/3394486.3403253) paper (KDD 2020).
+- **[UniGCN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.UniGCN.html#dhg.models.UniGCN)** model of [UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks](https://arxiv.org/pdf/2105.00956.pdf) paper (IJCAI 2021).
+
+- **[UniGAT](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.UniGAT.html#dhg.models.UniGAT)** model of [UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks](https://arxiv.org/pdf/2105.00956.pdf) paper (IJCAI 2021).
+
+- **[UniSAGE](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.UniSAGE.html#dhg.models.UniSAGE)** model of [UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks](https://arxiv.org/pdf/2105.00956.pdf) paper (IJCAI 2021).
+
+- **[UniGIN](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.models.UniGIN.html#dhg.models.UniGIN)** model of [UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks](https://arxiv.org/pdf/2105.00956.pdf) paper (IJCAI 2021).
 
 
 

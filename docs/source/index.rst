@@ -12,12 +12,6 @@ DHG Overview
    \part{English}
    \chapter{DHG Overview}
 
-.. only:: not latex
-
-   .. attention:: 
-
-      We are rushing the documentation and tutorials, which will be updated twice a day!
-
 
 **DHG** (*DeepHypergraph*) is a deep learning library built upon `PyTorch <https://pytorch.org/>`_ for learning with both Graph Neural Networks and Hypergraph Neural Networks. 
 It is a general framework that supports both low-order and high-order message passing like 
@@ -35,7 +29,8 @@ can help you automatically tune the hyper-parameters of your models in training 
 
 **News**
 
-- *2022-08-25*  ->  The **v0.9.1 release** is now available!
+- 2022-09-25 -> The **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
+- 2022-08-25 -> The **v0.9.1** is now available!
 
 **Citing**
 
