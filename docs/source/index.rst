@@ -101,7 +101,7 @@ If you find our library useful for your research, please cite our papers:
    tutorial/vis_structure
    tutorial/vis_feature
 
-.. decomment for latex
+   .. decomment for latex
 
    .. toctree:: 
       :maxdepth: 3

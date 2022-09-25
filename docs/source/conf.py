@@ -221,8 +221,8 @@ latex_elements = {
         \clearpage
         \pagenumbering{roman}
         \tableofcontents
-        \listoffigures
-        \listoftables
+        %\listoffigures
+        %\listoftables
         \clearpage
         \pagenumbering{arabic}
 
@@ -237,7 +237,7 @@ latex_elements = {
 }
 latex_logo = "_static/logo.png"
 latex_documents = [("index", "dhg_manual.tex", "Manual of DeepHypergraph", "iMoonLab", "manual")]
-
+# numfig = True
 
 def setup(app):
     app.add_css_file("css/dhg.css")
