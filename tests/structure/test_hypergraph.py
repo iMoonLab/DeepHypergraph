@@ -4,7 +4,7 @@ import pytest
 import numpy as np
 import scipy.spatial
 from dhg import Graph, BiGraph, Hypergraph
-from dhg.random import graph_Gnm
+from dhg.random import graph_Gnm, bigraph_Gnm
 
 # from dhg.random.hypergraph import hypergraph_Gnm
 
@@ -24,11 +24,16 @@ def g2():
     return g
 
 
-def test_save():
+def test_save(g1, tmp_path):
     from dhg import load_structure
 
-    # TODO
-    pass
+    g1.save(tmp_path / "g1")
+    g2 = load_structure(tmp_path / "g1")
+
+    for e1, e2 in zip(g1.e[0], g2.e[0]):
+        assert e1 == e2
+    for w1, w2 in zip(g1.e[1], g2.e[1]):
+        assert w1 == w2
 
 
 # test construction
@@ -212,9 +217,24 @@ def test_add_hyperedges_from_graph_kHop(g1):
 
 
 def test_add_hyperedges_from_bigraph():
-    # TODO
-    pass
+    g = BiGraph(3, 4, [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 2], [3, 2]])
+    h = Hypergraph(6)
+    h.add_hyperedges_from_bigraph(g, group_name="bigraph")
+    assert h.num_e == 4
+    assert (0, 1, 2, 3) in h.e_of_group("bigraph")[0]
+    assert (0, 1) in h.e_of_group("bigraph")[0]
+    assert (2, 3) in h.e_of_group("bigraph")[0]
 
+    h.add_hyperedges_from_bigraph(g, group_name="bigraph-u", U_as_vertex=True)
+    assert h.num_e == 4
+    assert (0, 1, 2, 3) in h.e_of_group("bigraph-u")[0]
+    assert (0, 1) in h.e_of_group("bigraph-u")[0]
+    assert (2, 3) in h.e_of_group("bigraph-u")[0]
+
+    h.add_hyperedges_from_bigraph(g, group_name="bigraph-v", U_as_vertex=False)
+    assert h.num_e == 3
+    assert (0, 1) in h.e_of_group("bigraph-v")[0]
+    assert (0, 2) in h.e_of_group("bigraph-v")[0]
 
 def test_remove_hyperedges(g1):
     assert g1.e[0] == [(0, 1, 2, 5), (0, 1), (2, 3, 4)]
@@ -553,28 +573,84 @@ def test_L_HGNN_group(g1):
 
 
 def test_smoothing():
-    # TODO
-    pass
+    x = torch.rand(10, 5)
+    L = torch.rand(10, 10)
+    g = Hypergraph(10)
+    lbd = 0.1
+    assert pytest.approx(g.smoothing(x, L, lbd)) == x + lbd * L @ x
+
 
 
 def test_L_sym(g1):
-    # TODO
-    pass
+    H = g1.H.to_dense().cpu()
+    D_v_neg_1_2 = torch.diag(H.sum(dim=1).view(-1) ** (-0.5))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e.to_dense()
+    L_sym = torch.eye(H.shape[0]) -  D_v_neg_1_2 @ H @ W_e @ D_e_neg_1 @ H.t() @ D_v_neg_1_2
+    assert (L_sym == g1.L_sym.to_dense().cpu()).all()
 
 
 def test_L_sym_group(g1):
-    # TODO
-    pass
+    g1.add_hyperedges([[0, 1]], group_name="knn")
+    # all
+    H = g1.H.to_dense().cpu()
+    D_v_neg_1_2 = torch.diag(H.sum(dim=1).view(-1) ** (-0.5))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e.to_dense()
+    L_sym = torch.eye(H.shape[0]) -  D_v_neg_1_2 @ H @ W_e @ D_e_neg_1 @ H.t() @ D_v_neg_1_2
+    assert (L_sym == g1.L_sym.to_dense().cpu()).all()
+    # main group
+    H = g1.H_of_group("main").to_dense().cpu()
+    D_v_neg_1_2 = torch.diag(H.sum(dim=1).view(-1) ** (-0.5))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e_of_group("main").to_dense()
+    L_sym = torch.eye(H.shape[0]) -  D_v_neg_1_2 @ H @ W_e @ D_e_neg_1 @ H.t() @ D_v_neg_1_2
+    assert (L_sym == g1.L_sym_of_group('main').to_dense().cpu()).all()
+    # knn group
+    H = g1.H_of_group("knn").to_dense().cpu()
+    D_v_neg_1_2 = H.sum(dim=1).view(-1) ** (-0.5)
+    D_v_neg_1_2[torch.isinf(D_v_neg_1_2)] = 0
+    D_v_neg_1_2 = torch.diag(D_v_neg_1_2)
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e_of_group("knn").to_dense()
+    L_sym = torch.eye(H.shape[0]) -  D_v_neg_1_2 @ H @ W_e @ D_e_neg_1 @ H.t() @ D_v_neg_1_2
+    assert (L_sym == g1.L_sym_of_group('knn').to_dense().cpu()).all()
 
 
 def test_L_rw(g1):
-    # TODO
-    pass
+    H = g1.H.to_dense().cpu()
+    D_v_neg_1 = torch.diag(H.sum(dim=1).view(-1) ** (-1))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e.to_dense()
+    L_rw = torch.eye(H.shape[0]) -  D_v_neg_1 @ H @ W_e @ D_e_neg_1 @ H.t()
+    assert (L_rw == g1.L_rw.to_dense().cpu()).all()
 
 
 def test_L_rw_group(g1):
-    # TODO
-    pass
+    g1.add_hyperedges([[0, 1]], group_name="knn")
+    # all
+    H = g1.H.to_dense().cpu()
+    D_v_neg_1 = torch.diag(H.sum(dim=1).view(-1) ** (-1))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e.to_dense()
+    L_rw = torch.eye(H.shape[0]) -  D_v_neg_1 @ H @ W_e @ D_e_neg_1 @ H.t()
+    assert (L_rw == g1.L_rw.to_dense().cpu()).all()
+    # main group
+    H = g1.H_of_group("main").to_dense().cpu()
+    D_v_neg_1 = torch.diag(H.sum(dim=1).view(-1) ** (-1))
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e_of_group("main").to_dense()
+    L_rw = torch.eye(H.shape[0]) -  D_v_neg_1 @ H @ W_e @ D_e_neg_1 @ H.t()
+    assert (L_rw == g1.L_rw_of_group('main').to_dense().cpu()).all()
+    # knn group
+    H = g1.H_of_group("knn").to_dense().cpu()
+    D_v_neg_1 = H.sum(dim=1).view(-1) ** (-1)
+    D_v_neg_1[torch.isinf(D_v_neg_1)] = 0
+    D_v_neg_1 = torch.diag(D_v_neg_1)
+    D_e_neg_1 = torch.diag(H.sum(dim=0).view(-1) ** (-1))
+    W_e = g1.W_e_of_group("knn").to_dense()
+    L_rw = torch.eye(H.shape[0]) -  D_v_neg_1 @ H @ W_e @ D_e_neg_1 @ H.t()
+    assert (L_rw == g1.L_rw_of_group('knn').to_dense().cpu()).all()
 
 
 def test_smoothing_with_HGNN(g1):
@@ -679,4 +755,3 @@ def test_graph_and_hypergraph():
     _mm = torch.sparse.mm
     est_A = _mm(_mm(g.D_v_neg_1_2, g.A), g.D_v_neg_1_2) + torch.eye(4).to_sparse()
     assert pytest.approx(est_A.to_dense() / 2) == hg.L_HGNN.to_dense()
-

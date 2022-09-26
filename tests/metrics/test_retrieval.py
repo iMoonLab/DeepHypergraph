@@ -1,11 +1,9 @@
 import pytest
 
+import numpy as np
+from sklearn.metrics import average_precision_score, ndcg_score
 import torch
 import dhg.metrics.retrieval as dm
-
-
-def test_precision():
-    pass
 
 
 def test_recall():
@@ -57,12 +55,30 @@ def test_ap():
 
 
 def test_map():
-    # TODO
-    pass
+    y_true = torch.tensor([
+        [True, False, True, False, True],
+        [False, False, False, True, True],
+        [True, True, False, True, False],
+        [False, True, True, False, True],
+    ])
+    y_pred = torch.tensor([
+        [0.2, 0.8, 0.5, 0.4, 0.3],
+        [0.8, 0.2, 0.3, 0.9, 0.4],
+        [0.2, 0.4, 0.5, 0.9, 0.8],
+        [0.8, 0.2, 0.9, 0.3, 0.7],
+    ])
+    ap = []
+    for i in range(y_true.shape[0]):
+        ap.append(average_precision_score(y_true[i], y_pred[i]))
+    map = np.mean(ap)
+    assert dm.map(y_true, y_pred, method='legacy') == pytest.approx(map)
+
 
 
 def test_ndcg():
-    # TODO
+    y_true = torch.tensor([0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1])
+    y_pred = torch.tensor([0.23, 0.76, 0.01, 0.91, 0.13, 0.45, 0.12, 0.03, 0.38, 0.11, 0.03, 0.09, 0.65, 0.07, 0.12, 0.24, 0.10, 0.23, 0.46, 0.08])
+    assert dm.ndcg(y_true, y_pred, k=5) == pytest.approx(ndcg_score(y_true.reshape(1, -1), y_pred.reshape(1, -1), k=5))
     pass
 
 
