@@ -154,7 +154,7 @@ All of the sizes above represent the relative size, and the default values are `
 
 Customize Layout
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-The layout of the structures is based on the modified directed-force layout algorithm. There are four forces to determine the position of the nodes, *i.e.*, node attraction force :math: `f_{na}`, node repulsion force :math: `f_{nr}`, edge repulsion force :math: `f_{er}`, and the center force :math: `f_c`. :math: `f_{na}` is the spring force which attracts the adjacent nodes. :math: `f_{nr}` is used to repel the nodes from each other. :math: `f_{er}` is used to repel the hyperedges from each other, which only make sense for hypergraph visualization. :math: `f_c` is used to attract the nodes to the center (two centers for the bipartite graphs).
+The layout of the structures is based on the modified directed-force layout algorithm. There are four forces to determine the position of the nodes, *i.e.*, node attraction force :math:`f_{na}`, node repulsion force :math:`f_{nr}`, edge repulsion force :math:`f_{er}`, and the center force :math:`f_c`. :math:`f_{na}` is the spring force which attracts the adjacent nodes. :math:`f_{nr}` is used to repel the nodes from each other. :math:`f_{er}` is used to repel the hyperedges from each other, which only make sense for hypergraph visualization. :math:`f_c` is used to attract the nodes to the center (two centers for the bipartite graphs).
 The strength of the forces could be customized by ``forces`` argument, which is a dictionary with the keys ``Simulator.NODE_ATTRACTION``, ``Simulator.NODE_REPULSION``, ``Simulator.EDGE_REPULSION``, and ``Simulator.CENTER_GRAVITY``. The default values of the forces are ``1.0``.
 
 
