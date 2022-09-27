@@ -5,7 +5,7 @@ from dhg.utils import sparse_dropout
 
 
 def test_sparse_dropout():
-    a = torch.rand(10, 20)
+    a = (torch.rand(10, 20) > 0.7).float()
 
     idx = torch.nonzero(a).T
     data = a[idx[0], idx[1]]
@@ -15,7 +15,7 @@ def test_sparse_dropout():
 
     assert coo.size() == dropped.size()
 
-    assert dropped._nnz() == pytest.approx(coo._nnz() * 0.7, 0.1)
+    assert (dropped._values()!=0).sum() == pytest.approx(coo._nnz() * 0.7, 0.15)
 
     for i in range(10):
         for j in range(20):
