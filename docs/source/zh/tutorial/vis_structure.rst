@@ -7,18 +7,18 @@
     - 翻译：颜杰龙
     - 校对: `丰一帆 <https://fengyifan.site/>`_
 
-Basic Usages
+基本用法
 --------------
-DHG provides a simple interface to visualize the correlation structures:
+DHG提供了一种简单的接口来可视化关联结构：
 
-1. Create a structure object (*i.e.*, :py:class:`dhg.Graph`, :py:class:`dhg.BiGraph`, :py:class:`dhg.DiGraph`, and :py:class:`dhg.Hypergraph`);
-2. Call the ``draw()`` method of the object;
-3. Call ``plt.show()`` to show the figure or ``plt.savefig()`` to save the figure.
+1. 构造关联结构对象 (*也就是*, :py:class:`dhg.Graph`、 :py:class:`dhg.BiGraph`、 :py:class:`dhg.DiGraph` 和 :py:class:`dhg.Hypergraph`);
+2. 调用对象的 ``draw()`` 方法;
+3. 调用 ``plt.show()`` 显示图片或者 ``plt.savefig()`` 保存图片。
 
-.. note:: The ``plt`` is short for ``matplotlib.pyplot`` module.
+.. note:: ``plt`` 为 ``matplotlib.pyplot`` 模块的缩写。
 
 
-Visualization of Graph
+图的可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_graph.png
@@ -36,7 +36,7 @@ Visualization of Graph
     >>> plt.show()
 
 
-Visualization of Directed Graph
+有向图的可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_digraph.png
@@ -53,7 +53,7 @@ Visualization of Directed Graph
     >>> plt.show()
 
 
-Visualization of Bipartite Graph
+二分图的可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -71,7 +71,7 @@ Visualization of Bipartite Graph
     >>> plt.show()
 
 
-Visualization of Hypergraph
+超图的可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_hypergraph.png
@@ -89,16 +89,19 @@ Visualization of Hypergraph
 
 
 
-Advanced Usages
+高级用法
 ---------------------
 
-Customize Labels
+自定义标签
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-The labels of the vertices could be customized by the ``v_label`` argument. The ``v_label`` could be a list of strings. The labels of the vertices are the strings in the list.
-For example, the following code shows how to customize the labels of the vertices of a graph.
-If the ``v_label`` is not specified, no labels will be shown in the figure.
-The ``font_size`` argument for ``dhg.Graph``, ``dhg.DiGraph``, and ``dhg.Hypergraph``, as well as ``u_font_size`` and ``v_font_size`` for ``dhg.BiGraph`` is used to specify the relative size of the font of the labels, and the default value is ``1.0``.
-The ``font_family`` argument is used to specify the font family of the labels, and the default value is ``'sans-serif'``.
+顶点的标签可以通过 ``v_label`` 参数自定义。
+``v_label`` 可以为字符串列表。
+顶点的标签为列表中的字符串。
+例如，以下代码显示如何自定义图关联结构中顶点的标签。
+如果没有指定 ``v_label`` ， 那么图中不会显示任何标签。
+``dhg.Graph``、 ``dhg.DiGraph`` 和 ``dhg.Hypergraph`` 中的 ``font_size`` 参数以及 ``dhg.BiGraph`` 中的 ``u_font_size`` 和 ``v_font_size`` 参数用于指定标签字体的相对大小，
+其默认值为 ``1.0`` 。
+``font_family`` 参数用于指定标签的字体，其默认值为 ``'sans-serif'`` 。
 
 .. code-block:: python
 
@@ -115,9 +118,16 @@ The ``font_family`` argument is used to specify the font family of the labels, a
     :height: 400px
 
 
-Customize Colors
+自定义颜色
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-For ``dhg.Graph``, ``dhg.DiGraph``, and ``dhg.Hypergraph``, the colors of the vertices could be customized by the ``v_color`` argument and the colors of the edges could be customized by the ``e_color`` argument. While for ``dhg.BiGraph``, the colors of the vertices in :math:`\mathcal{U}` could be customized by the ``u_color`` argument and the colors of the vertices in  :math:`\mathcal{V}` could be customized by the ``v_color`` argument.  Both the ``v_color``, ``u_color``, and ``e_color`` could be a string or list of strings. If a string is provided, all the vertices or edges will be colored by the string. If a list of strings is provided, the colors of the vertices or edges are the strings in the list. For example, the following code shows how to customize the colors of the vertices and edges of a hypergraph.
+对于 ``dhg.Graph`` 、 ``dhg.DiGraph`` 和 ``dhg.Hypergraph`` ，
+顶点的颜色可以由 ``v_color`` 参数指定，边的颜色可以由 ``e_color`` 指定。
+对于 ``dhg.BiGraph`` ， 集合 :math:`\mathcal{U}` 内顶点的颜色可以由 ``u_color`` 参数指定，
+集合 :math:`\mathcal{V}` 内顶点的颜色可以由 ``v_color`` 参数指定。
+``v_color`` 、 ``u_color`` 和 ``e_color`` 参数为单个字符串或者字符串列表。
+若为单个字符串，那么所有的顶点或边将根据该字符串着色。
+若为字符串列表，顶点或者边的颜色为该列表中的字符串。
+例如，以下代码显示如何自定义超图的顶点和边的颜色。
 
 .. code-block:: python
 
@@ -133,10 +143,19 @@ For ``dhg.Graph``, ``dhg.DiGraph``, and ``dhg.Hypergraph``, the colors of the ve
     :height: 400px
 
 
-Customize Sizes
+自定义大小
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-For ``dhg.Graph``, ``dhg.DiGraph``, and ``dhg.Hypergraph``, the sizes of the vertices could be customized by the ``v_size`` argument and the sizes of the edges could be customized by the ``e_size`` argument. While for ``dhg.BiGraph``, the sizes of the vertices in :math:`\mathcal{U}` could be customized by the ``u_size`` argument and the sizes of the vertices in  :math:`\mathcal{V}` could be customized by the ``v_size`` argument.  Both the ``v_size``, ``u_size``, and ``e_size`` could be a float or list of float. If a float is provided, all the vertices or edges will be sized by the float. If a list of floats is provided, the sizes of the vertices or edges are the floats in the list. ``v_line_width`` represents the width of the surrounding line of the vertices. ``e_line_width`` represents the width of the line of the edges.
-All of the sizes above represent the relative size, and the default values are ``1.0``. For example, the following code shows how to customize the sizes of the vertices and edges of a hypergraph.
+对于 ``dhg.Graph`` 、 ``dhg.DiGraph`` 和 ``dhg.Hypergraph`` ，
+顶点的大小可以由 ``v_size`` 参数指定，边的大小可以由 ``e_size`` 参数指定。
+对于 ``dhg.BiGraph`` ， 集合 :math:`\mathcal{U}` 内顶点的大小可以由 ``u_size`` 参数指定，
+集合 :math:`\mathcal{V}` 内顶点的大小可以由 ``v_size`` 参数指定。
+``v_size`` 、 ``u_size`` 和 ``e_size`` 参数为单个浮点数或者浮点数列表。
+若为单个浮点数，那么所有的顶点或边将根据该浮点数调整大小。
+若为浮点数列表，顶点或者边的大小为该列表中的浮点数。
+``v_line_width`` 表示顶点周围线的宽度。
+``e_line_width`` 表示边周围线的宽度。
+以上所有的大小为相对大小，默认值为 ``1.0`` 。
+例如，以下代码显示如何自定义超图的顶点和边的大小。
 
 .. code-block:: python
 
@@ -153,10 +172,17 @@ All of the sizes above represent the relative size, and the default values are `
 
 
 
-Customize Layout
+自定义布局
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-The layout of the structures is based on the modified directed-force layout algorithm. There are four forces to determine the position of the nodes, *i.e.*, node attraction force :math:`f_{na}`, node repulsion force :math:`f_{nr}`, edge repulsion force :math:`f_{er}`, and the center force :math:`f_c`. :math:`f_{na}` is the spring force which attracts the adjacent nodes. :math:`f_{nr}` is used to repel the nodes from each other. :math:`f_{er}` is used to repel the hyperedges from each other, which only make sense for hypergraph visualization. :math:`f_c` is used to attract the nodes to the center (two centers for the bipartite graphs).
-The strength of the forces could be customized by ``forces`` argument, which is a dictionary with the keys ``Simulator.NODE_ATTRACTION``, ``Simulator.NODE_REPULSION``, ``Simulator.EDGE_REPULSION``, and ``Simulator.CENTER_GRAVITY``. The default values of the forces are ``1.0``.
+关联结构的布局基于改进后的定向力布局算法。
+顶点的位置由四种力确定，也就是，顶点吸引力 :math:`f_{na}` 、顶点斥力 :math:`f_{nr}`、 边斥力 :math:`f_{er}` 和 中心力 :math:`f_c`。
+:math:`f_{na}` 是吸引相邻顶点的弹力。
+:math:`f_{nr}` 用于将顶点相互排斥。
+:math:`f_{er}` 用于将超边相互排斥，其只用于超图可视化。
+:math:`f_c` 用于将顶点吸引到中心（二分图的两个中心）。
+各种力的强度可以通过 ``forces`` 参数自定义，该参数是包含
+``Simulator.NODE_ATTRACTION`` 、 ``Simulator.NODE_REPULSION`` 、 ``Simulator.EDGE_REPULSION`` 和 ``Simulator.CENTER_GRAVITY`` 键值的字典。
+力的默认值为 ``1.0`` 。
 
 
 .. different style, change size, change color, change opacity
