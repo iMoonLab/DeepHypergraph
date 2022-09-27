@@ -22,7 +22,7 @@ DHG provides an interface to visualize the distribution of feaures:
 Visualization of Features in Euclidean Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_ft_euclidean.png
+.. image:: ../../_static/img/vis_ft_euclidean.png
     :align: center
     :alt: Visualization of Features in Euclidean Space
     :height: 400px
@@ -43,7 +43,7 @@ Visualization of Features in Euclidean Space
 Visualization of Features in Poincare Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_ft_poincare.png
+.. image:: ../../_static/img/vis_ft_poincare.png
     :align: center
     :alt: Visualization of Features in Poincare Space
     :height: 400px
@@ -69,7 +69,7 @@ We provide functions to make 3D rotation animation for feature visualization.
 Rotating Visualization of Features in Euclidean Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_ft_euclidean_ani.png
+.. image:: ../../_static/img/vis_ft_euclidean_ani.png
     :align: center
     :alt: Rotating Visualization of Features in Euclidean Space
     :height: 400px
@@ -103,7 +103,7 @@ Rotating Visualization of Features in Euclidean Space
 Rotating Visualization of Features in Poincare Space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_ft_poincare_ani.png
+.. image:: ../../_static/img/vis_ft_poincare_ani.png
     :align: center
     :alt: Rotating Visualization of Features in Poincare Space
     :height: 400px

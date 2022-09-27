@@ -21,7 +21,7 @@ DHG provides a simple interface to visualize the correlation structures:
 Visualization of Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_graph.png
+.. image:: ../../_static/img/vis_graph.png
     :align: center
     :alt: Visualization of Graph
     :height: 400px
@@ -39,7 +39,7 @@ Visualization of Graph
 Visualization of Directed Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_digraph.png
+.. image:: ../../_static/img/vis_digraph.png
     :align: center
     :alt: Visualization of Directed Graph
     :height: 400px
@@ -57,7 +57,7 @@ Visualization of Bipartite Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-.. image:: ../_static/img/vis_bigraph.png
+.. image:: ../../_static/img/vis_bigraph.png
     :align: center
     :alt: Visualization of Bipartite Graph
     :height: 400px
@@ -74,7 +74,7 @@ Visualization of Bipartite Graph
 Visualization of Hypergraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../_static/img/vis_hypergraph.png
+.. image:: ../../_static/img/vis_hypergraph.png
     :align: center
     :alt: Visualization of Hypergraph
     :height: 400px
@@ -109,7 +109,7 @@ The ``font_family`` argument is used to specify the font family of the labels, a
     >>> g.draw(v_label=labels, font_size=1.5, font_family='serif')
     >>> plt.show()
 
-.. image:: ../_static/img/custom_label.png
+.. image:: ../../_static/img/custom_label.png
     :align: center
     :alt: Customize label
     :height: 400px
@@ -127,7 +127,7 @@ For ``dhg.Graph``, ``dhg.DiGraph``, and ``dhg.Hypergraph``, the colors of the ve
     >>> hg.draw(v_color='cyan', e_color='grey')
     >>> plt.show()
 
-.. image:: ../_static/img/custom_color.png
+.. image:: ../../_static/img/custom_color.png
     :align: center
     :alt: Customize color
     :height: 400px
@@ -146,7 +146,7 @@ All of the sizes above represent the relative size, and the default values are `
     >>> g.draw(v_size=1.5, v_line_width=1.5, e_line_width=1.5)
     >>> plt.show()
 
-.. image:: ../_static/img/custom_size.png
+.. image:: ../../_static/img/custom_size.png
     :align: center
     :alt: Customize size
     :height: 400px
