@@ -1,6 +1,7 @@
 import pytest
 
 import torch
+import numpy as np
 from sklearn.metrics import f1_score, confusion_matrix
 import dhg.metrics.classification as dm
 

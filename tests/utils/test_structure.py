@@ -3,62 +3,67 @@ from dhg import utils
 
 
 def test_remap_edge_list():
-    e_list = [(1, 3), ('A', 100), (4.5, 'A')]
+    e_list = [(1, 3), (100, "A"), (4.5, "A")]
 
     e1, m = utils.remap_edge_list(e_list, ret_map=True)
     for i, (u, v) in enumerate(e_list):
-        assert e1[i][0] == m[u]
-        assert e1[i][1] == m[v]
+        assert e1[i][0] == m[str(u)]
+        assert e1[i][1] == m[str(v)]
 
-    e2, m = utils.remap_edge_list(e_list, ret_map=True, bipartite_graph=True)
+    e2, m_u, m_v = utils.remap_edge_list(e_list, ret_map=True, bipartite_graph=True)
     for i, (u, v) in enumerate(e_list):
-        assert e2[i][0] == m[u]
-        assert e2[i][1] == m[v]
+        assert e2[i][0] == m_u[str(u)]
+        assert e2[i][1] == m_v[str(v)]
 
 
 def test_remap_edge_lists():
-    e_list = [[(1, 3), ('A', 100), (4.5, 'A')], [(1, 5), ('B', 101), (4.1, 'A')]]
+    e_lists = [[(1, 3), (100, "A"), (4.5, "A")], [(1, 5), ("B", 101), (4.1, "A")]]
 
-    e1, m = utils.remap_edge_lists(e_list, ret_map=True)
-    for i, ee in enumerate(e_list):
-        for j, (u, v) in enumerate(ee):
-            assert e1[i][j][0] == m[u]
-            assert e1[i][j][1] == m[v]
+    e1, m = utils.remap_edge_lists(*e_lists, ret_map=True)
+    for i, e_list in enumerate(e_lists):
+        for j, (u, v) in enumerate(e_list):
+            assert e1[i][j][0] == m[str(u)]
+            assert e1[i][j][1] == m[str(v)]
 
-    e2, m = utils.remap_edge_list(e_list, ret_map=True, bipartite_graph=True)
-    for i, ee in enumerate(e_list):
-        for j, (u, v) in enumerate(ee):
-            assert e2[i][j][0] == m[u]
-            assert e2[i][j][1] == m[v]
+    e2, m_u, m_v = utils.remap_edge_lists(*e_lists, ret_map=True, bipartite_graph=True)
+    for i, e_list in enumerate(e_lists):
+        for j, (u, v) in enumerate(e_list):
+            assert e2[i][j][0] == m_u[str(u)]
+            assert e2[i][j][1] == m_v[str(v)]
 
 
 def test_remap_adj_list():
-    adj_list = [[0, 'A', 1.5], ['A', 1, 2], [1.5, 1, 0]]
+    adj_list = [[0, "A", 1.5], ["A", 1, 2], [1.5, 1, 0]]
     e1, m = utils.remap_adj_list(adj_list, ret_map=True)
     for i, adj in enumerate(adj_list):
         for j, a in enumerate(adj):
-            assert e1[i][j] == m[a]
+            assert e1[i][j] == m[str(a)]
 
-    e2, m = utils.remap_adj_list(adj_list, ret_map=True, bipartite_graph=True)
+    e2, m_u, m_v = utils.remap_adj_list(adj_list, ret_map=True, bipartite_graph=True)
     for i, adj in enumerate(adj_list):
         for j, a in enumerate(adj):
-            assert e2[i][j] == m[a]
+            if j == 0:
+                assert e2[i][j] == m_u[str(a)]
+            else:
+                assert e2[i][j] == m_v[str(a)]
 
 
 def test_remap_adj_lists():
-    adj_lists = [[[0, 'A', 1.5], ['A', 1, 2], [1.5, 1, 0]], [[0, 3, 'A', 'B'], [1, 2, 'A', 'B'], ['A', 'B', 0, 1]]]
-    e1, m = utils.remap_adj_lists(adj_lists, ret_map=True)
+    adj_lists = [[[0, "A", 1.5], ["A", 1, 2], [1.5, 1, 0]], [[0, 3, "A", "B"], [1, 2, "A", "B"], ["A", "B", 0, 1]]]
+    e1, m = utils.remap_adj_lists(*adj_lists, ret_map=True)
     for i, adj_list in enumerate(adj_lists):
         for j, adj in enumerate(adj_list):
             for k, a in enumerate(adj):
-                assert e1[i][j][k] == m[a]
+                assert e1[i][j][k] == m[str(a)]
 
-    e2, m = utils.remap_adj_list(adj_lists, ret_map=True, bipartite_graph=True)
+    e2, m_u, m_v = utils.remap_adj_lists(*adj_lists, ret_map=True, bipartite_graph=True)
     for i, adj_list in enumerate(adj_lists):
         for j, adj in enumerate(adj_list):
             for k, a in enumerate(adj):
-                assert e2[i][j][k] == m[a]
-
+                if k == 0:
+                    assert e2[i][j][k] == m_u[str(a)]
+                else:
+                    assert e2[i][j][k] == m_v[str(a)]
 
 
 def test_edge_list_to_adj_list():
@@ -95,4 +100,4 @@ def test_adj_list_to_edge_list():
     assert (1, 3) in e_list
     assert (1, 4) in e_list
     assert (2, 3) in e_list
-    assert len(e_list) == 7   # 8 ???
+    assert len(e_list) == 8  # 8 ???
