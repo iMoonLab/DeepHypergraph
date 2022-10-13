@@ -76,10 +76,14 @@ def draw_circle_edge(
     for eidx, lines in enumerate(line_paths):
         pathdata = []
         for line in lines:
+            if len(line) == 0:
+                continue
             start_pos, end_pos = line
             pathdata.append((Path.MOVETO, start_pos.tolist()))
             pathdata.append((Path.LINETO, end_pos.tolist()))
 
+        if len(list(zip(*pathdata))) == 0:
+            continue
         codes, verts = zip(*pathdata)
         path = Path(verts, codes)
         ax.add_patch(
@@ -164,6 +168,15 @@ def hull_layout(n_v, e_list, pos, v_size, radius_increment=0.3):
 
         line_path_for_e = []
         arc_path_for_e = []
+
+        if len(edge) == 1:
+            arc_path_for_e.append([pos[edge[0]], 0, 360, vertices_radius[edge[0]]])
+
+            vertices_radius[edge] += vertices_increased_radius[edge]
+
+            line_paths[e_idx] = line_path_for_e
+            arc_paths[e_idx] = arc_path_for_e
+            continue
 
         pos_in_edge = pos[edge]
         if len(edge) == 2:

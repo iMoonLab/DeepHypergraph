@@ -105,7 +105,7 @@ def draw_digraph(
     pull_e_strength: float = 1.0,
     pull_center_strength: float = 1.0,
 ):
-    r"""Draw the directed graph structure. 
+    r"""Draw the directed graph structure.
 
     Args:
         ``g`` (``dhg.DiGraph``): The DHG's directed graph object.
@@ -178,7 +178,7 @@ def draw_bigraph(
     pull_v_center_strength: float = 1.0,
 ):
     r"""Draw the bipartite graph structure.
-    
+
     Args:
         ``g`` (``dhg.BiGraph``): The DHG's bipartite graph object.
         ``e_style`` (``str``): The edge style. The supported edge styles are only ``'line'``. Defaults to ``'line'``.
@@ -255,7 +255,7 @@ def draw_bigraph(
     draw_vertex(
         ax,
         np.vstack([u_coor, v_coor]),
-        u_label + v_label if u_label is not None and v_label is not None else None,
+        list(u_label) + list(v_label) if u_label is not None and v_label is not None else None,
         u_font_size + v_font_size,
         font_family,
         u_size + v_size,
@@ -287,7 +287,7 @@ def draw_hypergraph(
     pull_center_strength: float = 1.0,
 ):
     r"""Draw the hypergraph structure.
-    
+
     Args:
         ``hg`` (``dhg.Hypergraph``): The DHG's hypergraph object.
         ``e_style`` (``str``): The style of hyperedges. The available styles are only ``'circle'``. Defaults to ``'circle'``.
