@@ -64,6 +64,12 @@
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
 
+.. image:: ../../_static/img/build_structure_graph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 可以发现图的邻接矩阵是一个对称矩阵。
 :py:attr:`g.e <dhg.Graph.e>` 属性会返回两个列表的元组，第一个列表是边列表，第二个列表是每条边的权重。
 :py:attr:`g.e_both_side <dhg.Graph.e_both_side>` 属性会返回图里所有边及其对应的对称形式。
@@ -138,6 +144,12 @@
             [1., 1., 1., 1., 0.]])
 
 
+.. image:: ../../_static/img/build_structure_graph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -184,6 +196,12 @@
             [0., 1., 1., 0., 0., 0., 0., 0., 0.],
             [1., 0., 0., 1., 1., 0., 0., 0., 0.]])
 
+.. image:: ../../_static/img/build_structure_graph_from_star_expansion.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 **团扩展** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
 和星扩展不同的是，团扩展不会在图内增加虚拟顶点。
@@ -204,6 +222,12 @@
             [1., 1., 0., 1., 0.],
             [1., 1., 1., 0., 1.],
             [1., 0., 0., 1., 0.]])
+
+.. image:: ../../_static/img/build_structure_graph_from_clique_expansion.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 **基于HyperGCN的扩展** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
@@ -245,6 +269,13 @@
             [0.3333, 0.3333, 0.3333, 0.0000, 0.3333],
             [0.0000, 0.0000, 0.0000, 0.3333, 0.0000]])
 
+
+.. image:: ../../_static/img/build_structure_graph_from_hypergcn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 .. _zh_build_directed_graph:
 
 构建有向图
@@ -282,6 +313,11 @@
             [0., 1., 0., 0., 0.],
             [0., 0., 1., 0., 0.]])
 
+.. image:: ../../_static/img/build_structure_digraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 可以发现有向图的邻接矩阵不是一个对称矩阵。
 
 使用 :py:meth:`dhg.DiGraph.from_adj_list` 函数 **从邻接列表构建一个有向图**
@@ -300,6 +336,12 @@
             [0., 1., 0., 1., 0.],
             [1., 0., 0., 0., 0.],
             [0., 0., 0., 0., 0.]])
+
+
+.. image:: ../../_static/img/build_structure_digraph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 
 使用 :py:meth:`dhg.DiGraph.from_feature_kNN` 函数 **根据特征的k近邻构建有向图**
@@ -322,6 +364,11 @@
             [0., 1., 0., 0., 1.],
             [1., 0., 1., 0., 0.],
             [0., 1., 1., 0., 0.]], dtype=torch.float64)
+
+.. image:: ../../_static/img/build_structure_digraph_from_knn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 
 从高阶关联结构简化而来
@@ -377,6 +424,12 @@
             [0., 0., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
 
+.. image:: ../../_static/img/build_structure_bigraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 使用 :py:meth:`dhg.BiGraph.from_adj_list` 函数 **从邻接列表构建一个二分图**
 
 .. code-block:: python
@@ -402,6 +455,13 @@
             [0., 1., 0., 0., 0., 0., 0., 0., 0.],
             [1., 1., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
+
+
+.. image:: ../../_static/img/build_structure_bigraph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 从高阶关联结构简化而来
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -448,6 +508,12 @@
             [1., 0., 0., 1., 1.]])
 
 
+.. image:: ../../_static/img/build_structure_bigraph_from_hypergraph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 构建高阶关联结构
 -----------------------
 
@@ -489,6 +555,12 @@
             [1., 1., 0.],
             [0., 1., 0.],
             [0., 0., 1.]])
+
+.. image:: ../../_static/img/build_structure_hypergraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 .. important:: 
 
@@ -569,6 +641,13 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 0., 0., 0., 1., 0., 0., 1., 0.],
             [0., 0., 1., 0., 0., 1., 0., 0., 1.]])
 
+
+.. image:: ../../_static/img/build_structure_hypergraph_from_knn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 .. note:: 
 
     重边根据 ``mean`` 操作合并。
@@ -600,6 +679,11 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 1., 1., 0.],
             [0., 0., 1., 0.],
             [0., 0., 0., 1.]])
+
+.. image:: ../../_static/img/build_structure_hypergraph_from_graph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 
 使用 :py:meth:`dhg.Hypergraph.from_graph_kHop` 函数 **根据图顶点的k阶邻居构建一个超图**
@@ -634,6 +718,13 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 1., 1.],
             [1., 1., 0.]])
 
+
+.. image:: ../../_static/img/build_structure_hypergraph_from_khop.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 使用 :py:meth:`dhg.Hypergraph.from_bigraph` 函数 **从二分图构建一个超图**
 
     .. code-block:: python
@@ -667,4 +758,9 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
         tensor([[0., 0., 1.],
                 [1., 1., 0.],
                 [0., 1., 0.]])
-        
+
+.. image:: ../../_static/img/build_structure_hypergraph_from_bigraph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
