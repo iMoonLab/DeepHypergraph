@@ -7,19 +7,19 @@
     - 翻译：颜杰龙
     - 校对: `丰一帆 <https://fengyifan.site/>`_
 
-Basic Usages
+基本用法
 ---------------
-DHG provides an interface to visualize the distribution of feaures:
+DHG提供了一种简单的接口来可视化特征分布：
 
-1. Input the features and lable (optional);
-2. Specify parameters (*i.e.*, `the dimensionality of the visualisation`, `point size`, `color` and `the method of dimensionality reduction`);
-3. Call ``plt.show()`` funtion to show the figure/animation. 
+1. 输入特征及标签（可选的）；
+2. 指定参数 (*例如*, `可视化的维度`, `顶点大小`, `颜色` 和 `降维方法`);
+3. 调用 ``plt.show()`` 函数显示图片/动画。
 
    
-.. note:: The ``plt`` is short for ``matplotlib.pyplot`` module.
+.. note:: ``plt`` 为 ``matplotlib.pyplot`` 模块的缩写。
 
 
-Visualization of Features in Euclidean Space
+在欧几里得空间中进行特征可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_ft_euclidean.png
@@ -40,7 +40,7 @@ Visualization of Features in Euclidean Space
     >>> plt.show()
 
 
-Visualization of Features in Poincare Space
+在庞加莱空间中进行特征可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_ft_poincare.png
@@ -61,12 +61,11 @@ Visualization of Features in Poincare Space
     >>> plt.show()
 
 
-Make Animation
+制作动画
 -------------------------
+我们提供了制作 3D 旋转动画来可视化特征的函数。
 
-We provide functions to make 3D rotation animation for feature visualization.
-
-Rotating Visualization of Features in Euclidean Space
+欧几里得空间中特征的旋转可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_ft_euclidean_ani.png
@@ -100,7 +99,7 @@ Rotating Visualization of Features in Euclidean Space
             ft, save_dir, d, label, reduce_method=low_demen_method, auto_play=show_method
         )
 
-Rotating Visualization of Features in Poincare Space
+庞加莱空间中特征的旋转可视化
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ../../_static/img/vis_ft_poincare_ani.png
@@ -136,56 +135,54 @@ Rotating Visualization of Features in Poincare Space
 
 
 
-Mathamatical Principles of Hyperbolic Space
+双曲空间的数学原理
 --------------------------------------------------
 
-The hyperbolic space is a manifold with constant Gaussian constant negative curvature everywhere, 
-which has several models. We base our work on the Poincaré ball model for its well-suited for gradient-based optimization. 
+双曲空间是一个处处具有恒定高斯常数负曲率的流形，其有几种不同的模型并且非常适合基于梯度的优化。
+我们以下工作基于庞加莱球模型展开。
 
-The Poincaré ball model with constant negative curvature :math:`-1 / k(k>0)` corresponds to the 
-Riemannian manifold 
-:math:`\left(\mathbb{P}^{n,k},  g_{\mathbf{x}}^{\mathbb{P}}\right)`. 
-:math:`\mathbb{P}^{n,k} = \left\{\mathbf{x} \in \mathbb{R}^{n}: \| \mathbf{x}\|<1 \right\}` is an open :math:`n`-demensionsional unit ball, 
-where :math:`\|. \|` denotes the Euclidean norm. Its metric tensor is :math:`g_{\mathbf{x}}^{\mathbb{P}} = \lambda_{\mathbf{x}}^{2} g^{E}`, 
-where :math:`\lambda_{\mathbf{x}} = \frac{2} {1- k\|\mathbf{x}\|^{2} }` is the conformal factor and :math:`g^{E}=\mathbf{I}_{n}` is the Euclidean metric tensor. 
-For two points :math:`\mathbf{x}, \mathbf{y} \in \mathbb{P}^{n,k}`, we ues the Möbius addition :math:`\oplus` operate adding 
-by connecting the gyrospace framework with Riemannian geometry:
+具有恒定负曲率 :math:`-1 / k(k>0)` 的庞加莱球模型对应于黎曼流形 :math:`\left(\mathbb{P}^{n,k},  g_{\mathbf{x}}^{\mathbb{P}}\right)` 。
+:math:`\mathbb{P}^{n,k} = \left\{\mathbf{x} \in \mathbb{R}^{n}: \| \mathbf{x}\|<1 \right\}` 是一个 :math:`n` 维单位开球，
+其中 :math:`\|. \|` 代表欧几里得范数。
+它的度量张量是 :math:`g_{\mathbf{x}}^{\mathbb{P}} = \lambda_{\mathbf{x}}^{2} g^{E}` ，
+其中 :math:`\lambda_{\mathbf{x}} = \frac{2} {1- k\|\mathbf{x}\|^{2} }` 为保形因子、 :math:`g^{E}=\mathbf{I}_{n}` 为欧几里得度量张量。
+对于两点 :math:`\mathbf{x}, \mathbf{y} \in \mathbb{P}^{n,k}` ，我们使用莫比乌斯加法 :math:`\oplus` 将陀螺空间框架与黎曼几何连接来进行加法运算：
 
 .. math::
 
     \mathbf{x} \oplus_{k} \mathbf{y} =\frac{\left(1+2k\langle\mathbf{x}, \mathbf{y}\rangle+k\|\mathbf{y}\|^{2}\right) \mathbf{x}+\left(1-k\|\mathbf{x}\|^{2}\right) \mathbf{y}}{1+2k\langle\mathbf{x}, \mathbf{y}\rangle+k^{2}\|\mathbf{x}\|^{2}\|\mathbf{y}\|^{2}} .
 
-The distance between two points :math:`\mathbf{x}, \mathbf{y} \in \mathbb{P}^{n,k}` is calculated by integration of the metric tensor, which is given as:
+:math:`\mathbf{x}, \mathbf{y} \in \mathbb{P}^{n,k}` 两点之间的距离是通过度量张量的集成来计算的，如下：
 
 .. math::
 
     d_{\mathbb{P}}^{k} (\mathbf{x}, \mathbf{y}) = (2 / \sqrt{K}) \tanh ^{-1}\left(\sqrt{k}\left\|-x \oplus_{k} y\right\|\right) .
 
 
-Denote point :math:`\mathbf{z} \in \mathcal{T}_{\mathrm{x}} \mathbb{P}^{n,k}` the tangent (Euclidean) space centered at any point :math:`\mathbf{x}` in the hyperbolic space. 
-For the tangent vector :math:`\mathbf{z} \neq \mathbf{0}` and the point :math:`\mathbf{y} \neq \mathbf{0}`, 
-the exponential map :math:`\exp _{\mathbf{x}}: \mathcal{T}_{\mathbf{x}} \mathbb{P}^{n,k} \rightarrow \mathbb{P}^{n,k}` and 
-the logarithmic map :math:`\log_{\mathbf{x}}: \mathbb{P}^{n,k} \rightarrow \mathcal{T}_{\mathbf{x}} \mathbb{P}^{n,k}` are given for 
-:math:`\mathbf{y} \neq \mathbf{x}` by:
+将点 :math:`\mathbf{z} \in \mathcal{T}_{\mathrm{x}} \mathbb{P}^{n,k}` 表示为以双曲空间中任意点 :math:`\mathbf{x}` 为中心的切线（欧几里得）空间。
+对于切向量 :math:`\mathbf{z} \neq \mathbf{0}` 和点 :math:`\mathbf{y} \neq \mathbf{0}` ，
+满足 :math:`\mathbf{y} \neq \mathbf{x}` 的
+指数映射 :math:`\exp _{\mathbf{x}}: \mathcal{T}_{\mathbf{x}} \mathbb{P}^{n,k} \rightarrow \mathbb{P}^{n,k}`
+和对数映射 :math:`\log_{\mathbf{x}}: \mathbb{P}^{n,k} \rightarrow \mathcal{T}_{\mathbf{x}} \mathbb{P}^{n,k}` 由下式给出：
 
 .. math::
 
     \exp _{\mathbf{x}}^{k}(\mathbf{z})=\mathbf{x} \oplus_{k}\left(\tanh \left(\sqrt{k} \frac{\lambda_{\mathbf{x}}^{k}\|\mathbf{z}\|}{2}\right) \frac{\mathbf{z}}{\sqrt{k}\|\mathbf{z}\|}\right), 
 
-and
+以及
 
 .. math::
 
     \log _{\mathbf{x}}^{k}(\mathbf{y})=\frac{2}{\sqrt{k} \lambda_{\mathbf{x}}^{k}} \tanh ^{-1}\left(\sqrt{k}\left\|-\mathbf{x} \oplus_{k} \mathbf{y}\right\|\right) \frac{-\mathbf{x} \oplus_{k} \mathbf{y}}{\left\|-\mathbf{x} \oplus_{k} \mathbf{y}\right\|} .
 
-It is noted that our initial data are on Euclidean space and need to be converted to embeddings on hyperbolic space, so first project the data on the previously obtained Euclidean space onto the hyperbolic manifold space 
-in order to use the Spectral-based hypergraph hyperbolic convolutional network to learn the information to update the node embeddings. 
-Set :math:`t:=\{\sqrt{K}, 0, 0, \dots, 0\}\in\mathbb{P}^{d, K}` as a reference point to perform tangent space operations, 
-where :math:`-1/K` is the negative curvature of hyperbolic model. 
-The above premise makes :math:`\langle(0, \mathbf{x}^{0, E}), t\rangle=0` hold, 
-so :math:`(0, \mathbf{x}^{0, E})` can be regarded as the initial embedding representation of the hypergraph structure on the tangent plane 
-of the hyperbolic manifold space :math:`\mathcal{T}_t\mathbb{P}^{d, K}`. The initial hypergraph structure embedding is 
-then mapped onto the hyperbolic manifold space :math:`\mathbb{P}` using the following equation:
+需要注意的是，我们的初始数据是在欧几里得空间上，需要转换成双曲空间上的嵌入。
+所以首先把之前得到的欧几里得空间上的数据投影到双曲流形空间上，
+以便使用基于谱域的超图双曲卷积网络来学习从而更新节点嵌入。
+以 :math:`t:=\{\sqrt{K}, 0, 0, \dots, 0\}\in\mathbb{P}^{d, K}` 为参考点进行切线空间运算，
+其中 :math:`-1/K` 为双曲线模型的负曲率。
+上述前提使 :math:`\langle(0, \mathbf{x}^{0, E}), t\rangle=0` 成立，
+所以 :math:`(0, \mathbf{x}^{0, E})` 可以看成是超图结构在双曲流形空间 :math:`\mathcal{T}_t\mathbb{P}^{d, K}` 切面上的初始嵌入表示。
+然后使用以下等式将初始超图结构嵌入映射到双曲流形空间 :math:`\mathbb{P}` ：
 
 .. math::
 
@@ -193,6 +190,5 @@ then mapped onto the hyperbolic manifold space :math:`\mathbb{P}` using the foll
     &=\left(\sqrt{K} \cosh \left(\frac{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}{\sqrt{K}}\right), 
     \sqrt{K} \sinh \left(\frac{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}{\sqrt{K}}\right) \frac{\mathbf{x}^{0, \mathbb{E}}}{\left\|\mathbf{x}^{0, \mathbb{E}}\right\|_{2}}\right).
 
-The hyperbolic operation is accomplished by means of a feature mapping between Euclidean space and Hyperbolic space.
-
+双曲运算是通过欧几里得空间和双曲空间之间的特征映射来完成的。
 
