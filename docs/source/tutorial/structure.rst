@@ -1,7 +1,7 @@
 Building Structure
 ===================================
 
-.. hint:: 
+.. hint::
 
     - Author: `Yifan Feng (丰一帆) <https://fengyifan.site/>`_
     - Proof: Xinwei Zhang
@@ -39,6 +39,7 @@ Common Methods
 
 **Construct a graph from edge list with** :py:class:`dhg.Graph`
 
+
 .. code-block:: python
 
     >>> import dhg
@@ -63,6 +64,12 @@ Common Methods
             [1., 1., 0., 0., 0.],
             [0., 0., 0., 0., 1.],
             [0., 0., 0., 1., 0.]])
+
+.. image:: ../_static/img/build_structure_graph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 You can find that the adjacency matrix of the graph is a symmetric matrix.
 The :py:attr:`g.e <dhg.Graph.e>` attribute will return a tuple of two lists, the first list is the edge list and the second list is a list of weight for each edge.
@@ -112,13 +119,13 @@ The adjacency list is a list of lists, each list contains two parts. The first p
 The second part is the **remaining elements** of the list, which are the vertex indices of the destination vertices.
 For example, assuming we have a graph with 5 vertices and a adjacency list as:
 
-.. code-block:: 
+.. code-block::
 
     [[0, 1, 2], [0, 3], [1, 2], [3, 4]]
 
 Then, the transformed edge list is:
 
-.. code-block:: 
+.. code-block::
 
     [(0, 1), (0, 2), (0, 3), (1, 2), (3, 4)]
 
@@ -136,6 +143,11 @@ We can construct a graph from the adjacency list as:
             [0., 1., 0., 0., 1.],
             [1., 1., 1., 1., 0.]])
 
+
+.. image:: ../_static/img/build_structure_graph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -183,6 +195,12 @@ The ``True`` in the ``vertex mask`` indicates the vertex is a actual vertex and 
             [0., 1., 1., 0., 0., 0., 0., 0., 0.],
             [1., 0., 0., 1., 1., 0., 0., 0., 0.]])
 
+.. image:: ../_static/img/build_structure_graph_from_star_expansion.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 **Clique Expansion** :py:meth:`dhg.Graph.from_hypergraph_clique`
 
 Unlike the star expansion, the clique expansion will not add any virtual vertex to the graph.
@@ -191,7 +209,6 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
 
 .. code-block:: python
 
-    >>> g = dhg.Hypergraph.from_hypergraph_clique(hg)
     >>> g = dhg.Graph.from_hypergraph_clique(hg)
     >>> g
     Graph(num_v=5, num_e=8)
@@ -203,6 +220,12 @@ For each hyperedge, the clique expansion will add edges to any two vertices in t
             [1., 1., 0., 1., 0.],
             [1., 1., 1., 0., 1.],
             [1., 0., 0., 1., 0.]])
+
+
+.. image:: ../_static/img/build_structure_graph_from_clique_expansion.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 **HyperGCN-based Expansion** :py:meth:`dhg.Graph.from_hypergraph_hypergcn`
 
@@ -245,6 +268,13 @@ a method to reduce the hyperedges in the hypergraph to the edges in the graph as
             [0.3333, 0.3333, 0.3333, 0.0000, 0.3333],
             [0.0000, 0.0000, 0.0000, 0.3333, 0.0000]])
 
+
+.. image:: ../_static/img/build_structure_graph_from_hypergcn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 .. _build_directed_graph:
 
 Building Directed Graph
@@ -282,6 +312,13 @@ Common Methods
             [0., 1., 0., 0., 0.],
             [0., 0., 1., 0., 0.]])
 
+
+.. image:: ../_static/img/build_structure_digraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 You can find that the adjacency matrix of the directed graph is not symmetric.
 
 
@@ -301,6 +338,11 @@ You can find that the adjacency matrix of the directed graph is not symmetric.
             [0., 1., 0., 1., 0.],
             [1., 0., 0., 0., 0.],
             [0., 0., 0., 0., 0.]])
+
+.. image:: ../_static/img/build_structure_digraph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
 
 
 **Construct a directed graph from feature k-Nearest Neighbors with** :py:meth:`dhg.DiGraph.from_feature_kNN`
@@ -323,6 +365,12 @@ You can find that the adjacency matrix of the directed graph is not symmetric.
             [0., 1., 0., 0., 1.],
             [1., 0., 1., 0., 0.],
             [0., 1., 1., 0., 0.]], dtype=torch.float64)
+
+.. image:: ../_static/img/build_structure_digraph_from_knn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 
 Reduced from High-Order Structures
@@ -378,6 +426,13 @@ Common Methods
             [0., 0., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
 
+
+.. image:: ../_static/img/build_structure_bigraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 **Construct a bipartite graph from adjacency list with** :py:meth:`dhg.BiGraph.from_adj_list`
 
 .. code-block:: python
@@ -403,6 +458,13 @@ Common Methods
             [0., 1., 0., 0., 0., 0., 0., 0., 0.],
             [1., 1., 0., 0., 1., 0., 0., 0., 0.],
             [1., 0., 0., 0., 0., 0., 0., 0., 0.]])
+
+
+.. image:: ../_static/img/build_structure_bigraph_from_adj.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 Reduced from High-Order Structures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -449,6 +511,12 @@ We first define a hypergraph as:
             [1., 0., 0., 1., 1.]])
 
 
+.. image:: ../_static/img/build_structure_bigraph_from_hypergraph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 High-Order Structures
 -----------------------
 
@@ -491,6 +559,14 @@ Common Methods
             [1., 1., 0.],
             [0., 1., 0.],
             [0., 0., 1.]])
+
+
+.. image:: ../_static/img/build_structure_hypergraph_from_edge_list.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 
 .. important::
 
@@ -570,6 +646,14 @@ You can find the weight of the last hyperedge is ``1.0`` and ``2.0``, if you set
             [0., 0., 0., 0., 1., 0., 0., 1., 0.],
             [0., 0., 1., 0., 0., 1., 0., 0., 1.]])
 
+
+.. image:: ../_static/img/build_structure_hypergraph_from_knn.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
+
 .. note::
 
     Those duplicated hyperedges are merged with ``mean`` operation.
@@ -601,6 +685,13 @@ Prometed from Low-Order Structures
             [0., 1., 1., 0.],
             [0., 0., 1., 0.],
             [0., 0., 0., 1.]])
+
+
+.. image:: ../_static/img/build_structure_hypergraph_from_graph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
 
 
 **Construct a hypergraph from vertex's k-Hop neighbors of a graph with** :py:meth:`dhg.Hypergraph.from_graph_kHop`
@@ -636,6 +727,12 @@ Prometed from Low-Order Structures
             [1., 1., 0.]])
 
 
+.. image:: ../_static/img/build_structure_hypergraph_from_khop.png
+    :align: center
+    :alt: Customize size
+    :height: 400px
+
+
 **Construct a hypergraph from a bipartite graph with** :py:meth:`dhg.Hypergraph.from_bigraph`
 
     .. code-block:: python
@@ -669,3 +766,8 @@ Prometed from Low-Order Structures
         tensor([[0., 0., 1.],
                 [1., 1., 0.],
                 [0., 1., 0.]])
+
+.. image:: ../_static/img/build_structure_hypergraph_from_bigraph.png
+    :align: center
+    :alt: Customize size
+    :height: 400px

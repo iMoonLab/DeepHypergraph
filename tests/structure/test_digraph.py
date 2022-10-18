@@ -1,9 +1,11 @@
 import random
+from random import randrange
 import numpy as np
 import scipy
 import torch
 import pytest
 from dhg import DiGraph
+from dhg.random import digraph_Gnm
 
 
 @pytest.fixture()
@@ -120,8 +122,10 @@ def test_remove_edges(g1):
 
 
 def test_reverse_direction(g1):
-    # TODO
-    pass
+    g1.reverse_direction()
+    assert g1.num_e == 2
+    assert (1, 0) in g1.e[0]
+    assert (2, 0) in g1.e[0]
 
 
 # test properties
@@ -276,8 +280,26 @@ def test_N():
 
 
 def test_smoothing():
-    # TODO
-    pass
+    num_v = 200
+    num_e = 500
+    x = torch.rand((num_v, 10))
+    for _ in range(3):
+        e_list = []
+        # A = torch.zeros((num_u + num_v, num_u + num_v))
+        for i in range(num_e):
+            u, v = randrange(num_v), randrange(num_v)
+            e_list.append((u, v))
+            # A[u, v + num_u] = 1
+            # A[v + num_u, u] = 1
+
+
+        g = DiGraph(num_v)
+        g.add_edges(e_list)
+
+        L = g.A
+        lbd = 0.1
+
+        assert pytest.approx(x + lbd * L @ x) == g.smoothing(x, L, lbd).to_dense()
 
 
 # test message passing
@@ -321,6 +343,7 @@ def test_v2v(g1):
     assert y.shape == (4, 8)
 
 
-def test_drop_edges(g1):
-    # TODO
-    pass
+def test_drop_edges():
+    g = digraph_Gnm(100, 200)
+    gg = g.drop_edges(0.1)
+    assert pytest.approx(gg.num_e, rel=0.1) == 180

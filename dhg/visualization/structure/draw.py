@@ -255,7 +255,7 @@ def draw_bigraph(
     draw_vertex(
         ax,
         np.vstack([u_coor, v_coor]),
-        u_label + v_label if u_label is not None and v_label is not None else None,
+        list(u_label) + list(v_label) if u_label is not None and v_label is not None else None,
         u_font_size + v_font_size,
         font_family,
         u_size + v_size,

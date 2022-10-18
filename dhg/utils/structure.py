@@ -65,6 +65,7 @@ def remap_edge_list(
         ``bipartite_graph`` (``bool``): Whether the structure is bipartite graph. Defaults to ``False``.
         ``ret_map`` (``bool``): Whether to return the map dictionary of raw marker to new index. Defaults to ``False``.
     """
+    e_list = [[str(v) for v in e] for e in e_list]
     if bipartite_graph:
         u_set, v_set = set(), set()
         for u, v in e_list:
@@ -87,7 +88,7 @@ def remap_edge_list(
                 v_set.add(v)
         v_list = sorted(v_set)
         v_map = {raw_v: new_v for new_v, raw_v in enumerate(v_list)}
-        e_list = [set([v_map[v] for v in e]) for e in e_list]
+        e_list = [tuple([v_map[v] for v in e]) for e in e_list]
         if ret_map:
             return e_list, v_map
         else:
@@ -107,6 +108,7 @@ def remap_edge_lists(
         ``bipartite_graph`` (``bool``): Whether the structure is bipartite graph. Defaults to ``False``.
         ``ret_map`` (``bool``): Whether to return the map dictionary of raw marker to new index. Defaults to ``False``.
     """
+    e_lists = [[[str(v) for v in e] for e in e_list] for e_list in e_lists]
     if bipartite_graph:
         u_set, v_set = set(), set()
         for e_list in e_lists:
@@ -131,7 +133,7 @@ def remap_edge_lists(
                     v_set.add(v)
         v_list = sorted(v_set)
         v_map = {raw_v: new_v for new_v, raw_v in enumerate(v_list)}
-        e_list = [[set([v_map[v] for v in e]) for e in e_list] for e_list in e_lists]
+        e_list = [[tuple([v_map[v] for v in e]) for e in e_list] for e_list in e_lists]
         if ret_map:
             return e_list, v_map
         else:
@@ -151,6 +153,7 @@ def remap_adj_list(
         ``bipartite_graph`` (``bool``): Whether the structure is bipartite graph. Defaults to ``False``.
         ``ret_map`` (``bool``): Whether to return the map dictionary of raw marker to new index. Defaults to ``False``.
     """
+    adj_list = [[str(v) for v in line] for line in adj_list]
     if bipartite_graph:
         u_set, v_set = set(), set()
         for line in adj_list:
@@ -202,6 +205,7 @@ def remap_adj_lists(
         ``bipartite_graph`` (``bool``): Whether the structure is bipartite graph. Defaults to ``False``.
         ``ret_map`` (``bool``): Whether to return the map dictionary of raw marker to new index. Defaults to ``False``.
     """
+    adj_lists = [[[str(v) for v in line] for line in adj_list] for adj_list in adj_lists]
     if bipartite_graph:
         u_set, v_set = set(), set()
         for adj_list in adj_lists:

@@ -2,6 +2,7 @@ from random import choices, random, randrange, choice
 import torch
 import pytest
 from dhg import BiGraph
+from dhg.random import bigraph_Gnm
 
 
 @pytest.fixture()
@@ -341,8 +342,26 @@ def test_N():
 
 
 def test_smoothing():
-    # TODO
-    pass
+    num_u, num_v = 100, 200
+    num_e = 500
+    x = torch.rand((num_u + num_v, 10))
+    for _ in range(3):
+        e_list = []
+        # A = torch.zeros((num_u + num_v, num_u + num_v))
+        for i in range(num_e):
+            u, v = randrange(num_u), randrange(num_v)
+            e_list.append((u, v))
+            # A[u, v + num_u] = 1
+            # A[v + num_u, u] = 1
+
+
+        g = BiGraph(num_u, num_v)
+        g.add_edges(e_list)
+
+        L = g.L_GCN
+        lbd = 0.1
+
+        assert pytest.approx(x + lbd * L @ x) == g.smoothing(x, L, lbd).to_dense()
 
 
 # test spactral-based smoothing matrix
@@ -428,7 +447,7 @@ def test_v2u():
         assert pytest.approx(mean_v2u) == g.v2u(x, "mean")
 
 
-def test_drop_edges(g1):
-    # TODO
-    pass
-
+def test_drop_edges():
+    g = bigraph_Gnm(100, 200, 500)
+    gg = g.drop_edges(0.1)
+    assert pytest.approx(gg.num_e, rel=0.1) == 450

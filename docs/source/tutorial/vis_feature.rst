@@ -8,11 +8,11 @@ Feature Visualization
 
 Basic Usages
 ---------------
-DHG provides an interface to visualize the distribution of feaures:
+DHG provides an interface to visualize the distribution of features:
 
-1. Input the features and lable (optional);
+1. Input the features and label (optional);
 2. Specify parameters (*i.e.*, `the dimensionality of the visualisation`, `point size`, `color` and `the method of dimensionality reduction`);
-3. Call ``plt.show()`` funtion to show the figure/animation. 
+3. Call ``plt.show()`` function to show the figure/animation.
 
    
 .. note:: The ``plt`` is short for ``matplotlib.pyplot`` module.
@@ -162,7 +162,7 @@ Rotating Visualization of Features in Poincare Space
 
 
 
-Mathamatical Principles of Hyperbolic Space
+Mathematical Principles of Hyperbolic Space
 --------------------------------------------------
 
 The hyperbolic space is a manifold with constant Gaussian constant negative curvature everywhere, 
