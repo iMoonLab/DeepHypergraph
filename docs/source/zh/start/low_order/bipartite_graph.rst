@@ -12,7 +12,7 @@
 
 定义
 -------------------------
-`有向图 <https://en.wikipedia.org/wiki/Bipartite_graph>`_ 可以表示为 :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})`，
+`二分图 <https://en.wikipedia.org/wiki/Bipartite_graph>`_ 可以表示为 :math:`\mathcal{G} = (\mathcal{U}, \mathcal{V}, \mathcal{E})`，
 其分为 :math:`\mathcal{U}` 和 :math:`\mathcal{V}` 两部分， 通过二分图内的边 :math:`\mathcal{E}` 连接。
 
 - :math:`\mathcal{U}` 是一个 **顶点** 集(也可以称为 **节点** 或者 **点**);
