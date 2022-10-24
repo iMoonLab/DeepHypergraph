@@ -96,7 +96,7 @@ class Hypergraph(BaseHypergraph):
         pull_center_strength: float = 1.0,
     ):
         r"""Draw the hypergraph structure.
-        
+
         Args:
             ``e_style`` (``str``): The style of hyperedges. The available styles are only ``'circle'``. Defaults to ``'circle'``.
             ``v_label`` (``list``): The labels of vertices. Defaults to ``None``.
@@ -201,7 +201,7 @@ class Hypergraph(BaseHypergraph):
 
     @staticmethod
     def from_graph(graph: "Graph", device: torch.device = torch.device("cpu")) -> "Hypergraph":
-        r"""Construct the hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph. 
+        r"""Construct the hypergraph from the graph. Each edge in the graph is treated as a hyperedge in the constructed hypergraph.
 
         .. note::
             The construsted hypergraph is a 2-uniform hypergraph, and has the same number of vertices and edges/hyperedges as the graph.
@@ -263,13 +263,13 @@ class Hypergraph(BaseHypergraph):
 
     @staticmethod
     def _e_list_from_bigraph(bigraph: "BiGraph", U_as_vertex: bool = True) -> List[tuple]:
-        r"""Construct hyperedges from the bipartite graph. 
+        r"""Construct hyperedges from the bipartite graph.
 
         Args:
             ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
-            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
-             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively.
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
              will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
         """
         e_list = []
@@ -289,13 +289,13 @@ class Hypergraph(BaseHypergraph):
     def from_bigraph(
         bigraph: "BiGraph", U_as_vertex: bool = True, device: torch.device = torch.device("cpu")
     ) -> "Hypergraph":
-        r"""Construct the hypergraph from the bipartite graph. 
+        r"""Construct the hypergraph from the bipartite graph.
 
         Args:
             ``bigraph`` (``BiGraph``): The bipartite graph to construct the hypergraph.
-            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
-             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+            ``U_as_vertex`` (``bool``, optional): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively.
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
              will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
             ``device`` (``torch.device``, optional): The device to store the hypergraph. Defaults to ``torch.device('cpu')``.
         """
@@ -356,7 +356,7 @@ class Hypergraph(BaseHypergraph):
         self.add_hyperedges(e_list, group_name=group_name)
 
     def add_hyperedges_from_graph(self, graph: "Graph", group_name: str = "main"):
-        r"""Add hyperedges from edges in the graph. Each edge in the graph is treated as a hyperedge. 
+        r"""Add hyperedges from edges in the graph. Each edge in the graph is treated as a hyperedge.
 
         Args:
             ``graph`` (``Graph``): The graph to join the hypergraph.
@@ -385,13 +385,13 @@ class Hypergraph(BaseHypergraph):
         self.add_hyperedges(e_list, group_name=group_name)
 
     def add_hyperedges_from_bigraph(self, bigraph: "BiGraph", U_as_vertex: bool = False, group_name: str = "main"):
-        r"""Add hyperedges from the bipartite graph. 
+        r"""Add hyperedges from the bipartite graph.
 
         Args:
             ``bigraph`` (``BiGraph``): The bigraph to join the hypergraph.
-            ``U_as_vertex`` (``bool``): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
-             will be treated as vertices and hyperedges in the constructed hypergraph, respectively. 
-             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}` 
+            ``U_as_vertex`` (``bool``): If set to ``True``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
+             will be treated as vertices and hyperedges in the constructed hypergraph, respectively.
+             If set to ``False``, vertices in set :math:`\mathcal{U}` and set :math:`\mathcal{V}`
              will be treated as hyperedges and vertices in the constructed hypergraph, respectively. Defaults to ``True``.
             ``group_name`` (``str``, optional): The target hyperedge group to add these hyperedges. Defaults to the ``main`` hyperedge group.
         """
@@ -624,17 +624,17 @@ class Hypergraph(BaseHypergraph):
     # properties for deep learning
     @property
     def vars_for_DL(self) -> List[str]:
-        r"""Return a name list of available variables for deep learning in the hypergraph including 
+        r"""Return a name list of available variables for deep learning in the hypergraph including
 
         Sparse Matrices:
-        
+
         .. math::
             \mathbf{H}, \mathbf{H}^\top, \mathcal{L}_{sym}, \mathcal{L}_{rw} \mathcal{L}_{HGNN},
-        
+
         Sparse Diagnal Matrices:
 
         .. math::
-            \mathbf{W}_e, \mathbf{D}_v, \mathbf{D}_v^{-1}, \mathbf{D}_v^{-\frac{1}{2}}, \mathbf{D}_e, \mathbf{D}_e^{-1}, 
+            \mathbf{W}_e, \mathbf{D}_v, \mathbf{D}_v^{-1}, \mathbf{D}_v^{-\frac{1}{2}}, \mathbf{D}_e, \mathbf{D}_e^{-1},
 
         Vectors:
 
@@ -670,7 +670,7 @@ class Hypergraph(BaseHypergraph):
 
     def v2e_src_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the source vertex index vector :math:`\overrightarrow{v2e}_{src}` of the connections (vertices point to hyperedges) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -685,7 +685,7 @@ class Hypergraph(BaseHypergraph):
 
     def v2e_dst_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the destination hyperedge index vector :math:`\overrightarrow{v2e}_{dst}` of the connections (vertices point to hyperedges) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -700,7 +700,7 @@ class Hypergraph(BaseHypergraph):
 
     def v2e_weight_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the weight vector :math:`\overrightarrow{v2e}_{weight}` of the connections (vertices point to hyperedges) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -715,7 +715,7 @@ class Hypergraph(BaseHypergraph):
 
     def e2v_src_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the source hyperedge index vector :math:`\overrightarrow{e2v}_{src}` of the connections (hyperedges point to vertices) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -730,7 +730,7 @@ class Hypergraph(BaseHypergraph):
 
     def e2v_dst_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the destination vertex index vector :math:`\overrightarrow{e2v}_{dst}` of the connections (hyperedges point to vertices) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -745,7 +745,7 @@ class Hypergraph(BaseHypergraph):
 
     def e2v_weight_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the weight vector :math:`\overrightarrow{e2v}_{weight}` of the connections (hyperedges point to vertices) in the specified hyperedge group.
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -1010,7 +1010,7 @@ class Hypergraph(BaseHypergraph):
         return e_indices.clone()
 
     def N_v(self, e_idx: int) -> torch.Tensor:
-        r"""Return the neighbor vertices of the specified hyperedge with ``torch.Tensor`` format. 
+        r"""Return the neighbor vertices of the specified hyperedge with ``torch.Tensor`` format.
 
         .. note::
             The ``e_idx`` must be in the range of [0, :attr:`num_e`).
@@ -1048,7 +1048,7 @@ class Hypergraph(BaseHypergraph):
     @property
     def L_sym(self) -> torch.Tensor:
         r"""Return the symmetric Laplacian matrix :math:`\mathcal{L}_{sym}` of the hypergraph with ``torch.sparse_coo_tensor`` format.
-        
+
         .. math::
             \mathcal{L}_{sym} = \mathbf{I} - \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}}
         """
@@ -1064,10 +1064,10 @@ class Hypergraph(BaseHypergraph):
 
     def L_sym_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the symmetric Laplacian matrix :math:`\mathcal{L}_{sym}` of the specified hyperedge group with ``torch.sparse_coo_tensor`` format.
-        
+
         .. math::
             \mathcal{L}_{sym} = \mathbf{I} - \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}}
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -1085,7 +1085,7 @@ class Hypergraph(BaseHypergraph):
     @property
     def L_rw(self) -> torch.Tensor:
         r"""Return the random walk Laplacian matrix :math:`\mathcal{L}_{rw}` of the hypergraph with ``torch.sparse_coo_tensor`` format.
-        
+
         .. math::
             \mathcal{L}_{rw} = \mathbf{I} - \mathbf{D}_v^{-1} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top
         """
@@ -1105,10 +1105,10 @@ class Hypergraph(BaseHypergraph):
 
     def L_rw_of_group(self, group_name: str) -> torch.Tensor:
         r"""Return the random walk Laplacian matrix :math:`\mathcal{L}_{rw}` of the specified hyperedge group with ``torch.sparse_coo_tensor`` format.
-        
+
         .. math::
             \mathcal{L}_{rw} = \mathbf{I} - \mathbf{D}_v^{-1} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -1151,7 +1151,7 @@ class Hypergraph(BaseHypergraph):
 
         .. math::
             \mathcal{L}_{HGNN} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}}
-        
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
@@ -1172,8 +1172,8 @@ class Hypergraph(BaseHypergraph):
         r"""Return the smoothed feature matrix with the HGNN Laplacian matrix :math:`\mathcal{L}_{HGNN}`.
 
             .. math::
-                \mathbf{X} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X} 
-            
+                \mathbf{X} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X}
+
         Args:
             ``X`` (``torch.Tensor``): The feature matrix. Size :math:`(|\mathcal{V}|, C)`.
             ``drop_rate`` (``float``): Dropout rate. Randomly dropout the connections in incidence matrix with probability ``drop_rate``. Default: ``0.0``.
@@ -1190,8 +1190,8 @@ class Hypergraph(BaseHypergraph):
         r"""Return the smoothed feature matrix with the HGNN Laplacian matrix :math:`\mathcal{L}_{HGNN}`.
 
             .. math::
-                \mathbf{X} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X} 
-            
+                \mathbf{X} = \mathbf{D}_v^{-\frac{1}{2}} \mathbf{H} \mathbf{W}_e \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-\frac{1}{2}} \mathbf{X}
+
         Args:
             ``group_name`` (``str``): The name of the specified hyperedge group.
             ``X`` (``torch.Tensor``): The feature matrix. Size :math:`(|\mathcal{V}|, C)`.

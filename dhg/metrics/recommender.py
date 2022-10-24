@@ -112,7 +112,9 @@ def recall(
     assert y_true.max() == 1, "The input y_true must be binary."
     pred_seq = y_true.gather(1, torch.argsort(y_pred, dim=-1, descending=True))[:, :k]
     num_true = y_true.sum(dim=1)
-    res_list = (pred_seq.sum(dim=1) / num_true).detach().cpu()
+    res_list = (pred_seq.sum(dim=1) / num_true).cpu()
+    res_list[torch.isinf(res_list)] = 0
+    res_list[torch.isnan(res_list)] = 0
     if ret_batch:
         return [res.item() for res in res_list]
     else:
@@ -169,6 +171,7 @@ def ndcg(
 
     res_list = (pred_dcg / ideal_dcg).detach().cpu()
     res_list[torch.isinf(res_list)] = 0
+    res_list[torch.isnan(res_list)] = 0
     if ret_batch:
         return [res.item() for res in res_list]
     else:

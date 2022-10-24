@@ -67,7 +67,7 @@ def default_size(
     v_size: Union[float, list] = 1.0,
     v_line_width: Union[float, list] = 1.0,
     e_line_width: Union[float, list] = 1.0,
-    font_size: int = 1.0,
+    font_size: float = 1.0,
 ):
     _v_size = 1 / np.sqrt(num_v + 10) * 0.1
     _v_line_width = 1 * np.exp(-num_v / 50)
@@ -91,8 +91,8 @@ def default_bipartite_size(
     v_size: Union[float, list] = 1.0,
     v_line_width: Union[float, list] = 1.0,
     e_line_width: Union[float, list] = 1.0,
-    u_font_size: int = 1.0,
-    v_font_size: int = 1.0,
+    u_font_size: float = 1.0,
+    v_font_size: float = 1.0,
 ):
     _u_size = 1 / np.sqrt(num_u + 12) * 0.08
     _u_line_width = 1 * np.exp(-num_u / 50)

@@ -1,6 +1,9 @@
 import torch
 import pytest
+import random
+
 from dhg import Graph
+from dhg.random import graph_Gnm
 
 
 @pytest.fixture()
@@ -18,11 +21,16 @@ def g2():
     return g
 
 
-def test_save():
+def test_save(g1, tmp_path):
     from dhg import load_structure
 
-    # TODO
-    pass
+    g1.save(tmp_path / "g1")
+    g2 = load_structure(tmp_path / "g1")
+
+    for e1, e2 in zip(g1.e[0], g2.e[0]):
+        assert e1 == e2
+    for w1, w2 in zip(g1.e[1], g2.e[1]):
+        assert w1 == w2
 
 
 # test representation
@@ -82,7 +90,10 @@ def test_add_edges(g1, g2):
     assert g2.A[3, 2] == 1
     assert (2, 3) in g2.e_both_side[0]
     assert g2.A[2, 3] == 1
-    # TODO: test merge operation
+    g2.add_edges(((3, 2), (3, 1)), merge_op="sum")
+    assert g2.num_e == 6
+    assert g2.A[3, 2] == 2
+    assert g2.A[2, 3] == 2
 
 
 def test_add_edges_sum(g1, g2):
@@ -233,14 +244,21 @@ def test_N(g1):
 
 
 def test_smoothing():
-    # TODO
-    pass
+    num_v = 200
+    num_e = 500
+    x = torch.rand((num_v, 10))
+
+    g = graph_Gnm(num_v, num_e)
+    L = g.L_GCN
+    lbd = 0.1
+
+    assert pytest.approx(x + lbd * L @ x) == g.smoothing(x, L, lbd).to_dense()
+
 
 
 def test_laplacian_GCN():
     num_v = 20
     num_e = 50
-    import random
 
     for _ in range(3):
         g = Graph(num_v)
@@ -265,13 +283,55 @@ def test_laplacian_GCN():
 
 
 def test_laplacian_symmetric():
-    # TODO
-    pass
+    num_v = 20
+    num_e = 50
+
+    for _ in range(3):
+        g = Graph(num_v)
+        A = torch.zeros((num_v, num_v))
+        for _ in range(num_e):
+            s = random.randrange(num_v)
+            d = random.randrange(num_v)
+            g.add_edges((s, d))
+            A[s, d] = 1
+            A[d, s] = 1
+        # add the extra selfloop
+        # for idx in range(num_v):
+        #     A[idx, idx] += 1
+
+        D = A.sum(0)
+        D_inv_1_2 = D ** -0.5
+        D_inv_1_2[torch.isinf(D_inv_1_2)] = 0
+        D_inv_1_2 = torch.diag(D_inv_1_2.view(-1))
+        L = torch.eye(num_v) - D_inv_1_2 @ A @ D_inv_1_2
+
+        assert pytest.approx(g.L_sym.to_dense()) == L
 
 
 def test_laplacian_random_walk():
-    # TODO
-    pass
+    num_v = 20
+    num_e = 50
+
+    for _ in range(3):
+        g = Graph(num_v)
+        A = torch.zeros((num_v, num_v))
+        for _ in range(num_e):
+            s = random.randrange(num_v)
+            d = random.randrange(num_v)
+            g.add_edges((s, d))
+            A[s, d] = 1
+            A[d, s] = 1
+        # add the extra selfloop
+        # for idx in range(num_v):
+        #     A[idx, idx] += 1
+
+        D = A.sum(0)
+        D_inv_1 = D ** -1
+        D_inv_1[torch.isinf(D_inv_1)] = 0
+        D_inv_1 = torch.diag(D_inv_1.view(-1))
+        L = torch.eye(num_v) - D_inv_1 @ A
+
+        assert pytest.approx(g.L_rw.to_dense()) == L
 
 
 def test_v2v(g1):
@@ -288,7 +348,6 @@ def test_v2v(g1):
     y = g1.v2v(x, "sum", w)
     assert y.shape == (4, 8)
 
-    import random
 
     for _ in range(1):
         g = Graph(num_v)  # .cuda()
@@ -301,20 +360,18 @@ def test_v2v(g1):
             A[s, d] = 1
             A[d, s] = 1
 
-            D = A.sum(0)
-            D_inv = 1 / D
-            D_inv[torch.isinf(D_inv)] = 0
-            D_inv = torch.diag(D_inv.view(-1))
-            sum_v2v = A @ x
-            mean_v2v = D_inv @ sum_v2v
+        D = A.sum(0)
+        D_inv = 1 / D
+        D_inv[torch.isinf(D_inv)] = 0
+        D_inv = torch.diag(D_inv.view(-1))
+        sum_v2v = A @ x
+        mean_v2v = D_inv @ sum_v2v
 
-            assert pytest.approx(g.v2v(x, "sum").cpu()) == sum_v2v.cpu()
-            assert pytest.approx(g.v2v(x, "mean").cpu()) == mean_v2v.cpu()
-
-    # TODO: manually compute and compare with g1.v2v
+        assert pytest.approx(g.v2v(x, "sum").cpu()) == sum_v2v.cpu()
+        assert pytest.approx(g.v2v(x, "mean").cpu()) == mean_v2v.cpu()
 
 
 def test_drop_edges(g1):
-    # TODO
-    pass
-
+    g = graph_Gnm(100, 200)
+    gg = g.drop_edges(0.1)
+    assert pytest.approx(gg.num_e, rel=0.1) == 180
