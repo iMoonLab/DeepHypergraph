@@ -29,6 +29,10 @@ It supports a wide variety of structures like low-order structures (graph, direc
 
 In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
+![Framework of DHG Structures](docs/source/_static/img/fw_dhg_structure.jpg)
+
+![Framework of DHG Function Library](docs/source/_static/img/fw_dhg_other.jpg)
+
 * [Hightlights](#highlights)
 * [Installation](#installation)
 * [Quick Start](#quick-start)
