@@ -1488,7 +1488,7 @@ class Hypergraph(BaseHypergraph):
                 P = self.H_of_group(group_name)
             if aggr == "mean":
                 X = torch.sparse.mm(P, X)
-                X = torch.sparse.mm(self.D_v_neg_1_of_group[group_name], X)
+                X = torch.sparse.mm(self.D_v_neg_1_of_group(group_name), X)
             elif aggr == "sum":
                 X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
@@ -1499,12 +1499,12 @@ class Hypergraph(BaseHypergraph):
         else:
             # init message path
             assert (
-                e2v_weight.shape[0] == self.e2v_weight_of_group[group_name].shape[0]
+                e2v_weight.shape[0] == self.e2v_weight_of_group(group_name).shape[0]
             ), f"The size of e2v_weight must be equal to the size of self.e2v_weight_of_group('{group_name}')."
             P = torch.sparse_coo_tensor(
-                self.H_of_group[group_name]._indices(),
+                self.H_of_group(group_name)._indices(),
                 e2v_weight,
-                self.H_of_group[group_name].shape,
+                self.H_of_group(group_name).shape,
                 device=self.device,
             )
             if drop_rate > 0.0:

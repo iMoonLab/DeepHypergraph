@@ -217,24 +217,19 @@ def test_add_hyperedges_from_graph_kHop(g1):
 
 
 def test_add_hyperedges_from_bigraph():
-    g = BiGraph(3, 4, [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 2], [3, 2]])
-    h = Hypergraph(6)
-    h.add_hyperedges_from_bigraph(g, group_name="bigraph")
-    assert h.num_e == 4
-    assert (0, 1, 2, 3) in h.e_of_group("bigraph")[0]
-    assert (0, 1) in h.e_of_group("bigraph")[0]
-    assert (2, 3) in h.e_of_group("bigraph")[0]
+    g = BiGraph(4, 3, [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 2], [3, 2]])
+    hg = Hypergraph(3)
+    hg.add_hyperedges_from_bigraph(g, group_name="bigraph")
+    assert hg.num_e == 2
+    assert (0, 1) in hg.e_of_group("bigraph")[0]
+    assert (0, 2) in hg.e_of_group("bigraph")[0]
 
-    h.add_hyperedges_from_bigraph(g, group_name="bigraph-u", U_as_vertex=True)
-    assert h.num_e == 4
-    assert (0, 1, 2, 3) in h.e_of_group("bigraph-u")[0]
-    assert (0, 1) in h.e_of_group("bigraph-u")[0]
-    assert (2, 3) in h.e_of_group("bigraph-u")[0]
-
-    h.add_hyperedges_from_bigraph(g, group_name="bigraph-v", U_as_vertex=False)
-    assert h.num_e == 3
-    assert (0, 1) in h.e_of_group("bigraph-v")[0]
-    assert (0, 2) in h.e_of_group("bigraph-v")[0]
+    hg = Hypergraph(4)
+    hg.add_hyperedges_from_bigraph(g, group_name="bigraph-u", U_as_vertex=True)
+    assert hg.num_e == 3
+    assert (0, 1, 2, 3) in hg.e_of_group("bigraph-u")[0]
+    assert (0, 1) in hg.e_of_group("bigraph-u")[0]
+    assert (2, 3) in hg.e_of_group("bigraph-u")[0]
 
 
 def test_remove_hyperedges(g1):

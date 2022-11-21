@@ -292,6 +292,8 @@ def test_laplacian_symmetric():
         for _ in range(num_e):
             s = random.randrange(num_v)
             d = random.randrange(num_v)
+            if s == d:
+                continue
             g.add_edges((s, d))
             A[s, d] = 1
             A[d, s] = 1
@@ -318,6 +320,8 @@ def test_laplacian_random_walk():
         for _ in range(num_e):
             s = random.randrange(num_v)
             d = random.randrange(num_v)
+            if s == d:
+                continue
             g.add_edges((s, d))
             A[s, d] = 1
             A[d, s] = 1
