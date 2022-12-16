@@ -6,10 +6,9 @@ from .base import BaseData
 
 
 class DBLP8k(BaseData):
-    r"""The DBLP-8k dataset is a citation network dataset for link prediction task.
-    The dataset is a part of the dataset crawled according to DBLP API,
-     and we have selected each item based on some conditions, 
-     such as the venue and publication year (from 2018 to 2022). It contains 6498 authors and 2603 papers.
+    r"""The DBLP-8k dataset is a citation network dataset for link prediction task. 
+    The dataset is a part of the dataset crawled according to DBLP API, and we have selected each item based on some conditions, such as the venue and publication year (from 2018 to 2022). It contains 6498 authors and 2603 papers.
+    
     The content of the DBLP-8k dataset includes the following:
 
     - ``num_vertices``: The number of vertices: :math:`8,657`.

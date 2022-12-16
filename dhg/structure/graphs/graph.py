@@ -421,13 +421,14 @@ class Graph(BaseGraph):
         """
         return self.D_v._values().cpu().numpy().tolist()
 
-    def nbr_v(self, v_idx: int) -> Tuple[List[int], List[float]]:
-        r""" Return a vertex list of the neighbors of the vertex ``v_idx``.
+    def nbr_v(self, v_idx: int, hop: int = 1) -> List[int]:
+        r""" Return a vertex list of the ``k``-hop neighbors of the vertex ``v_idx``.
 
         Args:
             ``v_idx`` (``int``): The index of the vertex.
+            ``hop`` (``int``): The number of the hop.
         """
-        return self.N_v(v_idx).cpu().numpy().tolist()
+        return self.N_v(v_idx, hop).cpu().numpy().tolist()
 
     # =====================================================================================
     # properties for deep learning
@@ -521,13 +522,25 @@ class Graph(BaseGraph):
             ).coalesce()
         return self.cache["D_v_neg_1_2"]
 
-    def N_v(self, v_idx: int) -> Tuple[List[int], List[float]]:
-        r""" Return the neighbors of the vertex ``v_idx`` with ``torch.Tensor`` format.
+    def N_v(self, v_idx: int, hop: int = 1) -> List[int]:
+        r""" Return the ``k``-hop neighbors of the vertex ``v_idx`` with ``torch.Tensor`` format.
 
         Args:
             ``v_idx`` (``int``): The index of the vertex.
+            ``hop`` (``int``): The number of the hop.
         """
-        sub_v_set = self.A[v_idx]._indices()[0].clone()
+        assert hop >= 1, "``hop`` must be a number larger than or equal to 1."
+        if hop == 1:
+            A_k = self.A
+        else:
+            if self.cache.get(f"A_{hop}") is None:
+                A_1, A_k = self.A.clone(), self.A.clone()
+                for _ in range(hop - 1):
+                    A_k = torch.sparse.mm(A_k, A_1)
+                self.cache[f"A_{hop}"] = A_k
+            else:
+                A_k = self.cache[f"A_{hop}"]
+        sub_v_set = A_k[v_idx]._indices()[0].clone()
         return sub_v_set
 
     @property

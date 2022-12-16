@@ -174,6 +174,11 @@ def test_nbr(g1):
     assert g1.nbr_v(0) == [1, 2, 3]
     g1.remove_edges((0, 2))
     assert g1.nbr_v(2) == []
+    # hop k
+    g3 = Graph(5, [(0, 1), (0, 3), (1, 4), (2, 3)])
+    assert sorted(g3.nbr_v(3, 1)) == [0, 2]
+    assert sorted(g3.nbr_v(3, 2)) == [1, 3]
+    assert sorted(g3.nbr_v(3, 3)) == [0, 2, 4]
 
 
 # test deep learning
