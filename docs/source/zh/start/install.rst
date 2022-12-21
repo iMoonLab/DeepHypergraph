@@ -8,7 +8,7 @@
     - 校对： `丰一帆 <https://fengyifan.site/>`_ 、张欣炜
 
 - Python >= 3.8
-- Pytorch >=1.11
+- Pytorch >= 1.12
 
 
 目前， **DHG** 的最新稳定版本 **0.9.2** 已经发布，可以使用 ``pip`` 指令直接安装：
