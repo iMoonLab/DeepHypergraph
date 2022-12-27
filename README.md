@@ -29,9 +29,9 @@ It supports a wide variety of structures like low-order structures (graph, direc
 
 In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
-![Framework of DHG Structures](docs/source/_static/img/fw_dhg_structure.jpg)
+![Framework of DHG Structures](https://deephypergraph.com/fw_dhg_structure.jpg)
 
-![Framework of DHG Function Library](docs/source/_static/img/fw_dhg_other.jpg)
+![Framework of DHG Function Library](https://deephypergraph.com/fw_dhg_other.jpg)
 
 * [Hightlights](#highlights)
 * [Installation](#installation)
@@ -95,7 +95,7 @@ If you find any bugs, please report it to us in [GitHub Issues](https://github.c
 You can draw the graph, hypergraph, directed graph, and bipartite graph with DHG's visualization tool. More details see the [Tutorial](https://deephypergraph.readthedocs.io/en/latest/tutorial/vis_structure.html)
 
 
-![Visualization of graph and hypergraph](docs/source/_static/img/readme_graph_hypergraph.png)
+![Visualization of graph and hypergraph](https://deephypergraph.com/readme_graph_hypergraph.png)
 
 ```python
 import matplotlib.pyplot as plt
@@ -110,7 +110,7 @@ hg.draw()
 plt.show()
 ```
 
-![Visualization of directed graph and bipartite graph](docs/source/_static/img/readme_digraph_bigraph.png)
+![Visualization of directed graph and bipartite graph](https://deephypergraph.com/readme_digraph_bigraph.png)
 
 ```python
 import matplotlib.pyplot as plt
@@ -349,6 +349,8 @@ Currently, we have added the following datasets:
 - **[HouseCommittees](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.HouseCommittees.html#dhg.data.HouseCommittees)**: A committee network dataset for vertex classification task.
 
 - **[News20](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.News20.html#dhg.data.News20)**: A newspaper network dataset for vertex classification task.
+
+- **[DBLP8k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.DBLP8k.html#dhg.data.DBLP8k)**: The DBLP-8k dataset is a citation network dataset for link prediction task.
 
 ## Metrics
 
