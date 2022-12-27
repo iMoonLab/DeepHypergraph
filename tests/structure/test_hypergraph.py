@@ -449,6 +449,12 @@ def test_H_T_group(g1):
     assert (g1.H_T_of_group("knn").to_dense().cpu() == torch.tensor([[1, 0, 0, 0, 1, 1]])).all()
 
 
+def test_W_v(g2):
+    assert (g2.W_v.cpu()._values() == torch.tensor([1, 1, 1, 1, 1])).all()
+    hg = Hypergraph(5, [[1, 2], [0, 2, 3, 4]], v_weight=[0.1, 1, 2, 1, 1])
+    assert (hg.W_v.cpu()._values() == torch.tensor([0.1, 1, 2, 1, 1])).all()
+
+
 def test_W_e(g2):
     assert (g2.W_e.cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5])).all()
 
