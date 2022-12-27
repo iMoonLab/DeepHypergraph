@@ -46,10 +46,10 @@ class JHConv(nn.Module):
             X (``torch.Tensor``): Input vertex feature matrix. Size :math:`(N, C_{in})`.
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`N` vertices.
         """
-        X = self.theta(X)
+        X_ = self.theta(X)
         if self.bn is not None:
-            X = self.bn(X)
-        X = hg.smoothing_with_HGNN(X) + X
+            X_ = self.bn(X_)
+        X_ = hg.smoothing_with_HGNN(X_) + X
         if not self.is_last:
-            X = self.drop(self.act(X))
-        return X
+            X_ = self.drop(self.act(X_))
+        return X_

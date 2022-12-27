@@ -77,7 +77,7 @@ class DHCF(nn.Module):
             u_embs = hg_ui.smoothing_with_HGNN(u_embs)
             i_embs = hg_iu.smoothing_with_HGNN(i_embs)
             g_embs = torch.cat([u_embs, i_embs], dim=0)
-            sum_embs = F.leaky_relu(self.W_gc[_idx](g_embs) + g_embs, negative_slope=0.2)
+            sum_embs = F.leaky_relu(self.W_gc[_idx](g_embs) + all_embs, negative_slope=0.2)
             #==========================================================================================
 
             bi_embs = all_embs * g_embs
