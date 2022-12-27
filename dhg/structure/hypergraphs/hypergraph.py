@@ -847,7 +847,11 @@ class Hypergraph(BaseHypergraph):
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         if self.group_cache[group_name].get("D_v") is None:
-            _tmp = torch.sparse.sum(self.H_of_group(group_name), dim=1).to_dense().clone().view(-1)
+            H = self.H_of_group(group_name).clone()
+            w_e = self.W_e_of_group(group_name)._values().clone()
+            val = w_e[H._indices()[1]] * H._values()
+            H_ = torch.sparse_coo_tensor(H._indices(), val, size=H.shape, device=self.device).coalesce()
+            _tmp = torch.sparse.sum(H_, dim=1).to_dense().clone().view(-1)
             _num_v = _tmp.size(0)
             self.group_cache[group_name]["D_v"] = torch.sparse_coo_tensor(
                 torch.arange(0, _num_v).view(1, -1).repeat(2, 1),

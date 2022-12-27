@@ -290,7 +290,7 @@ def test_add_and_remove_group(g1):
 def test_deg(g1, g2):
     assert g1.deg_v == [2, 2, 2, 1, 1, 1]
     assert g1.deg_e == [4, 2, 3]
-    assert g2.deg_v == [2, 3, 3, 4, 1]
+    assert g2.deg_v == [1.5, 2, 2, 3, 1]
     assert g2.deg_e == [3, 3, 2, 3, 2]
 
 
@@ -463,7 +463,7 @@ def test_W_e_group(g2):
 def test_D(g1, g2):
     assert (g1.D_v.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1])).all()
     assert (g1.D_e.cpu()._values() == torch.tensor([4, 2, 3])).all()
-    assert (g2.D_v.cpu()._values() == torch.tensor([2, 3, 3, 4, 1])).all()
+    assert (g2.D_v.cpu()._values() == torch.tensor([1.5, 2, 2, 3, 1])).all()
     assert (g2.D_e.cpu()._values() == torch.tensor([3, 3, 2, 3, 2])).all()
 
 
@@ -483,11 +483,11 @@ def test_D_neg(g1, g2):
     # -1
     assert (g1.D_v_neg_1.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-1.0)).all()
     assert (g1.D_e_neg_1.cpu()._values() == torch.tensor([4, 2, 3]) ** (-1.0)).all()
-    assert (g2.D_v_neg_1.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-1.0)).all()
+    assert (g2.D_v_neg_1.cpu()._values() == torch.tensor([1.5, 2, 2, 3, 1]) ** (-1.0)).all()
     assert (g2.D_e_neg_1.cpu()._values() == torch.tensor([3, 3, 2, 3, 2]) ** (-1.0)).all()
     # -1/2
     assert (g1.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 2, 2, 1, 1, 1]) ** (-0.5)).all()
-    assert (g2.D_v_neg_1_2.cpu()._values() == torch.tensor([2, 3, 3, 4, 1]) ** (-0.5)).all()
+    assert (g2.D_v_neg_1_2.cpu()._values() == torch.tensor([1.5, 2, 2, 3, 1]) ** (-0.5)).all()
     # isolated vertex
     g3 = Hypergraph(3, [0, 1])
     assert (g3.D_v_neg_1.cpu()._values() == torch.tensor([1, 1, 0])).all()
