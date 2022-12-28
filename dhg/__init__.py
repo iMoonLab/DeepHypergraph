@@ -14,7 +14,7 @@ from .structure import BaseHypergraph, Hypergraph
 
 from ._global import AUTHOR_EMAIL, CACHE_ROOT, DATASETS_ROOT, REMOTE_DATASETS_ROOT
 
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 
 __all__ = {
     "AUTHOR_EMAIL",
