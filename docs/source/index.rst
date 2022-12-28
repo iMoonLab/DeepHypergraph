@@ -29,6 +29,7 @@ can help you automatically tune the hyper-parameters of your models in training 
 
 **News**
 
+- 2022-12-28 -> The **v0.9.3** is now available! More datasets and operations of hypergraph are included!
 - 2022-09-25 -> The **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
 - 2022-08-25 -> The **v0.9.1** is now available!
 
