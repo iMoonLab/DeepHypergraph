@@ -443,7 +443,7 @@ class DiGraph(BaseGraph):
         if self.cache.get("D_v_in", None) is None:
             _tmp = torch.sparse.sum(self.A_T, dim=1).to_dense().clone().view(-1)
             self.cache["D_v_in"] = torch.sparse_coo_tensor(
-                indices=torch.arange(0, self.num_v).view(1, -1).repeat(2, 1),
+                indices=torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1),
                 values=_tmp,
                 size=torch.Size([self.num_v, self.num_v]),
                 device=self.device,
@@ -457,7 +457,7 @@ class DiGraph(BaseGraph):
         if self.cache.get("D_v_out", None) is None:
             _tmp = torch.sparse.sum(self.A, dim=1).to_dense().clone().view(-1)
             self.cache["D_v_out"] = torch.sparse_coo_tensor(
-                indices=torch.arange(0, self.num_v).view(1, -1).repeat(2, 1),
+                indices=torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1),
                 values=_tmp,
                 size=torch.Size([self.num_v, self.num_v]),
                 device=self.device,

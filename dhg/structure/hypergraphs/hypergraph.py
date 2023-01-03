@@ -814,7 +814,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = torch.Tensor(self.v_weight)
             _num_v = _tmp.size(0)
             self.cache["W_v"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_v).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_v, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_v, _num_v]),
                 device=self.device,
@@ -830,7 +830,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = torch.cat(_tmp, dim=0).view(-1)
             _num_e = _tmp.size(0)
             self.cache["W_e"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_e).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_e, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_e, _num_e]),
                 device=self.device,
@@ -848,7 +848,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = self._fetch_W_of_group(group_name).view(-1)
             _num_e = _tmp.size(0)
             self.group_cache[group_name]["W_e"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_e).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_e, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_e, _num_e]),
                 device=self.device,
@@ -863,7 +863,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = [self.D_v_of_group(name)._values().clone() for name in self.group_names]
             _tmp = torch.vstack(_tmp).sum(dim=0).view(-1)
             self.cache["D_v"] = torch.sparse_coo_tensor(
-                torch.arange(0, self.num_v).view(1, -1).repeat(2, 1),
+                torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([self.num_v, self.num_v]),
                 device=self.device,
@@ -885,7 +885,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = torch.sparse.sum(H_, dim=1).to_dense().clone().view(-1)
             _num_v = _tmp.size(0)
             self.group_cache[group_name]["D_v"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_v).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_v, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_v, _num_v]),
                 device=self.device,
@@ -959,7 +959,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = torch.cat(_tmp, dim=0).view(-1)
             _num_e = _tmp.size(0)
             self.cache["D_e"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_e).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_e, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_e, _num_e]),
                 device=self.device,
@@ -977,7 +977,7 @@ class Hypergraph(BaseHypergraph):
             _tmp = torch.sparse.sum(self.H_T_of_group(group_name), dim=1).to_dense().clone().view(-1)
             _num_e = _tmp.size(0)
             self.group_cache[group_name]["D_e"] = torch.sparse_coo_tensor(
-                torch.arange(0, _num_e).view(1, -1).repeat(2, 1),
+                torch.arange(0, _num_e, device=self.device).view(1, -1).repeat(2, 1),
                 _tmp,
                 torch.Size([_num_e, _num_e]),
                 device=self.device,
@@ -1090,8 +1090,8 @@ class Hypergraph(BaseHypergraph):
         if self.cache.get("L_sym") is None:
             L_HGNN = self.L_HGNN.clone()
             self.cache["L_sym"] = torch.sparse_coo_tensor(
-                torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), L_HGNN._indices(),]),
-                torch.hstack([torch.ones(self.num_v), -L_HGNN._values()]),
+                torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), L_HGNN._indices(),]),
+                torch.hstack([torch.ones(self.num_v, device=self.device), -L_HGNN._values()]),
                 torch.Size([self.num_v, self.num_v]),
                 device=self.device,
             ).coalesce()
@@ -1110,8 +1110,8 @@ class Hypergraph(BaseHypergraph):
         if self.group_cache[group_name].get("L_sym") is None:
             L_HGNN = self.L_HGNN_of_group(group_name).clone()
             self.group_cache[group_name]["L_sym"] = torch.sparse_coo_tensor(
-                torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), L_HGNN._indices(),]),
-                torch.hstack([torch.ones(self.num_v), -L_HGNN._values()]),
+                torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), L_HGNN._indices(),]),
+                torch.hstack([torch.ones(self.num_v, device=self.device), -L_HGNN._values()]),
                 torch.Size([self.num_v, self.num_v]),
                 device=self.device,
             ).coalesce()
@@ -1128,8 +1128,8 @@ class Hypergraph(BaseHypergraph):
             _tmp = self.D_v_neg_1.mm(self.H).mm(self.W_e).mm(self.D_e_neg_1).mm(self.H_T)
             self.cache["L_rw"] = (
                 torch.sparse_coo_tensor(
-                    torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _tmp._indices(),]),
-                    torch.hstack([torch.ones(self.num_v), -_tmp._values()]),
+                    torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), _tmp._indices(),]),
+                    torch.hstack([torch.ones(self.num_v, device=self.device), -_tmp._values()]),
                     torch.Size([self.num_v, self.num_v]),
                     device=self.device,
                 )
@@ -1158,8 +1158,8 @@ class Hypergraph(BaseHypergraph):
             )
             self.group_cache[group_name]["L_rw"] = (
                 torch.sparse_coo_tensor(
-                    torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _tmp._indices(),]),
-                    torch.hstack([torch.ones(self.num_v), -_tmp._values()]),
+                    torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), _tmp._indices(),]),
+                    torch.hstack([torch.ones(self.num_v, device=self.device), -_tmp._values()]),
                     torch.Size([self.num_v, self.num_v]),
                     device=self.device,
                 )

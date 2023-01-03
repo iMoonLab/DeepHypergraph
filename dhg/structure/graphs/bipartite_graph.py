@@ -509,7 +509,7 @@ class BiGraph(BaseGraph):
         if self.cache.get("D_u", None) is None:
             _tmp = torch.sparse.sum(self.B, dim=1).to_dense().clone().view(-1)
             self.cache["D_u"] = torch.sparse_coo_tensor(
-                indices=torch.arange(0, self.num_u).view(1, -1).repeat(2, 1),
+                indices=torch.arange(0, self.num_u, device=self.device).view(1, -1).repeat(2, 1),
                 values=_tmp,
                 size=torch.Size([self.num_u, self.num_u]),
                 device=self.device,
@@ -523,7 +523,7 @@ class BiGraph(BaseGraph):
         if self.cache.get("D_v", None) is None:
             _tmp = torch.sparse.sum(self.B_T, dim=1).to_dense().clone().view(-1)
             self.cache["D_v"] = torch.sparse_coo_tensor(
-                indices=torch.arange(0, self.num_v).view(1, -1).repeat(2, 1),
+                indices=torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1),
                 values=_tmp,
                 size=torch.Size([self.num_v, self.num_v]),
                 device=self.device,

@@ -592,8 +592,8 @@ class Graph(BaseGraph):
             _tmp_g.remove_selfloop()
             _L = _tmp_g.D_v_neg_1_2.mm(_tmp_g.A).mm(_tmp_g.D_v_neg_1_2).clone()
             self.cache["L_sym"] = torch.sparse_coo_tensor(
-                torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _L._indices(),]),
-                torch.hstack([torch.ones(self.num_v), -_L._values()]),
+                torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), _L._indices(),]),
+                torch.hstack([torch.ones(self.num_v, device=self.device), -_L._values()]),
                 torch.Size([self.num_v, self.num_v]),
                 device=self.device,
             ).coalesce()
@@ -611,8 +611,8 @@ class Graph(BaseGraph):
             _tmp_g.remove_selfloop()
             _L = _tmp_g.D_v_neg_1.mm(_tmp_g.A).clone()
             self.cache["L_rw"] = torch.sparse_coo_tensor(
-                torch.hstack([torch.arange(0, self.num_v).view(1, -1).repeat(2, 1), _L._indices(),]),
-                torch.hstack([torch.ones(self.num_v), -_L._values()]),
+                torch.hstack([torch.arange(0, self.num_v, device=self.device).view(1, -1).repeat(2, 1), _L._indices(),]),
+                torch.hstack([torch.ones(self.num_v, device=self.device), -_L._values()]),
                 torch.Size([self.num_v, self.num_v]),
                 device=self.device,
             ).coalesce()
