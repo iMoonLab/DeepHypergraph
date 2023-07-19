@@ -29,6 +29,10 @@ def format_metric_configs(task: str, metric_configs: List[Union[str, Dict[str, d
         import dhg.metrics.recommender as module
 
         available_metrics = module.available_recommender_metrics()
+    elif task == "link_prediction":
+        import dhg.metrics.link_prediction as module
+
+        available_metrics = module.available_link_prediction_metrics()
     else:
         raise ValueError(f"Task {task} is not supported yet. Please email '{AUTHOR_EMAIL}' to add it.")
     metric_list = []
@@ -73,7 +77,7 @@ class BaseEvaluator:
     r"""The base class for task-specified metric evaluators.
     
     Args:
-        ``task`` (``str``): The type of the task. The supported types include: ``classification``, ``retrieval`` and ``recommender``.
+        ``task`` (``str``): The type of the task. The supported types include: ``classification``, ``retrieval``, ``user_item_recommender`` and ``link_prediction``.
         ``metric_configs`` (``List[Union[str, Dict[str, dict]]]``): The metric configurations. The key is the metric name and the value is the metric parameters.
         ``validate_index`` (``int``): The specified metric index used for validation. Defaults to ``0``.
     """
