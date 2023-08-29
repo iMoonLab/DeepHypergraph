@@ -56,8 +56,9 @@ class GraphSAGEConv(nn.Module):
         else:
             raise NotImplementedError()
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

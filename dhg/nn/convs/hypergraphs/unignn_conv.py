@@ -57,8 +57,6 @@ class UniGCNConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`|\mathcal{V}|` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         Y = hg.v2e(X, aggr="mean")
         # ===============================================
         # compute the special degree of hyperedges
@@ -71,8 +69,12 @@ class UniGCNConv(nn.Module):
         # ===============================================
         X = hg.e2v(Y, aggr="sum")
         X = torch.sparse.mm(hg.D_v_neg_1_2, X)
+
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X
 
 
@@ -128,8 +130,6 @@ class UniGATConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`|\mathcal{V}|` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         Y = hg.v2e(X, aggr="mean")
         # ===============================================
         alpha_e = self.atten_e(Y)
@@ -140,8 +140,12 @@ class UniGATConv(nn.Module):
         e_atten_score = torch.clamp(e_atten_score, min=0.001, max=5)
         # ================================================================================
         X = hg.e2v(Y, aggr="softmax_then_sum", e2v_weight=e_atten_score)
+
         if not self.is_last:
             X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X
 
 
@@ -196,12 +200,13 @@ class UniSAGEConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`|\mathcal{V}|` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         Y = hg.v2e(X, aggr="mean")
         X = hg.e2v(Y, aggr="sum") + X
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X
 
 
@@ -265,11 +270,11 @@ class UniGINConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`|\mathcal{V}|` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         Y = hg.v2e(X, aggr="mean")
         X = (1 + self.eps) * hg.e2v(Y, aggr="sum") + X
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X
-

@@ -59,9 +59,10 @@ class HGNNPConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`|\mathcal{V}|` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         X = hg.v2v(X, aggr="mean")
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

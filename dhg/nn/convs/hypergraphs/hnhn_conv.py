@@ -42,12 +42,13 @@ class HNHNConv(nn.Module):
         """
         # v -> e
         X = self.theta_v2e(X)
-        if self.bn is not None:
-            X = self.bn(X)
         Y = self.act(hg.v2e(X, aggr="mean"))
         # e -> v
         Y = self.theta_e2v(Y)
         X = hg.e2v(Y, aggr="mean")
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

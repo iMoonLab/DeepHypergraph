@@ -48,9 +48,10 @@ class GCNConv(nn.Module):
             g (``dhg.Graph``): The graph structure that contains :math:`N` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         X = g.smoothing_with_GCN(X)
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

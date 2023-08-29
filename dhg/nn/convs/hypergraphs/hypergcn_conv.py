@@ -49,8 +49,6 @@ class HyperGCNConv(nn.Module):
             ``cached_g`` (``dhg.Graph``): The pre-transformed graph structure from the hypergraph structure that contains :math:`N` vertices. If not provided, the graph structure will be transformed for each forward time. Defaults to ``None``.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         if cached_g is None:
             g = Graph.from_hypergraph_hypergcn(
                 hg, X, self.use_mediator, device=X.device
@@ -59,5 +57,8 @@ class HyperGCNConv(nn.Module):
         else:
             X = cached_g.smoothing_with_GCN(X)
         if not self.is_last:
-            X = self.drop(self.act(X))
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

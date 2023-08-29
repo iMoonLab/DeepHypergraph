@@ -45,8 +45,6 @@ class GATConv(nn.Module):
             g (``dhg.Graph``): The graph structure that contains :math:`N_v` vertices.
         """
         X = self.theta(X)
-        if self.bn is not None:
-            X = self.bn(X)
         x_for_src = self.atten_src(X)
         x_for_dst = self.atten_dst(X)
         e_atten_score = x_for_src[g.e_src] + x_for_dst[g.e_dst]
@@ -56,6 +54,10 @@ class GATConv(nn.Module):
         e_atten_score = torch.clamp(e_atten_score, min=0.001, max=5)
         # ================================================================================
         X = g.v2v(X, aggr="softmax_then_sum", e_weight=e_atten_score)
+
         if not self.is_last:
             X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
         return X

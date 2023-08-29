@@ -47,9 +47,10 @@ class JHConv(nn.Module):
             hg (``dhg.Hypergraph``): The hypergraph structure that contains :math:`N` vertices.
         """
         X_ = self.theta(X)
-        if self.bn is not None:
-            X_ = self.bn(X_)
-        X_ = hg.smoothing_with_HGNN(X_) + X
+        X = hg.smoothing_with_HGNN(X_) + X
         if not self.is_last:
-            X_ = self.drop(self.act(X_))
-        return X_
+            X = self.act(X)
+            if self.bn is not None:
+                X = self.bn(X)
+            X = self.drop(X)
+        return X
