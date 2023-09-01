@@ -8,7 +8,7 @@ from .walmart import WalmartTrips
 from .white_house import HouseCommittees
 from .news import News20
 from .coauthorship import CoauthorshipCora, CoauthorshipDBLP
-from .dblp import DBLP8k
+from .dblp import DBLP4k, DBLP8k
 from .cocitation import CocitationCora, CocitationCiteseer, CocitationPubmed
 from .blogcatalog import BlogCatalog
 from .flickr import Flickr
@@ -39,6 +39,7 @@ __all__ = [
     "PubmedBiGraph",
     "CoauthorshipCora",
     "CoauthorshipDBLP",
+    "DBLP4k",
     "DBLP8k",
     "CocitationCora",
     "CocitationCiteseer",

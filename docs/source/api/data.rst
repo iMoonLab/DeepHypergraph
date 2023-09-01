@@ -61,6 +61,7 @@ Hypergraph Datasets
     dhg.data.WalmartTrips
     dhg.data.HouseCommittees
     dhg.data.News20
+    dhg.data.DBLP4k
     dhg.data.DBLP8k
 
 
