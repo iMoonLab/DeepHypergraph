@@ -63,6 +63,7 @@ Hypergraph Datasets
     dhg.data.News20
     dhg.data.DBLP4k
     dhg.data.DBLP8k
+    dhg.data.IMDB4k
 
 
 **Welcome to contribute datasets!**
