@@ -18,6 +18,7 @@ from .tencent import TencentBiGraph
 from .cora import Cora, CoraBiGraph
 from .citeseer import Citeseer, CiteseerBiGraph
 from .pubmed import Pubmed, PubmedBiGraph
+from .imdb import IMDB4k
 
 __all__ = [
     "BaseData",
@@ -48,4 +49,5 @@ __all__ = [
     "WalmartTrips",
     "HouseCommittees",
     "News20",
+    "IMDB4k",
 ]

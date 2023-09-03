@@ -32,7 +32,7 @@ class DBLP8k(BaseData):
 
 
 class DBLP4k(BaseData):
-    r"""The DBLP-4k dataset is a citation network hypergraph dataset for node classification task.
+    r"""The DBLP-4k dataset is a citation network dataset for node classification task.
     The dataset is an academic network from four research areas. There are 14,475 authors, 
     14,376 papers, and 20 conferences, among which 4,057 authors, 20 conferences and 
     100 papers are labeled with one of the four research areas (database, data mining, machine learning, and information retrieval). 
@@ -49,12 +49,15 @@ class DBLP4k(BaseData):
     - ``dim_features``: The dimension of author features: :math:`334`.
     - ``features``: The author feature matrix. ``torch.Tensor`` with size :math:`(4,057 \times 334)`.
     - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(4,057, )`.
-    - ``edge_by_paper``: The hyperedge list constructed by the co-paper correlation. ``List`` with length :math:`(14,328 \times 2)`.
-    - ``edge_by_term``: The hyperedge list constructed by the co-term correlation. ``List`` with length :math:`(7,723 \times 2)`.
-    - ``edge_by_conf``: The hyperedge list constructed by the co-conference correlation. ``List`` with length :math:`(20 \times 2)`.
+    - ``edge_by_paper``: The hyperedge list constructed by the co-paper correlation. ``List`` with length :math:`(14,328)`.
+    - ``edge_by_term``: The hyperedge list constructed by the co-term correlation. ``List`` with length :math:`(7,723)`.
+    - ``edge_by_conf``: The hyperedge list constructed by the co-conference correlation. ``List`` with length :math:`(20)`.
     - ``paper_author_dict``: The dictionary of ``{paper_id: [author_id, ...]}``. ``Dict`` with length :math:`(14,328)`.
     - ``term_paper_dict``: The dictionary of ``{term_id: [paper_id, ...]}``. ``Dict`` with length :math:`(7,723)`.
     - ``conf_paper_dict``: The dictionary of ``{conf_id: [paper_id, ...]}``. ``Dict`` with length :math:`(20)`.
+    
+    Args:
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to None.
     """
 
     def __init__(self, data_root: Optional[str] = None):
