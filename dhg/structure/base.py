@@ -562,7 +562,7 @@ class BaseHypergraph:
             torch.ones(len(v_idx)),
             torch.Size([self.num_v, num_e]),
             device=self.device,
-        ).coalesce()
+        ).coalesce().to(self.device)
         return H
 
     def _fetch_R_of_group(self, direction: str, group_name: str):
@@ -587,7 +587,7 @@ class BaseHypergraph:
             w_list.extend(self._raw_groups[group_name][e][f"w_{direction}"])
         R = torch.sparse_coo_tensor(
             torch.vstack([v_idx, e_idx]), torch.tensor(w_list), torch.Size([self.num_v, num_e]), device=self.device,
-        ).coalesce()
+        ).coalesce().to(self.device)
         return R
 
     def _fetch_W_of_group(self, group_name: str):
@@ -598,7 +598,7 @@ class BaseHypergraph:
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
         w_list = [content["w_e"] for content in self._raw_groups[group_name].values()]
-        W = torch.tensor(w_list, device=self.device).view((-1, 1))
+        W = torch.tensor(w_list, device=self.device).view((-1, 1)).to(self.device)
         return W
 
     # some structure modification functions
@@ -798,7 +798,7 @@ class BaseHypergraph:
         r"""Return the vertex weight matrix of the hypergraph.
         """
         if self.cache["W_v"] is None:
-            self.cache["W_v"] = torch.tensor(self.v_weight, dtype=torch.float, device=self.device).view(-1, 1)
+            self.cache["W_v"] = torch.tensor(self.v_weight, dtype=torch.float, device=self.device).view(-1, 1).to(self.device)
         return self.cache["W_v"]
 
     @property

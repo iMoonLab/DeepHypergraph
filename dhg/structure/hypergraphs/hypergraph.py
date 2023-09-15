@@ -773,7 +773,7 @@ class Hypergraph(BaseHypergraph):
         r"""Return the hypergraph incidence matrix :math:`\mathbf{H}` with ``torch.sparse_coo_tensor`` format.
         """
         if self.cache.get("H") is None:
-            self.cache["H"] = self.H_v2e
+            self.cache["H"] = self.H_v2e.to(self.device)
         return self.cache["H"]
 
     def H_of_group(self, group_name: str) -> torch.Tensor:
@@ -792,7 +792,7 @@ class Hypergraph(BaseHypergraph):
         r"""Return the transpose of the hypergraph incidence matrix :math:`\mathbf{H}^\top` with ``torch.sparse_coo_tensor`` format.
         """
         if self.cache.get("H_T") is None:
-            self.cache["H_T"] = self.H.t()
+            self.cache["H_T"] = self.H.t().to(self.device)
         return self.cache["H_T"]
 
     def H_T_of_group(self, group_name: str) -> torch.Tensor:
