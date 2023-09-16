@@ -59,5 +59,4 @@ class GATConv(nn.Module):
             X = self.act(X)
             if self.bn is not None:
                 X = self.bn(X)
-            X = self.drop(X)
         return X
