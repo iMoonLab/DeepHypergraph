@@ -65,8 +65,9 @@ def accuracy(y_true: torch.LongTensor, y_pred: torch.Tensor):
         >>> dm.link_prediction.accuracy(y_true, y_pred)
         0.3333333432674408
     """
+    y_pred = torch.where(y_pred >= y_pred.mean(), 1, 0)
     y_true, y_pred = _format_inputs(y_true, y_pred)
-    return (y_true == y_pred).float().mean().item()
+    return sm.accuracy_score(y_true, y_pred)
 
 
 def f1_score(y_true: torch.LongTensor, y_pred: torch.Tensor, average: str = "macro"):
@@ -94,6 +95,7 @@ def f1_score(y_true: torch.LongTensor, y_pred: torch.Tensor, average: str = "mac
         >>> dm.link_prediction.f1_score(y_true, y_pred, "weighted")
         0.41666666666666663
     """
+    y_pred = torch.where(y_pred >= y_pred.mean(), 1, 0)
     y_true, y_pred = _format_inputs(y_true, y_pred)
     return sm.f1_score(y_true, y_pred, average=average)
 
