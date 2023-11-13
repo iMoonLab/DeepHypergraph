@@ -45,7 +45,7 @@ __all__ = [
     "available_classification_metrics",
     "available_retrieval_metrics",
     "available_recommender_metrics",
-    "available_link_prediction_metrics"
+    "available_link_prediction_metrics",
     "VertexClassificationEvaluator",
     "GraphVertexClassificationEvaluator",
     "HypergraphVertexClassificationEvaluator",
