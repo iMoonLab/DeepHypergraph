@@ -8,7 +8,7 @@ from .base import BaseData
 
 class News20(BaseData):
     r"""The 20 Newsgroups dataset is a newspaper network dataset for vertex classification task. 
-    The node features are the TF-IDF representations of news messages.
+    The vertex features are the TF-IDF representations of news messages.
     More details see the `YOU ARE ALLSET: A MULTISET LEARNING FRAMEWORK FOR HYPERGRAPH NEURAL NETWORKS <https://openreview.net/pdf?id=hpBTIv2uy_E>`_ paper.
     
     The content of the 20 Newsgroups dataset includes the following:

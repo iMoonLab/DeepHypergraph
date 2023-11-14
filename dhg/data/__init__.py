@@ -19,6 +19,7 @@ from .cora import Cora, CoraBiGraph
 from .citeseer import Citeseer, CiteseerBiGraph
 from .pubmed import Pubmed, PubmedBiGraph
 from .imdb import IMDB4k
+from .recipe import Recipe100k, Recipe200k
 
 __all__ = [
     "BaseData",
@@ -50,4 +51,6 @@ __all__ = [
     "HouseCommittees",
     "News20",
     "IMDB4k",
+    "Recipe100k",
+    "Recipe200k"
 ]

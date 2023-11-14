@@ -64,6 +64,8 @@ Hypergraph Datasets
     dhg.data.DBLP4k
     dhg.data.DBLP8k
     dhg.data.IMDB4k
+    dhg.data.Recipe100k
+    dhg.data.Recipe200k
 
 
 **Welcome to contribute datasets!**
