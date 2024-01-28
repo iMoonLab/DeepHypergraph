@@ -1,7 +1,7 @@
 from .base import BaseData
 from .cooking_200 import Cooking200
 from .movielens import MovieLens1M
-from .yelp import Yelp2018, YelpRestaurant
+from .yelp import Yelp2018, YelpRestaurant, Yelp3k
 from .gowalla import Gowalla
 from .amazon import AmazonBook
 from .walmart import WalmartTrips
@@ -52,5 +52,6 @@ __all__ = [
     "News20",
     "IMDB4k",
     "Recipe100k",
-    "Recipe200k"
+    "Recipe200k",
+    "Yelp3k"
 ]

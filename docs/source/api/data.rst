@@ -66,6 +66,7 @@ Hypergraph Datasets
     dhg.data.IMDB4k
     dhg.data.Recipe100k
     dhg.data.Recipe200k
+    dhg.data.Yelp3k
 
 
 **Welcome to contribute datasets!**

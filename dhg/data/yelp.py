@@ -100,3 +100,47 @@ class YelpRestaurant(BaseData):
             },
         }
 
+
+
+class Yelp3k(BaseData):
+    r"""The Yelp3k dataset is a subset of Yelp-Restaurant dataset for vertex classification task.  
+    It is a restaurant-review network. All businesses in the “restaurant” catalog are selected as our nodes, 
+    and formed hyperedges by selecting restaurants visited by the same user. 
+    We use the state of the business as the corresponding node label.
+
+    The content of the Yelp-Restaurant dataset includes the following:
+
+    - ``num_classes``: The number of classes: :math:`6`.
+    - ``num_vertices``: The number of vertices: :math:`3,855`.     
+    - ``num_edges``: The number of edges: :math:`24,137`.
+    - ``dim_features``: The dimension of features: :math:`1,862`.
+    - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(3,855 \times 1,862)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`24,137`.
+    - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(3,855, )`.
+
+    Args:
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
+    """
+
+    def __init__(self, data_root: Optional[str] = None) -> None:
+        super().__init__("yelp_3k", data_root)
+        self._content = {
+            "num_classes": 6,
+            "num_vertices": 3855,
+            "num_edges": 24137,
+            "dim_features": 1862,
+            "features": {
+                "upon": [{"filename": "features.pkl", "md5": "b107876d2e9ba5b0f7f67175e36bfdf4"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_tensor,],
+            },
+            "edge_list": {
+                "upon": [{"filename": "edge_list.pkl", "md5": "322cfd002c0f557cf7bc4b9b2654b987"}],
+                "loader": load_from_pickle,
+            },
+            "labels": {
+                "upon": [{"filename": "labels.pkl", "md5": "16ead8bcbb8a3621202c88f64c8cbc07"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_long_tensor],
+            },
+        }
