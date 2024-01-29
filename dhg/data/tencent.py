@@ -110,17 +110,17 @@ class Tencent2k(BaseData):
                 "preprocess": [to_long_tensor],
             },
             "train_mask": {
-                "upon": [{"filename": "train_mask.pkl", "md5": "3e4de1d3b6b8b47bd729d4f59c65583d"}],
+                "upon": [{"filename": "train_mask.pkl", "md5": "2888a1fcc5162767d17a92b798a809e8"}],
                 "loader": load_from_pickle,
                 "preprocess": [to_bool_tensor],
             },
             "val_mask": {
-                "upon": [{"filename": "val_mask.pkl", "md5": "e8e42dc2ee21e733f7a2c733f162cea9"}],
+                "upon": [{"filename": "val_mask.pkl", "md5": "60deaa9e1df986c44059e795feaa2351"}],
                 "loader": load_from_pickle,
                 "preprocess": [to_bool_tensor],
             },
             "test_mask": {
-                "upon": [{"filename": "test_mask.pkl", "md5": "783283d2a5f2bee5a83d0d8e11ef9e5e"}],
+                "upon": [{"filename": "test_mask.pkl", "md5": "3f0325139633d3c258fb52d634a4f510"}],
                 "loader": load_from_pickle,
                 "preprocess": [to_bool_tensor],
             },
