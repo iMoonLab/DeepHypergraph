@@ -63,3 +63,65 @@ class TencentBiGraph(BaseData):
                 "preprocess": [to_long_tensor],
             },
         }
+
+
+
+class Tencent2k(BaseData):
+    r"""The Tencent2k dataset is a social network dataset for vertex classification task. 
+    It is a subset of TencentBiGraph dataset. 
+    The nodes are social network users. 
+    Nodes are connected by a hyperedge if the corresponding users join the same social communities. 
+
+    The content of the Tencent2k dataset includes the following:
+
+    - ``num_classes``: The number of classes: :math:`2`.
+    - ``num_vertices``: The number of vertices: :math:`2,146`.
+    - ``num_edges``: The number of edges: :math:`6,378`.
+    - ``dim_features``: The dimension of features: :math:`8`.
+    - ``features``: The vertex feature matrix. ``torch.Tensor`` with size :math:`(2,146 \times 8)`.
+    - ``edge_list``: The edge list. ``List`` with length :math:`6,378`.
+    - ``labels``: The label list. ``torch.LongTensor`` with size :math:`(2,146, )`.
+    - ``train_mask``: The train mask. ``torch.BoolTensor`` with size :math:`(2,146, )`.
+    - ``val_mask``: The validation mask. ``torch.BoolTensor`` with size :math:`(2,146, )`.
+    - ``test_mask``: The test mask. ``torch.BoolTensor`` with size :math:`(2,146, )`.
+
+    Args:
+        ``data_root`` (``str``, optional): The ``data_root`` has stored the data. If set to ``None``, this function will auto-download from server and save into the default direction ``~/.dhg/datasets/``. Defaults to ``None``.
+    """
+    def __init__(self, data_root: Optional[str] = None) -> None:
+        super().__init__("tencent_2k", data_root)
+        self._content = {
+            "num_classes": 2,
+            "num_vertices": 2146,
+            "num_edges": 6378,
+            "dim_features": 8,
+            "features": {
+                "upon": [{"filename": "features.pkl", "md5": "d3ff915a640b7e87e21849e3c400cc76"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_tensor, partial(norm_ft, ord=1)],
+            },
+            "edge_list": {
+                "upon": [{"filename": "edge_list.pkl", "md5": "c9dc2fa5092087173369385885ffbed4"}],
+                "loader": load_from_pickle,
+            },
+            "labels": {
+                "upon": [{"filename": "labels.pkl", "md5": "899ce99d0066d74c737cc19301f010f6"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_long_tensor],
+            },
+            "train_mask": {
+                "upon": [{"filename": "train_mask.pkl", "md5": "3e4de1d3b6b8b47bd729d4f59c65583d"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_bool_tensor],
+            },
+            "val_mask": {
+                "upon": [{"filename": "val_mask.pkl", "md5": "e8e42dc2ee21e733f7a2c733f162cea9"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_bool_tensor],
+            },
+            "test_mask": {
+                "upon": [{"filename": "test_mask.pkl", "md5": "783283d2a5f2bee5a83d0d8e11ef9e5e"}],
+                "loader": load_from_pickle,
+                "preprocess": [to_bool_tensor],
+            },
+        }

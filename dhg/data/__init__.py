@@ -14,7 +14,7 @@ from .blogcatalog import BlogCatalog
 from .flickr import Flickr
 from .github import Github
 from .facebook import Facebook
-from .tencent import TencentBiGraph
+from .tencent import TencentBiGraph, Tencent2k
 from .cora import Cora, CoraBiGraph
 from .citeseer import Citeseer, CiteseerBiGraph
 from .pubmed import Pubmed, PubmedBiGraph
@@ -53,5 +53,6 @@ __all__ = [
     "IMDB4k",
     "Recipe100k",
     "Recipe200k",
-    "Yelp3k"
+    "Yelp3k",
+    "Tencent2k"
 ]

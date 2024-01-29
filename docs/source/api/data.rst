@@ -67,6 +67,7 @@ Hypergraph Datasets
     dhg.data.Recipe100k
     dhg.data.Recipe200k
     dhg.data.Yelp3k
+    dhg.data.Tencent2k
 
 
 **Welcome to contribute datasets!**
