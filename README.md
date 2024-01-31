@@ -17,6 +17,8 @@
 
 
 ## News
+- 2024-01-31 -> **v0.9.4** is now available! Fix some bugs and more datasets are included!
+- 2024-01-31 -> **v0.9.4** 正式发布！ 修复了若干bug，包含更多数据集！
 - 2022-12-28 -> **v0.9.3** is now available! More datasets and operations of hypergraph are included!
 - 2022-12-28 -> **v0.9.3** 正式发布！ 包含更多数据集和超图操作！
 - 2022-09-25 -> **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
@@ -75,13 +77,13 @@ The Optuna library endows DHG with the Auto-ML ability. DHG supports automatical
 ## Installation
 
 
-Current, the stable version of **DHG** is 0.9.3. You can install it with ``pip`` as follows:
+Current, the stable version of **DHG** is 0.9.4. You can install it with ``pip`` as follows:
 
 ```python
 pip install dhg
 ```
 
-You can also try the nightly version (0.9.4) of **DHG** library with ``pip`` as follows:
+You can also try the nightly version (0.9.5) of **DHG** library with ``pip`` as follows:
 
 ```python
 pip install git+https://github.com/iMoonLab/DeepHypergraph.git
