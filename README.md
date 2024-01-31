@@ -356,6 +356,18 @@ Currently, we have added the following datasets:
 
 - **[DBLP8k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.DBLP8k.html#dhg.data.DBLP8k)**: The DBLP-8k dataset is a citation network dataset for link prediction task.
 
+- **[DBLP4k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.DBLP4k.html#dhg.data.DBLP4k)**: The DBLP-4k dataset is a citation network dataset for vertex classification task.
+
+- **[IMDB4k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.IMDB4k.html#dhg.data.IMDB4k)**: The IMDB-4k dataset is a movie dataset for vertex classification task.
+
+- **[Recipe100k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Recipe100k.html#dhg.data.Recipe100k)**: The Recipe100k dataset is a recipe-ingredient network dataset for vertex classification task.
+
+- **[Recipe200k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Recipe200k.html#dhg.data.Recipe200k)**: The Recipe200k dataset is a recipe-ingredient network dataset for vertex classification task.
+
+- **[Yelp3k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Yelp3k.html#dhg.data.Yelp3k)**: The Yelp3k dataset is a subset of Yelp-Restaurant dataset for vertex classification task.
+
+- **[Tencent2k](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.Tencent2k.html#dhg.data.Tencent2k)**: The Tencent2k dataset is a social network dataset for vertex classification task.
+
 ## Metrics
 
 ### Classification Metrics
@@ -457,7 +469,7 @@ If you find **DHG** is useful in your research, please consider citing:
 
 ## The DHG Team
 
-DHG is developed by DHG's core team including [Yifan Feng](http://fengyifan.site/), [Xinwei Zhang](https://github.com/zhangxwww), [Jielong Yan](https://github.com/JasonYanjl), [Shuyi Ji](), [Yue Gao](http://moon-lab.tech/), and [Qionghai Dai](https://ysg.ckcest.cn/html/details/8058/index.html). It is maintained by the [iMoon-Lab](http://moon-lab.tech/), Tsinghua University. You can contact us at [email](mailto:evanfeng97@gmail.com).
+DHG is developed by DHG's core team including [Yifan Feng](http://fengyifan.site/), [Xinwei Zhang](https://github.com/zhangxwww), [Jielong Yan](https://github.com/JasonYanjl), [Xiangmin Han](https://scholar.google.com/citations?user=Y96h0t0AAAAJ&hl=zh-CN&oi=ao), [Yue Gao](http://moon-lab.tech/), and [Qionghai Dai](https://ysg.ckcest.cn/html/details/8058/index.html). It is maintained by the [iMoon-Lab](http://moon-lab.tech/), Tsinghua University. You can contact us at [email](mailto:evanfeng97@gmail.com).
 
 
 ## License
