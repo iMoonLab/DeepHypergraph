@@ -38,7 +38,7 @@ optuna = "*"
 numpy = "*"
 scikit-learn = "*"
 requests = "*"
-matplotlib = "*"
+matplotlib = ">= 3.7.0"
 
 [tool.poetry.dev-dependencies]
 

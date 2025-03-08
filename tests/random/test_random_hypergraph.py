@@ -24,7 +24,7 @@ def test_uniform_hypergraph_Gnp():
     assert all(map(lambda e: len(e) == k, edges))
 
     max_n_e = C(n_v, k)
-    assert pytest.approx(g.num_e / max_n_e, 1) == prob
+    assert pytest.approx(g.num_e / max_n_e, rel=0.5) == prob
 
 
 def test_uniform_hypergraph_Gnm():

@@ -5,5 +5,5 @@ sphinxcontrib-bibtex
 numpy
 optuna
 torch>=1.11.0
-matplotlib
+matplotlib>=3.7.0
 scikit-learn
