@@ -1,6 +1,6 @@
 [project]
 name = "dhg"
-version = "0.9.5"
+version = "0.9.6"
 description = "DHG is a Deep Learning Framework for Graph Neural Network and Hypergraph Neural Networks."
 authors = [
     {name = "yifanfeng97", email = "evanfeng97@qq.com"}
