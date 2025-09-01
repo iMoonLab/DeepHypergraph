@@ -11,13 +11,13 @@
 - Pytorch >= 1.12
 
 
-目前， **DHG** 的最新稳定版本 **0.9.4** 已经发布，可以使用 ``pip`` 指令直接安装：
+目前， **DHG** 的最新稳定版本 **0.9.5** 已经发布，可以使用 ``pip`` 指令直接安装：
 
 .. code-block:: bash
 
     pip install dhg
 
-如果您想尝试最新的日构建版本(nightly version) **0.9.5** ，可以使用以下指令安装：
+如果您想尝试最新的日构建版本(nightly version) **0.9.6** ，可以使用以下指令安装：
 
 .. code-block:: bash
 

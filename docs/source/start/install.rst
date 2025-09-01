@@ -9,13 +9,13 @@ Installation
 - Python >= 3.8
 - Pytorch >= 1.12
 
-Current, the stable version of **DHG** is 0.9.4. You can install it with ``pip`` as follows:
+Current, the stable version of **DHG** is 0.9.5. You can install it with ``pip`` as follows:
 
 .. code-block:: bash
 
     pip install dhg
 
-You can also try the nightly version (0.9.5) of **DHG** library with ``pip`` as follows:
+You can also try the nightly version (0.9.6) of **DHG** library with ``pip`` as follows:
 
 .. code-block:: bash
 

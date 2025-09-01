@@ -29,6 +29,7 @@ can help you automatically tune the hyper-parameters of your models in training 
 
 **News**
 
+- 2025-09-01 -> The **v0.9.5** is now available! Fix some bugs and migrated to UV package manager with PEP 621 format!
 - 2024-01-31 -> The **v0.9.4** is now available! Fix some bugs and more datasets are included!
 - 2022-12-28 -> The **v0.9.3** is now available! More datasets and operations of hypergraph are included!
 - 2022-09-25 -> The **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
