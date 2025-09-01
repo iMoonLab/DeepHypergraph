@@ -23,13 +23,13 @@
 - 2022-12-28 -> **v0.9.3** 正式发布！ 包含更多数据集和超图操作！
 - 2022-09-25 -> **v0.9.2** is now available! More datasets, SOTA models, and visualizations are included!
 - 2022-09-25 -> **v0.9.2** 正式发布！ 包含更多数据集、最新模型和可视化功能！
-- 2022-08-25 -> DHG's first version **v0.9.1** is now available! 
+- 2022-08-25 -> DHG's first version **v0.9.1** is now available!
 - 2022-08-25 -> DHG的第一个版本 **v0.9.1** 正式发布！
 
 
 **DHG** *(DeepHypergraph)* is a deep learning library built upon [PyTorch](https://pytorch.org) for learning with both Graph Neural Networks and Hypergraph Neural Networks. It is a general framework that supports both low-order and high-order message passing like **from vertex to vertex**, **from vertex in one domain to vertex in another domain**, **from vertex to hyperedge**, **from hyperedge to vertex**, **from vertex set to vertex set**.
 
-It supports a wide variety of structures like low-order structures (graph, directed graph, bipartite graph, etc.), high-order structures (hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures. 
+It supports a wide variety of structures like low-order structures (graph, directed graph, bipartite graph, etc.), high-order structures (hypergraph, etc.). Various spectral-based operations (like Laplacian-based smoothing) and spatial-based operations (like message psssing from domain to domain) are integrated inside different structures. It provides multiple common metrics for performance evaluation on different tasks. Many state-of-the-art models are implemented and can be easily used for research. We also provide various visualization tools for both low-order structures and high-order structures.
 
 In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/latest/api/experiments.html) module (that implements **Auto-ML** upon [Optuna](https://optuna.org)) can help you automatically tune the hyper-parameters of your models in training and easily outperforms the state-of-the-art models.
 
@@ -39,6 +39,7 @@ In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/la
 
 * [Hightlights](#highlights)
 * [Installation](#installation)
+* [Dependencies](#dependencies)
 * [Quick Start](#quick-start)
 * [Examples](#examples)
 * [Datasets](#datasets)
@@ -50,7 +51,7 @@ In addition, DHG's [dhg.experiments](https://deephypergraph.readthedocs.io/en/la
 
 ## Highlights
 
-- **Support High-Order Message Passing on Structure**: 
+- **Support High-Order Message Passing on Structure**:
 DHG supports pair-wise message passing on the graph structure and beyond-pair-wise message passing on the hypergraph structure.
 
 - **Shared Ecosystem with Pytorch Framework**:
@@ -89,8 +90,23 @@ You can also try the nightly version (0.9.5) of **DHG** library with ``pip`` as 
 pip install git+https://github.com/iMoonLab/DeepHypergraph.git
 ```
 
-Nightly version is the development version of **DHG**. It may include the lastest SOTA methods and datasets, but it can also be unstable and not fully tested. 
+Nightly version is the development version of **DHG**. It may include the lastest SOTA methods and datasets, but it can also be unstable and not fully tested.
 If you find any bugs, please report it to us in [GitHub Issues](https://github.com/iMoonLab/DeepHypergraph/issues).
+
+### Dependencies
+
+**DHG** requires the following dependencies:
+
+- Python >= 3.8
+- PyTorch >= 1.12.1, < 2.0
+- scipy >= 1.8
+- matplotlib >= 3.7.0
+- numpy
+- scikit-learn
+- optuna
+- requests
+
+For visualization features, matplotlib 3.7.0 or higher is required to properly render 3D plots.
 
 ## Quick Start
 
@@ -227,7 +243,7 @@ class GCNConv(nn.Module):
         self.reset_parameters()
 
     def forward(self, X: torch.Tensor, g: dhg.Graph) -> torch.Tensor:
-        # apply the trainable parameters ``theta`` to the input ``X``  
+        # apply the trainable parameters ``theta`` to the input ``X``
         X = self.theta(X)
         # smooth the input ``X`` with the GCN's Laplacian
         X = g.smoothing_with_GCN(X)
@@ -253,7 +269,7 @@ class GATConv(nn.Module):
         e_atten_score = x_for_src[g.e_src] + x_for_dst[g.e_dst]
         e_atten_score = F.leaky_relu(e_atten_score).squeeze()
         # apply ``e_atten_score`` to each edge in the graph ``g``, aggragete neighbor messages
-        #  with ``softmax_then_sum``, and perform vertex->vertex message passing in graph 
+        #  with ``softmax_then_sum``, and perform vertex->vertex message passing in graph
         #  with message passing function ``v2v()``
         X = g.v2v(X, aggr="softmax_then_sum", e_weight=e_atten_score)
         X = F.elu(X)

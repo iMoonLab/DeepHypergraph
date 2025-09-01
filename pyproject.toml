@@ -36,13 +36,8 @@ dependencies = [
     "numpy<2.0",
     "scikit-learn",
     "requests",
-    "matplotlib<3.6",
+    "matplotlib>=3.7.0",
 ]
-
-[project.urls]
-Homepage = "https://deephypergraph.com"
-Repository = "https://github.com/iMoonLab/DeepHypergraph"
-Documentation = "https://deephypergraph.com/docs"
 
 [project.optional-dependencies]
 dev = [

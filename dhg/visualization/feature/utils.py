@@ -16,8 +16,8 @@ def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap=
     r"""Make an animation of embeddings.
 
     Args:
-        ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 3)`. 
-        ``colors`` (``Union[np.ndarray, str]``): The color matrix. ``str`` or Size :math:`(N, )`. 
+        ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 3)`.
+        ``colors`` (``Union[np.ndarray, str]``): The color matrix. ``str`` or Size :math:`(N, )`.
         ``cmap`` (``str``, optional): The `color map <https://matplotlib.org/stable/tutorials/colors/colormaps.html>`_. Defaults to ``"viridis"``.
     """
     embeddings = normalize(embeddings)
@@ -29,7 +29,7 @@ def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap=
         if colors is not None:
             ax.scatter(x, y, z, c=colors, cmap=cmap)
         else:
-            ax.scatter(x, y, z, cmap=cmap)
+            ax.scatter(x, y, z)
         return fig
 
     def animate(i):
@@ -41,7 +41,7 @@ def make_animation(embeddings: np.ndarray, colors: Union[np.ndarray, str], cmap=
 
 def plot_2d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None, cmap="viridis"):
     r"""Plot the embedding in 2D.
-    
+
     Args:
         ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 2)`.
         ``label`` (``np.ndarray``, optional): The label matrix.
@@ -52,16 +52,15 @@ def plot_2d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None
     if label is not None:
         plt.scatter(embeddings[:, 0], embeddings[:, 1], c=label, cmap=cmap)
     else:
-        plt.scatter(embeddings[:, 0], embeddings[:, 1], cmap=cmap)
-
-    plt.xlim((0, 1.0))
-    plt.ylim((0, 1.0))
+        plt.scatter(embeddings[:, 0], embeddings[:, 1])
+    plt.xlim(0, 1.0)
+    plt.ylim(0, 1.0)
     fig.tight_layout()
 
 
 def plot_3d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None, cmap="viridis"):
     r"""Plot the embedding in 3D.
-    
+
     Args:
         ``embeddings`` (``np.ndarray``): The embedding matrix. Size :math:`(N, 3)`.
         ``label`` (``np.ndarray``, optional): The label matrix.
@@ -70,11 +69,11 @@ def plot_3d_embedding(embeddings: np.ndarray, label: Optional[np.ndarray] = None
     embeddings = normalize(embeddings)
     x, y, z = embeddings[:, 0], embeddings[:, 1], embeddings[:, 2]
     fig = plt.figure(figsize=(8, 8))
-    ax = fig.gca(projection="3d")
+    ax = fig.add_subplot(111, projection="3d")
     if label is not None:
         ax.scatter(x, y, z, c=label, cmap=cmap)
     else:
-        ax.scatter(x, y, z, cmap=cmap)
+        ax.scatter(x, y, z)
 
     ax.set_xlim3d(0, 1.0)
     ax.set_ylim3d(0, 1.0)
@@ -90,7 +89,7 @@ def normalize(coor):
 # for poincare_ball
 def tanh(x, clamp=15):
     r"""Calculate the tanh value of the matrix x.
-    
+
     Args:
         ``x`` (``np.ndarray``): The feature matrix. Size :math:`(N, C)`.
         ``clap`` (``int``): Boundary value.
