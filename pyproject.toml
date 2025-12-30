@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "Apache-2.0"}
 readme = "README.md"
-requires-python = ">=3.8,<3.13"
+requires-python = ">=3.8"
 keywords = ["pytorch", "deep learning", "graph neural networks", "hypergraph neural networks"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -30,10 +30,10 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
-    "torch>=1.12.1,<2.0",
+    "torch>=1.12.1",
     "scipy>=1.8",
     "optuna",
-    "numpy<2.0",
+    "numpy",
     "scikit-learn",
     "requests",
     "matplotlib>=3.7.0",
