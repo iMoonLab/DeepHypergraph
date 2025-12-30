@@ -156,12 +156,12 @@ DHG内的关联结构
 +++++++++++++++++++++++++++++++
 基于空域信息传递的核心在于从 ``source domain`` 到 ``target domain`` 的信息传递以及使用不同聚合函数的信息聚合。
 在 **DHG** 中， ``source domain`` 和 ``target domain`` 可以是 ``a vertex`` 、 ``a vertex in specified vertex set`` 、 ``a hyperedge`` 、 ``a vertex set`` 的其中之一，
-信息聚合函数可以是 ``mean``、 ``softmax``、  ``softmax_then_sum``。
+信息聚合函数可以是 ``mean``、 ``sum``、  ``softmax_then_sum``。
 因此，与 `PyG <https://www.pyg.org/>`_ 和 `DGL <https://www.dgl.ai/>`_ 中只能将信息从 ``a vertex`` 传输到 ``another vertex or edge`` 不同，
 **DHG** 为低阶和高阶关联结构提供更多种类型的信息传递操作。
 
 在如下例子中，我们随机生成一个包含5个顶点和8条边的 **图**。
-图结构提供从 ``a vertex`` 到 ``another vertex`` 的信息传递，以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+图结构提供从 ``a vertex`` 到 ``another vertex`` 的信息传递，以及支持 ``mean`` 、 ``sum`` 、 ``softmax_then_sum`` 信息聚合函数。
 
     .. code:: python
 
@@ -215,7 +215,7 @@ DHG内的关联结构
 
 在如下例子中，我们随机生成集合 :math:`\mathcal{U}` 含有3个顶点、集合 :math:`\mathcal{V}` 含有5个顶点总共8条边的 **二分图**。
 二分图关联结构中，提供从 ``a vertex in a specified vertex set`` 到 ``another vertex in another specified vertex set`` 信息传递
-以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+以及支持 ``mean`` 、 ``sum`` 、 ``softmax_then_sum`` 信息聚合函数。
 二分图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_bipartite_graph>` 。
 
 
@@ -261,7 +261,7 @@ DHG内的关联结构
 在如下例子中，我们随机生成一个包含5个顶点和4条超边的 **超图**。
 超图关联结构中，提供从 ``a vertex`` 到 ``another vertex`` 、 从 ``a vertex set`` 到 ``a hyperedge`` 、
 从 ``a hyperedge`` 到 ``a vertex set`` 、  从 ``a vertex set`` 到 ``another vertex set`` 四种信息传递
-以及支持 ``mean`` 、 ``softmax`` 、 ``softmax_then_sum`` 信息聚合函数。
+以及支持 ``mean`` 、 ``sum`` 、 ``softmax_then_sum`` 信息聚合函数。
 超图中基于空域的操作细节可以参考 :ref:`此链接 <zh_start_learning_on_simple_hypergraph>`。
  
     .. code:: python

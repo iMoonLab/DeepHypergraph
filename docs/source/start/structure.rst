@@ -156,12 +156,12 @@ The Spatial-Based Operations
 +++++++++++++++++++++++++++++++
 The core of the spatial-based operation is message passing from ``source domain`` to ``target domain`` and message aggregation with different aggregation function.
 In **DHG**, the ``soure domain`` and ``target domain`` can be anyone of ``a vertex``, ``a vertex in specified vertex set``, ``a hyperedge``, and ``a vertex set``.
-The message aggregation function can be ``mean``, ``softmax``, and ``softmax_then_sum``.
+The message aggregation function can be ``mean``, ``sum``, and ``softmax_then_sum``.
 Thus, unlike `PyG <https://www.pyg.org/>`_ and `DGL <https://www.dgl.ai/>`_ that can only pass messages from ``a vertex`` to ``another vertex or edge``,
 the **DHG** provides more types of message passing functions on both low-order structure and high-order structure.
 
 In the following example, we randomly generate a **graph** structure with 5 vertices and 8 edges.
-The graph structure provides propagate message from ``a vertex`` to ``another vertex``, and the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
+The graph structure provides propagate message from ``a vertex`` to ``another vertex``, and the supported message aggregation function includes ``mean``, ``sum``, and ``softmax_then_sum``.
 
     .. code:: python
 
@@ -216,7 +216,7 @@ The graph structure provides propagate message from ``a vertex`` to ``another ve
 
 In the following example, we randomly generate a **bipartite graph** structure with 3 vertices in set :math:`\mathcal{U}`, 5 vertices in set :math:`\mathcal{V}`, and 8 edges.
 The bipartite graph structure provides message passing from ``a vertex in a specified vertex set`` to ``another vertex in another specified vertex set``, and
-the supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
+the supported message aggregation function includes ``mean``, ``sum``, and ``softmax_then_sum``.
 The detailed spatial-based operation on bipartite graph can refer to :ref:`here <start_learning_on_bipartite_graph>`.
 
 
@@ -263,7 +263,7 @@ The detailed spatial-based operation on bipartite graph can refer to :ref:`here 
 In the following example, we randomly generate a **hypergraph** structure with 5 vertices and 4 hyperedges.
 The hypergraph structure provides message passing from ``a vertex`` to ``another vertex``, from ``a vertex set`` to ``a hyperedge``,
 from ``a hyperedge`` to ``a vertex set``, and from ``a vertex set`` to ``another vertex set``.
-The supported message aggregation function includes ``mean``, ``softmax``, and ``softmax_then_sum``.
+The supported message aggregation function includes ``mean``, ``sum``, and ``softmax_then_sum``.
 The detailed spatial-based operation on hypergraph can refer to :ref:`here <start_learning_on_simple_hypergraph>`.
 
     .. code:: python
