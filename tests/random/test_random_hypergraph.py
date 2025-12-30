@@ -44,5 +44,13 @@ def test_hypergraph_Gnm():
     n_e = 500
 
     g = hypergraph_Gnm(n_v, n_e)
+    assert g.num_e == n_e
 
+    g = hypergraph_Gnm(n_v, n_e, method='high_order_first')
+    assert g.num_e == n_e
+
+    g = hypergraph_Gnm(n_v, n_e, method='low_order_first')
+    assert g.num_e == n_e
+
+    g = hypergraph_Gnm(n_v, n_e, method='uniform')
     assert g.num_e == n_e

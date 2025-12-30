@@ -97,7 +97,7 @@ def hypergraph_Gnm(num_v: int, num_e: int, method:str="low_order_first", prob_k_
         sum_of_prob_k_list = sum(prob_k_list)
         prob_k_list = [prob_k / sum_of_prob_k_list for prob_k in prob_k_list]
     elif method == "high_order_first":
-        prob_k_list = [3 ** (-k) for k in range(len(deg_e_list))].reverse()
+        prob_k_list = list(reversed([3 ** (-k) for k in range(len(deg_e_list))]))
         sum_of_prob_k_list = sum(prob_k_list)
         prob_k_list = [prob_k / sum_of_prob_k_list for prob_k in prob_k_list]
     elif method == "custom":
