@@ -337,7 +337,7 @@ class Hypergraph(BaseHypergraph):
         if e_weight is None:
             e_weight = [1.0] * len(e_list)
         elif type(e_weight) in (int, float):
-            e_weight = [e_weight]
+            e_weight = [e_weight] * len(e_list)
         elif type(e_weight) is list:
             pass
         else:

@@ -756,3 +756,7 @@ def test_graph_and_hypergraph():
     _mm = torch.sparse.mm
     est_A = _mm(_mm(g.D_v_neg_1_2, g.A), g.D_v_neg_1_2) + torch.eye(4).to_sparse()
     assert pytest.approx(est_A.to_dense() / 2) == hg.L_HGNN.to_dense()
+
+
+def test_hypergraph_with_e_weight():
+    hg = Hypergraph(4, [[0, 1, 2], [1, 2, 3]], e_weight=0.8)
