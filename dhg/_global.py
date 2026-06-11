@@ -3,7 +3,7 @@ from pathlib import Path
 
 def get_dhg_cache_root():
 
-    root = Path.home() / Path(".dhg/")
+    root = Path.home() / ".cache" / "dhg"
     root.mkdir(parents=True, exist_ok=True)
     return root
 

@@ -1,4 +1,5 @@
 import hashlib
+import shutil
 import requests
 import warnings
 from pathlib import Path
@@ -63,6 +64,21 @@ def _retry(n: int, exception_type=requests.HTTPError):
     return decorator
 
 
+def _try_migrate_from_legacy_cache(file_path: Path, md5: str) -> bool:
+    from dhg._global import CACHE_ROOT
+    LEGACY_CACHE_ROOT = Path.home() / ".dhg"
+
+    legacy_path = LEGACY_CACHE_ROOT / file_path.relative_to(CACHE_ROOT)
+    if legacy_path is None or not legacy_path.exists(): return False
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(legacy_path, file_path)
+    try:
+        legacy_path.parent.rmdir()
+    except OSError: # If the `legacy_path.parent` is not empty, `rmdir` won't remove it. This is intended.
+        pass
+    return True
+
+
 @_retry(3)
 def download_and_check(url: str, file_path: Path, md5: str):
     r""" Download a file from a url and check its integrity.
@@ -72,6 +88,8 @@ def download_and_check(url: str, file_path: Path, md5: str):
         ``file_path`` (``Path``): The path to the file.
         ``md5`` (``str``): The md5 of the file.
     """
+    if not file_path.exists():
+        _try_migrate_from_legacy_cache(file_path, md5) # Try to migrate from old-version cache path
     if not file_path.exists():
         download_file(url, file_path)
     if not check_file(file_path, md5):
