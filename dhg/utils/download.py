@@ -91,7 +91,16 @@ def download_and_check(url: str, file_path: Path, md5: str):
     if not file_path.exists():
         _try_migrate_from_legacy_cache(file_path, md5) # Try to migrate from old-version cache path
     if not file_path.exists():
-        download_file(url, file_path)
+        try:
+            download_file(url, file_path)
+        except requests.RequestException:
+            # fallback to BACKUP_REMOTE_DATASETS_ROOT
+            from dhg._global import REMOTE_DATASETS_ROOT, BACKUP_REMOTE_DATASETS_ROOT
+            if not url.startswith(REMOTE_DATASETS_ROOT): raise
+            download_file(
+                url.replace(REMOTE_DATASETS_ROOT, BACKUP_REMOTE_DATASETS_ROOT, 1),
+                file_path,
+            )
     if not check_file(file_path, md5):
         file_path.unlink()
         raise ValueError(
