@@ -183,14 +183,13 @@ class Hypergraph(BaseHypergraph):
             ``features`` (``torch.Tensor``): The feature matrix.
             ``k`` (``int``): The number of nearest neighbors.
         """
-        features = features.cpu().numpy()
         assert features.ndim == 2, "The feature matrix should be 2-D."
         assert (
             k <= features.shape[0]
         ), "The number of nearest neighbors should be less than or equal to the number of vertices."
-        tree = scipy.spatial.cKDTree(features)
-        _, nbr_array = tree.query(features, k=k)
-        return nbr_array.tolist()
+        dist_matrix = torch.cdist(features, features)
+        _, nbr_indices = torch.topk(dist_matrix, k, largest=False)
+        return nbr_indices.tolist()
 
     @staticmethod
     def from_feature_kNN(features: torch.Tensor, k: int, device: torch.device = torch.device("cpu")):
