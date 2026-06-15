@@ -1,10 +1,10 @@
 import abc
+from collections import defaultdict
 from pathlib import Path
-from collections import defaultdict, OrderedDict
-from typing import Union, Optional, List, Tuple, Dict, Any
+from typing import Union, Optional, List, Tuple, Dict, Any, Set
 
-import torch
 import numpy as np
+import torch
 
 
 def load_structure(file_path: Union[str, Path]):
@@ -691,6 +691,85 @@ class BaseHypergraph:
                 e_code = self._hyperedge_code(e_list_v2e[_idx], e_list_e2v[_idx])
                 self._raw_groups[group_name].pop(e_code, None)
         self._clear_cache(group_name)
+
+    def _subgraph_filter_hyperedge(
+        self,
+        e_code: Tuple,
+        content: Dict[str, Any],
+        v_map: Dict[int, int],
+        keep_edges_with_only_one_nodes: bool = True,
+    ) -> Optional[Tuple[Tuple, Dict[str, Any]]]:
+        r"""Filter a hyperedge for subgraph extraction.
+
+        Args:
+            ``e_code`` (``Tuple``): The hyperedge code.
+            ``content`` (``Dict[str, Any]``): The content of the hyperedge.
+            ``v_map`` (``Dict[int, int]``): The mapping from selected original vertex indices to new indices.
+            ``keep_edges_with_only_one_nodes`` (``bool``): Whether to keep hyperedges that contain only one vertex in the subgraph. Defaults to ``True``.
+        """
+        src_v, dst_v = e_code
+        sub_v = (set(src_v) | set(dst_v)) & v_map.keys()
+        min_nodes = 1 if keep_edges_with_only_one_nodes else 2
+        if len(sub_v) < min_nodes:
+            return None
+
+        def _filter_side(v_list: List[int], w_list: Optional[List[float]]):
+            if w_list is None:
+                pairs = [(v_map[v], None) for v in v_list if v in v_map]
+            else:
+                pairs = [(v_map[v], w) for v, w in zip(v_list, w_list) if v in v_map]
+            pairs.sort(key=lambda x: x[0])
+            new_v = tuple(v for v, _ in pairs)
+            if w_list is None:
+                return new_v, None
+            return new_v, [w for _, w in pairs]
+
+        new_src, new_w_v2e = _filter_side(list(src_v), content.get("w_v2e"))
+        new_dst, new_w_e2v = _filter_side(list(dst_v), content.get("w_e2v"))
+        new_content = {"w_e": content["w_e"]}
+        if new_w_v2e is not None:
+            new_content["w_v2e"] = new_w_v2e
+        if new_w_e2v is not None:
+            new_content["w_e2v"] = new_w_e2v
+        return (new_src, new_dst), new_content
+
+    def subgraph(
+        self, v_list: Union[List[int], Set[int]], keep_edges_with_only_one_nodes: bool = True,
+    ) -> "BaseHypergraph":
+        r"""Extract a sub-hypergraph induced by the given vertex set.
+
+        Only hyperedges that contain at least one vertex in ``v_list`` are retained.
+        The vertices in each retained hyperedge are restricted to ``v_list``, and
+        vertex indices are re-mapped according to the ascending order of ``v_list``.
+
+        Args:
+            ``v_list`` (``Union[List[int], Set[int]]``): The selected vertex set.
+            ``keep_edges_with_only_one_nodes`` (``bool``): Whether to keep hyperedges that contain only one vertex in the subgraph. Defaults to ``True``.
+
+        Returns:
+            ``BaseHypergraph``: The extracted sub-hypergraph.
+        """
+        v_list = sorted(set(v_list))
+        assert len(v_list) > 0, "v_list should not be empty."
+        assert v_list[0] >= 0 and v_list[-1] < self.num_v, "Vertex index out of range."
+
+        v_map = {old: new for new, old in enumerate(v_list)}
+        raw_groups = {}
+        for group_name in self.group_names:
+            raw_groups[group_name] = {}
+            for e_code, content in self._raw_groups[group_name].items():
+                filtered = self._subgraph_filter_hyperedge(
+                    e_code, content, v_map, keep_edges_with_only_one_nodes,
+                )
+                if filtered is not None:
+                    new_code, new_content = filtered
+                    raw_groups[group_name][new_code] = new_content
+
+        sub_hg = type(self).from_state_dict({"num_v": len(v_list), "raw_groups": raw_groups})
+        if self._v_weight is not None:
+            sub_hg._v_weight = [self._v_weight[v] for v in v_list]
+        sub_hg.device = self.device
+        return sub_hg.to(self.device)
 
     @abc.abstractmethod
     def drop_hyperedges(self, drop_rate: float, ord="uniform"):

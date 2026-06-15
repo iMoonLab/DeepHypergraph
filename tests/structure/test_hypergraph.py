@@ -334,6 +334,34 @@ def test_clone(g1):
     assert g1_clone.num_e == 4
 
 
+def test_subgraph(g1, g2):
+    sub_g1 = g1.subgraph([0, 1, 2])
+    assert sub_g1.num_v == 3
+    assert sub_g1.num_e == 3
+    assert (0, 1, 2) in sub_g1.e[0]
+    assert (0, 1) in sub_g1.e[0]
+    assert (2,) in sub_g1.e[0]
+
+    sub_g2 = g2.subgraph({1, 2, 3})
+    assert sub_g2.num_v == 3
+    assert sub_g2.num_e == 4
+    assert sub_g2.v_weight == [g2.v_weight[1], g2.v_weight[2], g2.v_weight[3]]
+
+    sub_g1_34 = g1.subgraph([3, 4])
+    assert sub_g1_34.num_v == 2
+    assert sub_g1_34.num_e == 1
+    assert sub_g1_34.e[0] == [(0, 1)]
+
+    sub_g1_dup = g1.subgraph([0, 1, 1, 2])
+    assert sub_g1_dup.num_v == 3
+    assert sub_g1_dup.e[0] == [(0, 1, 2), (0, 1), (2,)]
+
+    sub_g1_no_single = g1.subgraph([0, 1, 2], keep_edges_with_only_one_nodes=False)
+    assert sub_g1_no_single.num_v == 3
+    assert sub_g1_no_single.num_e == 2
+    assert sub_g1_no_single.e[0] == [(0, 1, 2), (0, 1)]
+
+
 # test deep learning
 def test_v2e_index(g1):
     v2e_src = g1.v2e_src.view(-1, 1)
