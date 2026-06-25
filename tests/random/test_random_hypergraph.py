@@ -1,6 +1,6 @@
 import pytest
 
-from dhg.random import uniform_hypergraph_Gnm, uniform_hypergraph_Gnp, hypergraph_Gnm
+from dhg.random import uniform_hypergraph_Gnm, uniform_hypergraph_Gnp, hypergraph_Gnm, set_seed
 
 
 def C(n, m):
@@ -18,6 +18,7 @@ def test_uniform_hypergraph_Gnp():
     k = 5
     prob = 0.01
 
+    set_seed(42)
     g = uniform_hypergraph_Gnp(k, n_v, prob)
     edges = g.e[0]
 

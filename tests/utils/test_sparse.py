@@ -1,10 +1,12 @@
-from re import A
 import pytest
 import torch
+
+from dhg.random import set_seed
 from dhg.utils import sparse_dropout
 
 
 def test_sparse_dropout():
+    set_seed(42)
     a = (torch.rand(10, 20) > 0.7).float()
 
     idx = torch.nonzero(a).T
