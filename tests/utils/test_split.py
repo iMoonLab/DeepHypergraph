@@ -8,7 +8,8 @@ from dhg.utils import edge_list_to_adj_list
 
 def test_split_by_num():
     n = 1000
-    v_label = np.random.randint(0, 10, n)
+    v_label = np.repeat(np.arange(10), n // 10)
+    np.random.shuffle(v_label)
     n_train, n_val, n_test = 50, 20, 10
     m_train, m_val, m_test = split_by_num(n, v_label, n_train, n_val, n_test)
     assert m_train.sum() == 500
