@@ -26,7 +26,7 @@ def simple_stdout2file(file_path: Union[str, Path]) -> None:
             ), f"The parent directory of {file_path} does not exist."
             self.file_path = file_path
             self.terminal = sys.stdout
-            self.file = open(file_path, "a")
+            self.file = open(file_path, "a", encoding="utf-8")
 
         def write(self, message):
             self.terminal.write(message)
@@ -36,6 +36,9 @@ def simple_stdout2file(file_path: Union[str, Path]) -> None:
         def flush(self):
             self.terminal.flush()
             self.file.flush()
+
+        def close(self):
+            self.file.close()
 
     file_path = Path(file_path)
     sys.stdout = SimpleLogger(file_path)

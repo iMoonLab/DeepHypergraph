@@ -27,14 +27,14 @@ def test_split_by_ratio():
     v_label = np.random.randint(0, 10, n)
     r_train, r_val, r_test = 0.5, 0.2, 0.1
     m_train, m_val, m_test = split_by_ratio(n, v_label, r_train, r_val, r_test)
-    assert pytest.approx(m_train.sum(), 5) == 500
-    assert pytest.approx(m_val.sum(), 5) == 200
-    assert pytest.approx(m_test.sum(), 5) == 100
+    assert pytest.approx(m_train.sum(), abs=5) == 500
+    assert pytest.approx(m_val.sum(), abs=5) == 200
+    assert pytest.approx(m_test.sum(), abs=5) == 100
 
     m_train, m_val, m_test = split_by_ratio(n, v_label, r_train, r_val)
-    assert pytest.approx(m_train.sum(), 5) == 500
-    assert pytest.approx(m_val.sum(), 5) == 200
-    assert pytest.approx(m_test.sum(), 5) == 300
+    assert pytest.approx(m_train.sum(), abs=5) == 500
+    assert pytest.approx(m_val.sum(), abs=5) == 200
+    assert pytest.approx(m_test.sum(), abs=5) == 300
 
 
 def test_split_by_num_for_UI_bigraph():

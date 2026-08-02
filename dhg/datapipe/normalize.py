@@ -63,6 +63,9 @@ def min_max_scaler(X: torch.Tensor, ft_min: float, ft_max: float) -> torch.Tenso
     assert ft_min < ft_max, "The minimum value of the feature should be less than the maximum value."
     X_min, X_max = X.min().item(), X.max().item()
     X_range = X_max - X_min
+    if X_range == 0:
+        X = torch.full_like(X, (ft_min + ft_max) / 2)
+        return X
     scale_ = (ft_max - ft_min) / X_range
     min_ = ft_min - X_min * scale_
     X = X * scale_ + min_

@@ -191,6 +191,8 @@ class BiGraph(BaseGraph):
         """
         if e_list is None:
             return [], []
+        if len(e_list) == 0:
+            return [], []
         # only one edge
         if isinstance(e_list[0], int) and len(e_list) == 2:
             e_list = [e_list]
@@ -483,7 +485,7 @@ class BiGraph(BaseGraph):
         """
         if self.cache.get("B", None) is None:
             if self.num_e == 0:
-                self.cache["B"] = torch.sparse_coo_tensor(size=(self.num_u, self.num_v))
+                self.cache["B"] = torch.sparse_coo_tensor(size=(self.num_u, self.num_v), device=self.device)
             else:
                 e_list, e_weight = self.e
                 self.cache["B"] = torch.sparse_coo_tensor(

@@ -144,7 +144,7 @@ def draw_vertex(
             y += offset[1]
             ax.text(x, y, label, fontsize=font_size, fontfamily=font_family, ha='center', va='top')
         patches.append(circle)
-    p = PatchCollection(patches, facecolors=v_color, edgecolors="black")
+    p = PatchCollection(patches, facecolors=v_color, edgecolors="black", linewidths=v_line_width)
     ax.add_collection(p)
 
 

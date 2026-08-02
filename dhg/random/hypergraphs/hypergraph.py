@@ -24,6 +24,7 @@ def uniform_hypergraph_Gnp(k: int, num_v: int, prob: float):
 
     assert num_v > 1, "num_v must be greater than 1"
     assert k > 1, "k must be greater than 1"  # TODO ?
+    assert k <= num_v, "k must be less than or equal to num_v"
     assert 0 <= prob <= 1, "prob must be between 0 and 1"
 
     edges = itertools.combinations(range(num_v), k)
@@ -51,6 +52,14 @@ def uniform_hypergraph_Gnm(k: int, num_v: int, num_e: int):
     assert k > 1, "k must be greater than 1"  # TODO ?
     assert num_v > 1, "num_v must be greater than 1"
     assert num_e > 0, "num_e must be greater than 0"
+    assert k <= num_v, "k must be less than or equal to num_v"
+
+    from math import comb as C
+    max_possible_edges = C(num_v, k)
+    assert num_e <= max_possible_edges, (
+        f"num_e ({num_e}) exceeds the maximum possible number of {k}-uniform hyperedges ({max_possible_edges}) "
+        f"for {num_v} vertices."
+    )
 
     edges = set()
     while len(edges) < num_e:
@@ -90,6 +99,11 @@ def hypergraph_Gnm(num_v: int, num_e: int, method:str="low_order_first", prob_k_
     assert num_e > 0, "num_e must be greater than 0"
     assert method in ("uniform", "low_order_first", "high_order_first", "custom"), "method must be one of 'uniform', 'low_order_first', 'high_order_first', 'custom'"
     deg_e_list = list(range(2, num_v + 1))
+    max_possible_edges = sum(C(num_v, k) for k in deg_e_list)
+    assert num_e <= max_possible_edges, (
+        f"num_e ({num_e}) exceeds the maximum possible number of hyperedges ({max_possible_edges}) "
+        f"for {num_v} vertices."
+    )
     if method == "uniform":
         prob_k_list = [C(num_v, k) / (2 ** num_v - 1) for k in deg_e_list]
     elif method == "low_order_first":

@@ -243,7 +243,6 @@ class Graph(BaseGraph):
             ``device`` (``torch.device``): The device to store the graph. Defaults to ``torch.device("cpu")``.
         """
         num_v = hypergraph.num_v
-        miu = 1.0
         adj = miu * hypergraph.H.mm(hypergraph.H_T).coalesce().cpu().clone()
         src_idx, dst_idx = adj._indices()
         edge_mask = src_idx < dst_idx
@@ -677,7 +676,7 @@ class Graph(BaseGraph):
             elif aggr == "sum":
                 X = torch.sparse.mm(P, X)
             elif aggr == "softmax_then_sum":
-                P = torch.sparse.mm(P, dim=1)
+                P = torch.sparse.softmax(P, dim=1)
                 X = torch.sparse.mm(P, X)
             else:
                 pass

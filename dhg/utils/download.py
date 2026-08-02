@@ -14,7 +14,7 @@ def download_file(url: str, file_path: Path):
         ``file_path`` (``str``): the path to the file
     """
     file_path.parent.mkdir(parents=True, exist_ok=True)
-    r = requests.get(url, stream=True, verify=True)
+    r = requests.get(url, stream=True, verify=True, timeout=(30, 120))
     if r.status_code != 200:
         raise requests.HTTPError(f"{url} is not accessible.")
     with open(file_path, 'wb') as f:
@@ -37,9 +37,10 @@ def check_file(file_path: Path, md5: str):
         raise FileNotFoundError(f"{file_path} does not exist.")
     else:
         with open(file_path, 'rb') as f:
-            data = f.read()
-        cur_md5 = hashlib.md5(data).hexdigest()
-        return cur_md5 == md5
+            cur_md5 = hashlib.md5()
+            for chunk in iter(lambda: f.read(8192), b''):
+                cur_md5.update(chunk)
+        return cur_md5.hexdigest() == md5
 
 
 def _retry(n: int, exception_type=requests.HTTPError):
@@ -56,10 +57,7 @@ def _retry(n: int, exception_type=requests.HTTPError):
                     return fetcher(*args, **kwargs)
                 except exception_type as e:
                     warnings.warn(f"Retry downloading({i + 1}/{n}): {str(e)}")
-                except Exception as e:
-                    raise e
             return fetcher(*args, **kwargs)
-            # raise FileNotFoundError
         return wrapper
     return decorator
 

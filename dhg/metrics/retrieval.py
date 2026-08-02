@@ -149,8 +149,8 @@ def ap(
     else:
         k = min(k, max_k) if k is not None else max_k
 
-    pred_seq = y_true[torch.argsort(y_pred, descending=True)]
-    pred_index = torch.arange(1, len(y_true) + 1, device=y_true.device)[pred_seq > 0]
+    pred_seq = y_true[torch.argsort(y_pred, descending=True)][:k]
+    pred_index = torch.arange(1, len(pred_seq) + 1, device=y_true.device)[pred_seq > 0]
     recall_seq = torch.arange(1, len(pred_index) + 1, device=y_true.device)
     res = recall_seq / pred_index
     if method == "pascal_voc":
@@ -276,7 +276,7 @@ def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, rati
         >>> y_true = torch.tensor([False, True, False, True])
         >>> y_pred = torch.tensor([0.2, 0.3, 0.5, 0.2])
         >>> dm.retrieval.rr(y_true, y_pred)
-        0.375
+        0.5
         >>> dm.retrieval.rr(y_true, y_pred, k=2)
         0.5
     """
@@ -292,8 +292,10 @@ def rr(y_true: torch.Tensor, y_pred: torch.Tensor, k: Optional[int] = None, rati
 
     pred_seq = y_true[torch.argsort(y_pred, dim=-1, descending=True)][:k]
     pred_index = torch.nonzero(pred_seq).view(-1)
-    res = (1 / (pred_index + 1)).mean().cpu()
-    return res.mean().item()
+    if len(pred_index) == 0:
+        return 0.0
+    res = (1 / (pred_index[0] + 1)).item()
+    return res
 
 
 def mrr(
@@ -318,7 +320,7 @@ def mrr(
         >>> y_true = torch.tensor([False, True, False, True])
         >>> y_pred = torch.tensor([0.2, 0.3, 0.5, 0.2])
         >>> dm.retrieval.mrr(y_true, y_pred)
-        0.375
+        0.5
         >>> dm.retrieval.mrr(y_true, y_pred, k=2)
         0.5
     """
@@ -370,8 +372,8 @@ def _pr_curve(
     else:
         k = min(k, max_k) if k is not None else max_k
 
-    pred_seq = y_true[torch.argsort(y_pred, descending=True)]
-    pred_index = torch.arange(1, len(y_true) + 1, device=y_true.device)[pred_seq > 0]
+    pred_seq = y_true[torch.argsort(y_pred, descending=True)][:k]
+    pred_index = torch.arange(1, len(pred_seq) + 1, device=y_true.device)[pred_seq > 0]
     recall_seq = torch.arange(1, len(pred_index) + 1, device=y_true.device)
     res = recall_seq / pred_index
     if method == "pascal_voc":

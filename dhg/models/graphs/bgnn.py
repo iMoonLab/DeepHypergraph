@@ -30,7 +30,7 @@ class BGNN_Adv(nn.Module):
             else:
                 self.layers.append(nn.Linear(u_dim, v_dim))
 
-    def forward(self, X_u: torch.Tensor, X_v: torch.Tensor, g: BiGraph) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, X_u: torch.Tensor, X_v: torch.Tensor, g: BiGraph) -> torch.Tensor:
         r"""The forward function.
 
         Args:
@@ -180,7 +180,7 @@ class BGNN_MLP(nn.Module):
                 self.layers.append(nn.Linear(u_dim, hid_dim))
                 self.decoders.append(Decoder(hid_dim, decoder_hid_dim, v_dim, drop_rate=drop_rate))
 
-    def forward(self, X_u: torch.Tensor, X_v: torch.Tensor, g: BiGraph) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, X_u: torch.Tensor, X_v: torch.Tensor, g: BiGraph) -> torch.Tensor:
         r"""The forward function.
 
         Args:

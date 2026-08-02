@@ -9,6 +9,8 @@
 [![Downloads](https://pepy.tech/badge/dhg)](https://pepy.tech/project/dhg)
 [![Visits Badge](https://visitor-badge.glitch.me/badge?page_id=iMoonLab.DeepHypergraph)](https://visitor-badge.glitch.me/)
 [![license](https://img.shields.io/github/license/imoonlab/DeepHypergraph)](LICENSE)
+[![Tests](https://github.com/iMoonLab/DeepHypergraph/actions/workflows/tests.yml/badge.svg)](https://github.com/iMoonLab/DeepHypergraph/actions/workflows/tests.yml)
+[![Publish](https://github.com/iMoonLab/DeepHypergraph/actions/workflows/publish.yml/badge.svg)](https://github.com/iMoonLab/DeepHypergraph/actions/workflows/publish.yml)
 <!-- [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black) -->
 <!-- [![Supported Python versions](https://img.shields.io/pypi/pyversions/dhg)](https://pypi.org/project/dhg/) -->
 
@@ -17,6 +19,8 @@
 
 
 ## News
+- 2026-08-02 -> **v0.9.7** is now available! Fixed 30+ bugs across structure, metrics, models, and visualization modules. Added CI/CD with automated testing and PyPI publishing.
+- 2026-08-02 -> **v0.9.7** 正式发布！ 修复了结构、指标、模型和可视化模块中的30余个bug，新增CI/CD自动化测试和PyPI发布。
 - 2025-09-01 -> **v0.9.5** is now available! Fix some bugs and migrated to UV package manager with PEP 621 format!
 - 2025-09-01 -> **v0.9.5** 正式发布！ 修复了若干bug，并迁移到UV包管理器，采用PEP 621格式！
 - 2024-01-31 -> **v0.9.4** is now available! Fix some bugs and more datasets are included!
@@ -80,13 +84,13 @@ The Optuna library endows DHG with the Auto-ML ability. DHG supports automatical
 ## Installation
 
 
-Current, the stable version of **DHG** is 0.9.5. You can install it with ``pip`` as follows:
+Current, the stable version of **DHG** is 0.9.7. You can install it with ``pip`` as follows:
 
 ```python
 pip install dhg
 ```
 
-You can also try the nightly version (0.9.6) of **DHG** library with ``pip`` as follows:
+You can also try the nightly version of **DHG** library with ``pip`` as follows:
 
 ```python
 pip install git+https://github.com/iMoonLab/DeepHypergraph.git
@@ -360,9 +364,9 @@ Currently, we have added the following datasets:
 
 - **[CocitationCora](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationCora.html#dhg.data.CocitationCora)**: A citation network dataset for vertex classification task.
 
-- **[CocitationPubmed](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationCiteseer.html#dhg.data.CocitationCiteseer)**: A citation network dataset for vertex classification task.
+- **[CocitationPubmed](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationPubmed.html#dhg.data.CocitationPubmed)**: A citation network dataset for vertex classification task.
 
-- **[CocitationCiteseer](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationPubmed.html#dhg.data.CocitationPubmed)**: A citation network dataset for vertex classification task.
+- **[CocitationCiteseer](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.CocitationCiteseer.html#dhg.data.CocitationCiteseer)**: A citation network dataset for vertex classification task.
 
 - **[YelpRestaurant](https://deephypergraph.readthedocs.io/en/latest/generated/dhg.data.YelpRestaurant.html#dhg.data.YelpRestaurant)**: A restaurant-review network dataset for vertex classification task.
 

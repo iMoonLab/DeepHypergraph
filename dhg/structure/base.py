@@ -128,6 +128,8 @@ class BaseGraph:
         """
         if e_list is None:
             return [], []
+        if len(e_list) == 0:
+            return [], []
         # only one edge
         if isinstance(e_list[0], int) and len(e_list) == 2:
             e_list = [e_list]
@@ -476,11 +478,13 @@ class BaseHypergraph:
         }
         _e = {}
         if "w_v2e" in e1 and "w_v2e" in e2:
+            _e["w_v2e"] = []
             for _idx in range(len(e1["w_v2e"])):
-                _e["w_v2e"] = _func[op](e1["w_v2e"][_idx], e2["w_v2e"][_idx])
+                _e["w_v2e"].append(_func[op](e1["w_v2e"][_idx], e2["w_v2e"][_idx]))
         if "w_e2v" in e1 and "w_e2v" in e2:
+            _e["w_e2v"] = []
             for _idx in range(len(e1["w_e2v"])):
-                _e["w_e2v"] = _func[op](e1["w_e2v"][_idx], e2["w_e2v"][_idx])
+                _e["w_e2v"].append(_func[op](e1["w_e2v"][_idx], e2["w_e2v"][_idx]))
         _e["w_e"] = _func[op](e1["w_e"], e2["w_e"])
         return _e
 
@@ -520,6 +524,8 @@ class BaseHypergraph:
             e_list = list(e_list)
         if w_list is not None and isinstance(w_list, tuple):
             w_list = list(w_list)
+        if len(e_list) == 0:
+            return [], []
         if isinstance(e_list[0], int) and w_list is None:
             w_list = [1] * len(e_list)
             e_list, w_list = [e_list], [w_list]
@@ -876,7 +882,7 @@ class BaseHypergraph:
     def W_v(self) -> torch.Tensor:
         r"""Return the vertex weight matrix of the hypergraph.
         """
-        if self.cache["W_v"] is None:
+        if self.cache.get("W_v", None) is None:
             self.cache["W_v"] = torch.tensor(self.v_weight, dtype=torch.float, device=self.device).view(-1, 1).to(self.device)
         return self.cache["W_v"]
 
@@ -884,7 +890,7 @@ class BaseHypergraph:
     def W_e(self) -> torch.Tensor:
         r"""Return the hyperedge weight matrix of the hypergraph.
         """
-        if self.cache["W_e"] is None:
+        if self.cache.get("W_e", None) is None:
             _tmp = [self.W_e_of_group(name) for name in self.group_names]
             self.cache["W_e"] = torch.cat(_tmp, dim=0)
         return self.cache["W_e"]
@@ -896,7 +902,7 @@ class BaseHypergraph:
             ``group_name`` (``str``): The name of the specified hyperedge group.
         """
         assert group_name in self.group_names, f"The specified {group_name} is not in existing hyperedge groups."
-        if self.group_cache[group_name]["W_e"] is None:
+        if self.group_cache[group_name].get("W_e", None) is None:
             self.group_cache[group_name]["W_e"] = self._fetch_W_of_group(group_name)
         return self.group_cache[group_name]["W_e"]
 

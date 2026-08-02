@@ -298,6 +298,7 @@ class DiGraph(BaseGraph):
         r"""Reverse the direction of edges in directed graph.
         """
         self._raw_e_dict = {(dst, src): w for (src, dst), w in self._raw_e_dict.items()}
+        self._clear_cache()
 
     def drop_edges(self, drop_rate: float, ord: str = "uniform"):
         r"""Randomly drop edges from the directed graph. This function will return a new directed graph with non-dropped edges.
@@ -417,7 +418,7 @@ class DiGraph(BaseGraph):
         """
         if self.cache.get("A", None) is None:
             if self.num_e == 0:
-                self.cache["A"] = torch.sparse_coo_tensor(size=(self.num_v, self.num_v))
+                self.cache["A"] = torch.sparse_coo_tensor(size=(self.num_v, self.num_v), device=self.device)
             else:
                 e_list, e_weight = self.e
                 self.cache["A"] = torch.sparse_coo_tensor(

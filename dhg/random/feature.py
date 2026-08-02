@@ -24,7 +24,7 @@ def normal_features(labels: Union[list, np.ndarray, torch.Tensor], noise: float 
     if isinstance(labels, list):
         labels = np.array(labels)
     elif isinstance(labels, torch.Tensor):
-        labels = labels.numpy()
+        labels = labels.cpu().numpy()
     elif not isinstance(labels, np.ndarray):
         raise TypeError("The type of labels must be list, np.ndarray or torch.Tensor.")
     assert len(labels.shape) == 1, "The shape of labels must be (num_vertices, )."

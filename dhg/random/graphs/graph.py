@@ -45,6 +45,11 @@ def graph_Gnp_fast(num_v: int, prob: float):
     assert prob >= 0 and prob <= 1, "prob must be between 0 and 1"
 
     e_list = []
+    if prob == 0.0:
+        return Graph(num_v, e_list)
+    if prob == 1.0:
+        e_list = [(w, v) for v in range(num_v) for w in range(v)]
+        return Graph(num_v, e_list)
     lp = math.log(1.0 - prob)
     v, w = 1, -1
     while v < num_v:
@@ -74,7 +79,7 @@ def graph_Gnm(num_v: int, num_e: int):
     """
     assert num_v > 1, "num_v must be greater than 1"
     assert (
-        num_e < num_v * (num_v - 1) // 2
+        num_e <= num_v * (num_v - 1) // 2
     ), "the specified num_e is larger than the possible number of edges"
 
     v_list = list(range(num_v))

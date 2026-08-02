@@ -135,8 +135,9 @@ class UniGATConv(nn.Module):
         Y = hg.v2e(X, aggr="mean")
         # ===============================================
         alpha_e = self.atten_e(Y)
-        e_atten_score = alpha_e[hg.e2v_src]
-        e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze())
+        alpha_v = self.atten_dst(X)
+        e_atten_score = alpha_e[hg.e2v_src] + alpha_v[hg.e2v_dst]
+        e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze(-1))
         # ================================================================================
         # We suggest to add a clamp on attention weight to avoid Nan error in training.
         e_atten_score = torch.clamp(e_atten_score, min=0.001, max=5)
@@ -272,7 +273,7 @@ class UniGINConv(nn.Module):
         """
         X = self.theta(X)
         Y = hg.v2e(X, aggr="mean")
-        X = (1 + self.eps) * hg.e2v(Y, aggr="sum") + X
+        X = hg.e2v(Y, aggr="sum") + (1 + self.eps) * X
         if not self.is_last:
             X = self.act(X)
             if self.bn is not None:

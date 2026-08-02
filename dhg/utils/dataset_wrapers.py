@@ -57,8 +57,16 @@ class UserItemDataset(Dataset):
             ``user`` (``int``): The index of the specified user.
         """
         neg_item = random.randrange(self.num_items)
+        max_retry = 1000
+        retry = 0
         while neg_item in self.adj_dict[user]:
+            if retry >= max_retry:
+                raise RuntimeError(
+                    f"Cannot sample a negative item for user {user}: "
+                    f"the user may have interacted with all {self.num_items} items."
+                )
             neg_item = random.randrange(self.num_items)
+            retry += 1
         return neg_item
 
     def __getitem__(self, index):

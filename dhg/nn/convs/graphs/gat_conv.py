@@ -48,7 +48,7 @@ class GATConv(nn.Module):
         x_for_src = self.atten_src(X)
         x_for_dst = self.atten_dst(X)
         e_atten_score = x_for_src[g.e_src] + x_for_dst[g.e_dst]
-        e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze())
+        e_atten_score = self.atten_dropout(self.atten_act(e_atten_score).squeeze(-1))
         # ================================================================================
         # We suggest to add a clamp on attention weight to avoid Nan error in training.
         e_atten_score = torch.clamp(e_atten_score, min=0.001, max=5)

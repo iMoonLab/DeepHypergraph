@@ -54,7 +54,7 @@ class HyperGCN(nn.Module):
         if self.fast:
             if self.cached_g is None:
                 self.cached_g = Graph.from_hypergraph_hypergcn(
-                    hg, X, self.with_mediator
+                    hg, X, self.with_mediator, device=X.device
                 )
             for layer in self.layers:
                 X = layer(X, hg, self.cached_g)

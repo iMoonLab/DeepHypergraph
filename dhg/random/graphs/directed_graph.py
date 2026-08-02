@@ -43,6 +43,11 @@ def digraph_Gnp_fast(num_v: int, prob: float):
     assert num_v > 1, "num_v must be greater than 1"
     assert prob >= 0 and prob <= 1, "prob must be between 0 and 1"
 
+    if prob == 0.0:
+        return DiGraph(num_v, [])
+    if prob == 1.0:
+        e_list = [(w, v) for v in range(num_v) for w in range(num_v) if w != v]
+        return DiGraph(num_v, e_list)
     lp = math.log(1.0 - prob)
     e_list = []
     # w -> v
@@ -84,7 +89,7 @@ def digraph_Gnm(num_v: int, num_e: int):
     """
 
     assert num_v > 1, "num_v must be greater than 1"
-    assert num_e < num_v * (
+    assert num_e <= num_v * (
         num_v - 1
     ), "the specified num_e is larger than the possible number of edges"
 

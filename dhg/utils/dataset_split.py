@@ -55,8 +55,8 @@ def split_by_num(
     assert isinstance(v_label, np.ndarray)
     v_label = v_label.squeeze().astype(int)
     assert v_label.ndim == 1
-    if v_label.min() == 1:
-        v_label -= 1
+    if v_label.min() > 0:
+        v_label -= v_label.min()
     num_classes = np.unique(v_label).shape[0]
 
     train_idx, test_idx = [], []
@@ -116,8 +116,8 @@ def split_by_ratio(
     assert isinstance(v_label, np.ndarray)
     v_label = v_label.squeeze().astype(int)
     assert v_label.ndim == 1
-    if v_label.min() == 1:
-        v_label -= 1
+    if v_label.min() > 0:
+        v_label -= v_label.min()
     num_classes = np.unique(v_label).shape[0]
 
     val_ratio = val_ratio if val_ratio is not None else 0

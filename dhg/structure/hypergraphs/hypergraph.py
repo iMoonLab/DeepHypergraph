@@ -672,7 +672,8 @@ class Hypergraph(BaseHypergraph):
             "D_e_neg_1",
             "v2e_src",
             "v2e_dst",
-            "v2e_weight" "e2v_src",
+            "v2e_weight",
+            "e2v_src",
             "e2v_dst",
             "e2v_weight",
         ]

@@ -488,7 +488,7 @@ def test_W_e(g2):
 
 
 def test_W_e_group(g2):
-    g2.add_hyperedges([0, 4, 5], group_name="knn")
+    g2.add_hyperedges([0, 1, 4], group_name="knn")
     assert (g2.W_e.cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5, 1])).all()
     assert (g2.W_e_of_group("main").cpu()._values() == torch.tensor([0.5, 1, 0.5, 1, 0.5])).all()
     assert (g2.W_e_of_group("knn").cpu()._values() == torch.tensor([1])).all()

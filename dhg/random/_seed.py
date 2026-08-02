@@ -31,3 +31,5 @@ def set_seed(seed: int):
     random.seed(_MANUAL_SEED)
     np.random.seed(_MANUAL_SEED)
     torch.manual_seed(_MANUAL_SEED)
+    torch.cuda.manual_seed(_MANUAL_SEED)
+    torch.cuda.manual_seed_all(_MANUAL_SEED)
