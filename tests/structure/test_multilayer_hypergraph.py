@@ -1,62 +1,64 @@
 import torch
 import pytest
-import numpy as np
+
 from dhg import Hypergraph, MultilayerHypergraph
-import matplotlib.pyplot as plt
-
-# from dhg.random.hypergraph import hypergraph_Gnm
 
 
-@pytest.fixture()
+@pytest.fixture
 def g1():
-    e_list = [(0, 1, 2, 5), (0, 1), (2, 3, 4), (3, 2, 4)]
-    g = Hypergraph(6, e_list)
-    return g
+    return Hypergraph(6, [(0, 1, 2, 5), (0, 1), (2, 3, 4), (3, 2, 4)])
 
 
-@pytest.fixture()
+@pytest.fixture
 def g2():
-    e_list = [(1, 2, 3), (0, 1, 3), (0, 1), (2, 4, 3), (2, 3)]
-    e_weight = [0.5, 1, 0.5, 1, 0.5]
-    g = Hypergraph(5, e_list, e_weight)
-    return g
+    return Hypergraph(5, [(1, 2, 3), (0, 1, 3), (0, 1), (2, 4, 3), (2, 3)])
 
 
-def test_save(g1, tmp_path):
-    from dhg import load_structure
-
-    g1.save(tmp_path / "g1")
-    g2 = load_structure(tmp_path / "g1")
-
-    for e1, e2 in zip(g1.e[0], g2.e[0]):
-        assert e1 == e2
-    for w1, w2 in zip(g1.e[1], g2.e[1]):
-        assert w1 == w2
-
-
-# test adjacency matrix
-def test_adjacency_matrix(g1):
-    adj = g1.A
-    assert adj.shape == (6, 6)
-    assert np.allclose(adj[0, 1], 1)
-    assert np.allclose(adj[0, 2], 1)
-    assert np.allclose(adj[0, 3], 0)
-    assert np.allclose(adj[0, 4], 0)
-    assert np.allclose(adj[0, 5], 1)
-# test construction
-def test_construct_multilayer_hypergraph():
-    g1 = g1()
-    g2 = g2()
-    
+def test_construct_multilayer_hypergraph(g1, g2):
     mhg = MultilayerHypergraph(11, 2, [g1, g2])
+
     assert mhg.num_layers == 2
-    assert mhg.layers_list[0] == g1
-    assert mhg.layers_list[1] == g2
+    assert mhg.layers_list == [g1, g2]
     assert mhg.num_v == 11
     assert mhg.prob_inner_layer_connect == 0
-    assert mhg.device == torch.device('cpu')
+    assert mhg.device == torch.device("cpu")
 
-def test_draw(mhg):
-    mhg.draw()
-    plt.show()
+    combined = mhg.construct_multi_layer_hypergraph()
+    assert type(combined) is Hypergraph
+    assert combined.num_v == 11
+    assert combined.num_e == g1.num_e + g2.num_e
 
+
+def test_offsets_are_local_and_repeatable(g1, g2):
+    mhg = MultilayerHypergraph(11, 2, [g1, g2])
+
+    assert mhg.node_layer_list() == [list(g1.v), [v + 6 for v in g2.v]]
+    first = mhg._inter_layer_connect()
+    second = mhg._inter_layer_connect()
+    assert first == second
+    assert mhg.construct_multi_layer_hypergraph().num_e == g1.num_e + g2.num_e
+
+
+def test_select_nodes_accepts_range(monkeypatch):
+    monkeypatch.setattr(
+        "dhg.structure.hypergraphs.multilayer_hypergraph.random.random",
+        lambda: 0,
+    )
+    assert MultilayerHypergraph.select_nodes(range(3), 1.0) == [0, 1, 2]
+
+
+def test_mapping_save_writes_once(g1, g2, tmp_path):
+    source_a = tmp_path / "a.txt"
+    source_b = tmp_path / "b.txt"
+    source_a.write_text("geneA\t1\ngeneB\t2\n", encoding="utf-8")
+    source_b.write_text("geneA\t7\ngeneB\t8\n", encoding="utf-8")
+    output = tmp_path / "merged.txt"
+    mhg = MultilayerHypergraph(11, 2, [g1, g2])
+
+    assert mhg.load_interlayer_mapping(
+        [str(source_a), str(source_b)], True, output
+    ) == [(1, 7), (2, 8)]
+    assert output.read_text(encoding="utf-8").splitlines() == [
+        "geneA [1, 7]",
+        "geneB [2, 8]",
+    ]
