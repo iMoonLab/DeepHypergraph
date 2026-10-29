@@ -218,7 +218,6 @@ class BaseGraph:
                 self._raw_e_dict[(src, dst)] = merge_func(self._raw_e_dict[(src, dst)], w)
             else:
                 self._raw_e_dict[(src, dst)] = w
-        self._clear_cache()
 
     @abc.abstractmethod
     def remove_edges(self, e_list: Union[List[int], List[List[int]]]):
@@ -239,7 +238,6 @@ class BaseGraph:
             del self._raw_selfloop_dict[v_a]
         elif (v_a, v_b) in self._raw_e_dict:
             del self._raw_e_dict[(v_a, v_b)]
-        self._clear_cache()
 
     def add_extra_selfloop(self):
         r"""Add extra selfloops to the graph.
@@ -815,11 +813,11 @@ class BaseHypergraph:
 
     @v_weight.setter
     def v_weight(self, v_weight: List[float]):
-        r"""Set the vertex weights of the hypergraph.
+        r"""Set the vertex weights of the hypergraph. Only clears caches that depend on vertex weights (``W_v``); structural caches like ``H``, ``D_e``, ``L`` are preserved.
         """
         assert len(v_weight) == self.num_v, "The length of vertex weights must be equal to the number of vertices."
         self._v_weight = v_weight
-        self._clear_cache()
+        self.cache.pop("W_v", None)
 
     @property
     @abc.abstractmethod

@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+from torch.utils.checkpoint import checkpoint
+
 import dhg
 from dhg.nn import HyperGCNConv
 from dhg.structure.graphs import Graph
@@ -16,6 +18,7 @@ class HyperGCN(nn.Module):
         ``use_mediator`` (``str``): Whether to use mediator to transform the hyperedges to edges in the graph. Defaults to ``False``.
         ``fast`` (``bool``): If set to ``True``, the transformed graph structure will be computed once from the input hypergraph and vertex features, and cached for future use. Defaults to ``True``.
         ``drop_rate`` (``float``, optional): Dropout ratio. Defaults to 0.5.
+        ``use_checkpoint`` (``bool``): If set to ``True``, use gradient checkpointing to save memory at the cost of computation. Defaults to ``False``.
     """
 
     def __init__(
@@ -27,9 +30,11 @@ class HyperGCN(nn.Module):
         use_bn: bool = False,
         fast: bool = True,
         drop_rate: float = 0.5,
+        use_checkpoint: bool = False,
     ) -> None:
         super().__init__()
         self.fast = fast
+        self.use_checkpoint = use_checkpoint
         self.cached_g = None
         self.with_mediator = use_mediator
         self.layers = nn.ModuleList()
@@ -57,8 +62,14 @@ class HyperGCN(nn.Module):
                     hg, X, self.with_mediator, device=X.device
                 )
             for layer in self.layers:
-                X = layer(X, hg, self.cached_g)
+                if self.use_checkpoint and self.training:
+                    X = checkpoint(layer, X, hg, self.cached_g, use_reentrant=False)
+                else:
+                    X = layer(X, hg, self.cached_g)
         else:
             for layer in self.layers:
-                X = layer(X, hg)
+                if self.use_checkpoint and self.training:
+                    X = checkpoint(layer, X, hg, use_reentrant=False)
+                else:
+                    X = layer(X, hg)
         return X

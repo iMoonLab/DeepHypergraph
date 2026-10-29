@@ -266,7 +266,6 @@ class DiGraph(BaseGraph):
             return
         e_list, e_weight = self._format_edges(e_list, e_weight)
         super().add_edges(e_list, e_weight, merge_op=merge_op)
-        self._clear_cache()
 
     def remove_edges(self, e_list: Union[List[int], List[List[int]]]):
         r"""Remove specifed edges in the directed graph.

@@ -322,7 +322,6 @@ class BiGraph(BaseGraph):
             self._raw_e_dict[(src, dst)] = merge_func(self._raw_e_dict[(src, dst)], w)
         else:
             self._raw_e_dict[(src, dst)] = w
-        self._clear_cache()
 
     def remove_edges(self, e_list: Union[List[int], List[List[int]]]):
         r"""Remove specifed edges in the bipartite graph.
